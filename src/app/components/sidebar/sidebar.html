@@ -1,0 +1,118 @@
+<!-- MOBILE TOP BAR -->
+<div class="lg:hidden w-full h-[60px] flex items-center justify-between px-4 border-b bg-white fixed top-0 left-0 z-50">
+    <h2 class="font-semibold text-[16px] text-[#4338CA]">SD Shop</h2>
+
+    <button (click)="toggleSidebar()" class="text-[20px]">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+</div>
+
+<!-- OVERLAY -->
+<div *ngIf="isSidebarOpen"
+     (click)="toggleSidebar()"
+     class="fixed inset-0 bg-black/30 z-40 lg:hidden"></div>
+
+<!-- SIDEBAR -->
+<div
+    class="w-[256px] h-screen fixed top-0 left-0 bg-white flex flex-col border-r border-[#E2E8F04D] p-4 z-50
+           transform transition-transform duration-300
+           lg:translate-x-0"
+    [ngClass]="isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+
+    <!-- HEADER -->
+    <div class="w-full h-[75px] pb-8 mt-[60px] lg:mt-0">
+        <h2 class="font-semibold text-[18px] text-[#4338CA]">
+            SD Shop
+        </h2>
+        <p class="mt-1 text-[13px] text-gray-500">
+            Enterprise Tier
+        </p>
+    </div>
+
+    <!-- MENU -->
+    <div class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
+        <div class="w-full pt-2 flex flex-col gap-2">
+            <ul class="space-y-2">
+
+                <!-- ITEM -->
+                <li routerLink="/dashboard"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+
+                    <img src="icons/dashboard.png" class="w-[15px] h-[15px]" />
+                    <span class="text-[14px] truncate">Dashboard</span>
+                </li>
+
+                <li routerLink="/content-management"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/contnt-mngmnt.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Content Management</span>
+                </li>
+
+                <li routerLink="/img-management"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/img-mngmnt.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Image Management</span>
+                </li>
+
+                <li routerLink="/pricing"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/pricing.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Pricing</span>
+                </li>
+
+                <li routerLink="/order"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/order.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Order</span>
+                </li>
+
+                <li routerLink="/coupons"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/coupon.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Coupons & Affiliates</span>
+                </li>
+
+                <li routerLink="/payment-stability"
+                    (click)="closeSidebarOnMobile()"
+                    routerLinkActive="bg-white shadow text-[#4F46E5]"
+                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
+                    <img src="icons/payment.png" class="w-[15px]" />
+                    <span class="text-[14px] truncate">Payment & Stability</span>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- USER -->
+    <div class="w-full pt-4 border-t mt-auto flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+            <div class="w-[32px] h-[32px] rounded-full bg-[#E2DFFF] flex items-center justify-center">
+                <span class="text-[12px] text-[#3525CD] font-bold">AU</span>
+            </div>
+
+            <div class="flex flex-col">
+                <span class="text-[12px] font-semibold">Admin User</span>
+                <span class="text-[10px] text-[#464555]">admin@company.com</span>
+            </div>
+        </div>
+
+        <div (click)="onLogout()" class="h-[36px] px-3 flex items-center gap-3 rounded-lg cursor-pointer hover:bg-gray-100">
+            <img src="icons/logout.png" class="w-[15px]" />
+            <span class="text-[14px]">Logout</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,207 @@
+<div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
+
+    <!-- TOP -->
+    <div class="flex flex-col lg:flex-row lg:justify-between gap-4">
+
+        <!-- TITLE -->
+        <div>
+            <p class="text-[11px] md:text-[12px] font-[700] text-[#3525CD] uppercase">
+                ADMINPANEL ORDERS
+            </p>
+            <h1 class="text-[22px] md:text-[30px] font-[700] text-[#141B2B]">
+                Order Management
+            </h1>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+
+            <!-- DROPDOWN -->
+            <div class="relative w-full sm:w-auto z-20">
+
+                <div (click)="toggleDropdown = !toggleDropdown"
+                    class="flex items-center justify-between gap-2 px-3 h-[42px] bg-white border rounded-lg cursor-pointer">
+
+                    <div class="flex items-center gap-2">
+                        <img src="icons/game.png" class="w-[15px]" />
+                        <span class="text-[13px] md:text-[14px]">
+                            {{ selectedGame || 'All Games' }}
+                        </span>
+                    </div>
+
+                    <i *ngIf="selectedGame"
+                        (click)="clearGameFilter(); $event.stopPropagation()"
+                        class="fa-solid fa-xmark text-[12px] text-gray-400"></i>
+                </div>
+
+                <!-- DROPDOWN -->
+                <div *ngIf="toggleDropdown"
+                    class="absolute top-[45px] left-0 w-full sm:w-[220px] bg-white border rounded-lg shadow z-50 max-h-[200px] overflow-y-auto">
+
+                    <div (click)="clearGameFilter(); toggleDropdown=false"
+                        class="px-3 py-2 text-[13px] hover:bg-gray-100 cursor-pointer">
+                        All Games
+                    </div>
+
+                    <div *ngFor="let game of games"
+                        (click)="filterByGame(game); toggleDropdown=false"
+                        class="px-3 py-2 text-[13px] hover:bg-gray-100 cursor-pointer">
+                        {{ game }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- TABS (FIXED) -->
+            <div
+                class="flex overflow-x-auto bg-[#EEF2FF] rounded-lg p-1 h-[40px] relative z-10 pointer-events-auto">
+
+                <button (click)="changeStatus('all'); toggleDropdown=false"
+                    [ngClass]="selectedStatus === 'all' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
+                    class="px-3 text-[12px] font-[600] whitespace-nowrap">
+                    All
+                </button>
+
+                <button (click)="changeStatus('pending'); toggleDropdown=false"
+                    [ngClass]="selectedStatus === 'pending' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
+                    class="px-3 text-[12px] font-[600] whitespace-nowrap">
+                    Pending
+                </button>
+
+                <button (click)="changeStatus('paid'); toggleDropdown=false"
+                    [ngClass]="selectedStatus === 'paid' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
+                    class="px-3 text-[12px] font-[600] whitespace-nowrap">
+                    Paid
+                </button>
+
+                <button (click)="changeStatus('failed'); toggleDropdown=false"
+                    [ngClass]="selectedStatus === 'failed' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
+                    class="px-3 text-[12px] font-[600] whitespace-nowrap">
+                    Failed
+                </button>
+
+                <button (click)="changeStatus('cancelled'); toggleDropdown=false"
+                    [ngClass]="selectedStatus === 'cancelled' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
+                    class="px-3 text-[12px] font-[600] whitespace-nowrap">
+                    Cancelled
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="bg-white rounded-xl border overflow-hidden">
+
+        <!-- DESKTOP -->
+        <table class="w-full hidden md:table">
+
+            <thead class="bg-[#F1F3FF80]">
+                <tr class="text-[11px] uppercase text-[#464555] font-[700] h-[44px]">
+                    <th class="text-left px-6">Order ID</th>
+                    <th class="text-left">Date</th>
+                    <th class="text-left">Status</th>
+                    <th class="text-left">Total</th>
+                    <th class="text-right pr-6">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y">
+
+                <tr *ngFor="let order of orders" class="h-[60px]">
+
+                    <td class="px-6 font-[600] text-[14px]">
+                        #{{ order.id.slice(-4) }}
+                    </td>
+
+                    <td>{{ formatDate(order.date) }}</td>
+
+                    <td>
+                        <span class="px-3 py-[4px] text-[10px] rounded-full"
+                            [ngClass]="{
+                                'bg-green-100 text-green-600': order.status==='paid',
+                                'bg-red-100 text-red-600': order.status==='failed',
+                                'bg-gray-200 text-gray-600': order.status==='cancelled',
+                                'bg-gray-100 text-gray-500': order.status==='pending'
+                            }">
+                            • {{ order.status }}
+                        </span>
+                    </td>
+
+                    <td class="font-[700]">
+                        {{ formatPrice(order.total) }}
+                    </td>
+
+                    <td class="pr-6 text-right">
+                        <button (click)="viewOrder(order)"
+                            class="text-[#3525CD] text-[12px] font-[700]">
+                            View
+                        </button>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <!-- MOBILE -->
+        <div class="md:hidden divide-y">
+
+            <div *ngFor="let order of orders" class="p-3 flex flex-col gap-2">
+
+                <div class="flex justify-between items-center">
+                    <p class="font-[600] text-[14px]">#{{ order.id.slice(-4) }}</p>
+
+                    <span class="text-[10px] px-2 py-[2px] rounded-full"
+                        [ngClass]="{
+                            'bg-green-100 text-green-600': order.status==='paid',
+                            'bg-red-100 text-red-600': order.status==='failed',
+                            'bg-gray-200 text-gray-600': order.status==='cancelled',
+                            'bg-gray-100 text-gray-500': order.status==='pending'
+                        }">
+                        {{ order.status }}
+                    </span>
+                </div>
+
+                <p class="text-[12px] text-gray-500">
+                    {{ formatDate(order.date) }}
+                </p>
+
+                <div class="flex justify-between items-center">
+
+                    <span class="font-[700] text-[14px]">
+                        {{ formatPrice(order.total) }}
+                    </span>
+
+                    <button (click)="viewOrder(order)"
+                        class="text-[#3525CD] text-[12px] font-[700]">
+                        View
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="flex flex-col md:flex-row justify-between gap-2 px-4 md:px-6 py-3 text-[12px]">
+
+            <span>
+                Showing {{ orders.length }} of {{ total }}
+            </span>
+
+            <div class="flex gap-2">
+                <button (click)="prev()" class="w-[28px] h-[28px] border rounded">‹</button>
+                <button (click)="next()" class="w-[28px] h-[28px] border rounded">›</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,196 @@
+<div class="w-full flex flex-col gap-[24px] px-3 md:px-0">
+
+    <!-- HEADER -->
+    <div class="w-full flex flex-col gap-[8px]">
+        <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">
+            Game Directory
+        </h1>
+        <p class="text-[14px] md:text-[18px] text-[#464555]">
+            Manage global inventory, visibility states, and metadata overrides.
+        </p>
+    </div>
+
+    <!-- TABLE WRAPPER -->
+    <div class="w-full bg-white rounded-[12px] border overflow-hidden">
+
+        <!-- DESKTOP HEADER -->
+        <div class="hidden md:flex w-full bg-[#F1F3FF] text-[11px] font-[700] uppercase text-[#64748B]">
+            <div class="w-[120px] px-[16px] py-[12px]">Status</div>
+            <div class="w-[260px] px-[16px] py-[12px]">Game / Product</div>
+            <div class="w-[140px] px-[16px] py-[12px]">Source</div>
+            <div class="w-[120px] px-[16px] py-[12px]">Visible</div>
+            <div class="w-[120px] px-[16px] py-[12px]">Products</div>
+            <div class="w-[120px] px-[16px] py-[12px]">Manage</div>
+            <div class="w-[80px] px-[16px] py-[12px]">Actions</div>
+        </div>
+
+        <!-- LOOP -->
+        <div *ngFor="let section of paginatedCategories">
+
+            <!-- DESKTOP ROW -->
+            <div class="hidden md:flex items-center border-b px-[16px] py-[14px]">
+
+                <div class="w-[120px]">
+                    <span class="px-[8px] py-[2px] text-[10px] font-[700] rounded-full"
+                        [ngClass]="section.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-600'">
+                        {{ section.isActive ? 'LIVE' : 'DRAFT' }}
+                    </span>
+                </div>
+
+                <div class="w-[260px] flex items-center gap-[10px]">
+                    <img [src]="section.image || 'https://via.placeholder.com/40'"
+                        class="w-[40px] h-[40px] rounded-[8px]" />
+                    <p class="text-[14px] font-[600]">{{ section.name }}</p>
+                </div>
+
+                <div class="w-[140px] text-[12px]">
+                    {{ section.mode === 'api' ? 'API Sync' : 'Manual Override' }}
+                </div>
+
+                <div class="w-[120px]">
+                    <div class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
+                        [ngClass]="section.isActive ? 'bg-[#3525CD]' : 'bg-[#E5E7EB]'"
+                        (click)="toggleStatus(section)">
+                        <div class="w-[16px] h-[16px] bg-white rounded-full"
+                            [ngClass]="section.isActive ? 'ml-auto' : ''"></div>
+                    </div>
+                </div>
+
+                <div class="w-[120px] text-[13px]">
+                    {{ section.totalProducts || 0 }} Products
+                </div>
+
+                <div class="w-[120px] text-[#3525CD] text-[12px] font-[700] cursor-pointer"
+                    (click)="goToGameManagement(section._id)">
+                    MANAGE
+                </div>
+
+                <div class="w-[80px] flex justify-center" (click)="toggleManage(section)">
+                    <img src="icons/edit.png" class="w-[18px]" />
+                </div>
+
+            </div>
+
+            <!-- MOBILE CARD -->
+            <div class="md:hidden border-b p-3 flex flex-col gap-3">
+
+                <!-- TOP -->
+                <div class="flex items-center gap-3">
+                    <img [src]="section.image || 'https://via.placeholder.com/40'"
+                        class="w-[40px] h-[40px] rounded-[8px]" />
+
+                    <div class="flex-1">
+                        <p class="text-[14px] font-[600]">{{ section.name }}</p>
+                        <p class="text-[11px] text-gray-500">
+                            {{ section.mode === 'api' ? 'API Sync' : 'Manual Override' }}
+                        </p>
+                    </div>
+
+                    <span class="px-[6px] py-[2px] text-[10px] rounded-full"
+                        [ngClass]="section.isActive ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-600'">
+                        {{ section.isActive ? 'LIVE' : 'DRAFT' }}
+                    </span>
+                </div>
+
+                <!-- MIDDLE -->
+                <div class="flex justify-between items-center">
+
+                    <div class="text-[12px]">
+                        {{ section.totalProducts || 0 }} Products
+                    </div>
+
+                    <div class="flex items-center gap-2">
+
+                        <div class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
+                            [ngClass]="section.isActive ? 'bg-[#3525CD]' : 'bg-gray-300'"
+                            (click)="toggleStatus(section)">
+                            <div class="w-[16px] h-[16px] bg-white rounded-full"
+                                [ngClass]="section.isActive ? 'ml-auto' : ''"></div>
+                        </div>
+
+                        <button class="text-[12px] text-[#3525CD] font-[700]"
+                            (click)="goToGameManagement(section._id)">
+                            Manage
+                        </button>
+
+                        <i (click)="toggleManage(section)"
+                            class="fa-solid fa-pen text-[12px]"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- EXPAND (kept same, just responsive padding) -->
+            <div *ngIf="expandedRowId === section._id"
+                class="bg-[#F8FAFC] px-3 md:px-[16px] pb-[20px] border-l-[4px] border-[#3525CD]">
+
+                <div class="bg-white rounded-[12px] p-3 md:p-[16px] flex flex-col lg:flex-row gap-[16px] md:gap-[20px] shadow">
+
+                    <!-- IMAGE -->
+                    <div class="w-full lg:w-[260px]">
+                        <p class="text-[11px] font-[700] mb-[6px]">Current Display Asset</p>
+
+                        <img [src]="section.image || 'https://via.placeholder.com/300'"
+                            class="w-full h-[140px] rounded-[8px]" />
+                    </div>
+
+                    <!-- FORM -->
+                    <div class="flex-1 flex flex-col gap-[12px]">
+
+                        <div class="flex flex-col md:flex-row gap-[12px]">
+
+                            <input [(ngModel)]="section.name"
+                                class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] px-[10px]" />
+
+                            <input [(ngModel)]="section.slug"
+                                class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] px-[10px]" />
+
+                        </div>
+
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+
+                            <button class="px-[12px] py-[6px] bg-[#E1E8FD] rounded text-[12px]"
+                                (click)="expandedRowId = null">
+                                Cancel
+                            </button>
+
+                            <button class="px-[14px] py-[6px] bg-[#3525CD] text-white rounded text-[12px]"
+                                (click)="updateCategory(section)">
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="flex flex-col md:flex-row justify-between gap-2 px-[16px] py-[12px] text-[12px] bg-[#F1F3FF4D]">
+
+        <span>
+            Showing {{ (currentPage - 1) * limit + 1 }}
+            -
+            {{ currentPage * limit > total ? total : currentPage * limit }}
+            of {{ total }} games
+        </span>
+
+        <div class="flex gap-[6px]">
+            <button (click)="prevPage()" [disabled]="currentPage === 1"
+                class="w-[26px] h-[26px] bg-white rounded">‹</button>
+
+            <button (click)="nextPage()" [disabled]="currentPage * limit >= total"
+                class="w-[26px] h-[26px] bg-white rounded">›</button>
+        </div>
+
+    </div>
+
+</div>

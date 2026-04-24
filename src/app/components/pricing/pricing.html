@@ -1,0 +1,311 @@
+<div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
+  <!-- HEADER -->
+  <div class="w-full md:w-[632px] flex flex-col gap-[8px]">
+    <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Games Pricing Overview</h1>
+    <p class="text-[14px] md:text-[18px] text-[#464555]">
+      Manage individual game markups and override global pricing logic.
+    </p>
+  </div>
+
+  <!-- TABLE WRAPPER -->
+  <div class="bg-white rounded-[12px] border overflow-hidden">
+    <!-- HEADER -->
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-2 px-[16px] py-[14px] border-b"
+    >
+      <div class="flex items-center gap-[10px] flex-wrap">
+        <p class="text-[16px] md:text-[18px] font-[600] text-[#141B2B]">Game-Level Controls</p>
+        <span class="px-[10px] py-[2px] bg-[#E2E8F0] text-[12px] rounded-full text-[#64748B]">
+          {{ products.length }} {{ products.length === 1 ? 'Game' : 'Games' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- DESKTOP HEADER -->
+    <div
+      class="hidden md:flex px-[16px] py-[12px] text-[12px] font-[700] uppercase text-[#64748B] border-b bg-[#F1F3FF]"
+    >
+      <div class="w-[320px]">Game Name</div>
+      <div class="w-[228px]">Markup (%)</div>
+      <div class="w-[234px]">Pricing Status</div>
+      <div class="w-[175px] text-end">Actions</div>
+    </div>
+
+    <!-- LOOP -->
+    <div *ngFor="let product of paginatedProducts">
+      <!-- DESKTOP ROW -->
+      <div class="hidden md:flex items-center px-[16px] py-[14px] border-b">
+        <div class="w-[320px] flex items-center gap-[16px]">
+          <img [src]="product.image" class="w-[40px] h-[40px] rounded-[8px]" />
+          <div>
+            <p class="text-[16px] font-[600]">{{ product.name }}</p>
+            <p class="text-[12px] text-[#64748B]">{{ product.categoryName || 'Game' }}</p>
+          </div>
+        </div>
+
+        <div class="w-[228px]">
+          <div class="flex items-center border rounded-[8px] px-[10px] py-[6px] w-[120px]">
+            <input
+              type="number"
+              [(ngModel)]="product.markup"
+              class="w-full outline-none text-[14px]"
+            />
+            <span>%</span>
+          </div>
+        </div>
+
+        <div class="w-[234px]">
+          <span
+            class="px-[10px] py-[3px] rounded-full text-[12px]"
+            [ngClass]="product.markup > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-100'"
+          >
+            {{ product.markup > 0 ? 'Override Active' : 'Using Global' }}
+          </span>
+        </div>
+
+        <div class="w-[175px] flex justify-center">
+          <button
+            class="w-[81px] h-[34px] border rounded-[8px] text-[12px] text-[#3525CD] font-[700]"
+            (click)="openManage(product)"
+          >
+            Manage
+          </button>
+        </div>
+      </div>
+
+      <!-- MOBILE CARD -->
+      <div class="md:hidden border-b p-3 flex flex-col gap-3">
+        <!-- TOP -->
+        <div class="flex items-center gap-3">
+          <img [src]="product.image" class="w-[40px] h-[40px] rounded-[8px]" />
+
+          <div class="flex-1">
+            <p class="text-[14px] font-[600]">{{ product.name }}</p>
+            <p class="text-[11px] text-gray-500">
+              {{ product.categoryName || 'Game' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- MARKUP -->
+        <div class="flex justify-between items-center">
+          <div class="flex items-center border rounded-[8px] px-[10px] py-[6px] w-[100px]">
+            <input
+              type="number"
+              [(ngModel)]="product.markup"
+              class="w-full outline-none text-[13px]"
+            />
+            <span>%</span>
+          </div>
+
+          <span
+            class="text-[11px]"
+            [ngClass]="product.markup > 0 ? 'text-green-600' : 'text-gray-500'"
+          >
+            {{ product.markup > 0 ? 'Override Active' : 'Global' }}
+          </span>
+        </div>
+
+        <!-- ACTION -->
+        <button
+          class="w-full border rounded py-2 text-[12px] text-[#3525CD] font-[600]"
+          (click)="openManage(product)"
+        >
+          Manage
+        </button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div
+      class="flex flex-col md:flex-row justify-between gap-2 px-[16px] py-[14px] text-[12px] bg-[#F1F3FF80]"
+    >
+      <span>
+        Showing {{ products.length ? (page - 1) * pageSize + 1 : 0 }} -
+        {{ Math.min(page * pageSize, products.length) }} of {{ products.length }}
+      </span>
+
+      <div class="flex gap-2 flex-wrap">
+        <button (click)="prevPage()" class="px-2 py-1 border rounded">‹</button>
+
+        <button
+          *ngFor="let p of visiblePages"
+          (click)="goToPage(p)"
+          class="px-2 py-1 border rounded"
+          [ngClass]="page === p ? 'bg-[#3525CD] text-white' : ''"
+        >
+          {{ p }}
+        </button>
+
+        <button (click)="nextPage()" class="px-2 py-1 border rounded">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isManageModalOpen" class="fixed inset-0 z-[9999] flex justify-end">
+  <!-- OVERLAY -->
+  <div
+    class="absolute inset-0 bg-black/40 backdrop-blur-[6px]"
+    (click)="isManageModalOpen = false"
+  ></div>
+
+  <!-- DRAWER -->
+  <div class="relative w-full md:w-[896px] h-full bg-white shadow flex flex-col z-[10000]">
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row justify-between gap-3 px-4 md:px-6 py-4 border-b">
+      <div class="flex items-center gap-3">
+        <img
+          [src]="selectedProduct?.image"
+          class="w-[40px] h-[40px] md:w-[46px] md:h-[46px] rounded-[10px]"
+        />
+
+        <div>
+          <h2 class="text-[16px] md:text-[20px] font-[700] text-[#141B2B] leading-tight">
+            {{ selectedProduct?.name }}
+            <span
+              class="ml-2 text-[9px] md:text-[10px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]"
+            >
+              OVERRIDE ACTIVE
+            </span>
+          </h2>
+
+          <p class="text-[12px] md:text-[14px] text-[#464555]">
+            RPG • Action • Developed by Cyberworks
+          </p>
+        </div>
+      </div>
+
+      <button (click)="isManageModalOpen = false" class="self-end md:self-auto">
+        <i class="fa-solid fa-xmark text-[18px] text-[#464555]"></i>
+      </button>
+    </div>
+
+    <!-- BODY -->
+    <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+      <!-- GAME LEVEL -->
+      <div class="flex flex-col gap-[12px]">
+        <h2 class="text-[12px] md:text-[14px] font-[700] uppercase">GAME-LEVEL SETTINGS</h2>
+
+        <div
+          class="w-full bg-[#F1F3FF] rounded-[12px] px-[12px] md:px-[16px] py-[12px] md:py-[14px]"
+        >
+          <p class="text-[11px] md:text-[12px] font-[700] mb-[6px]">DEFAULT MARKUP (%)</p>
+
+          <div
+            class="w-full md:w-[220px] h-[42px] bg-white rounded-[8px] px-[12px] flex items-center justify-between text-[14px] font-[700]"
+          >
+            <input
+              type="number"
+              [(ngModel)]="defaultMarkup"
+              (blur)="selectedProduct && updateDefaultMarkup()"
+              class="w-full outline-none"
+            />
+            <span>%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT TABLE -->
+      <div>
+        <h2 class="text-[12px] md:text-[14px] font-[700] uppercase mb-2">
+          PRODUCT-LEVEL OVERRIDES
+        </h2>
+
+        <!-- MOBILE: horizontal scroll -->
+        <div class="bg-[#F8FAFC] rounded-xl border overflow-x-auto">
+          <table class="w-[900px] md:w-full border-collapse">
+            <thead>
+              <tr class="text-[11px] md:text-[12px] font-[700] bg-[#EEF2FF]">
+                <th class="px-4 py-3 text-left">PRODUCT</th>
+                <th class="px-4 py-3 text-left">DISPLAY</th>
+                <th class="px-4 py-3 text-left">PRICE</th>
+                <th class="px-4 py-3 text-left">%</th>
+                <th class="px-4 py-3 text-left">FINAL</th>
+                <th class="px-4 py-3 text-left">STATUS</th>
+                <th class="px-4 py-3 text-right">ACTION</th>
+              </tr>
+            </thead>
+
+            <tbody class="text-[11px] md:text-[12px]">
+              <tr class="border-t" *ngFor="let product of modalProducts">
+                <td class="px-4 py-3 text-[#64748B]">
+                  {{ product.name }}
+                </td>
+
+                <td class="px-4 py-3">
+                  <input
+                    type="text"
+                    [(ngModel)]="product.displayName"
+                    class="border rounded px-2 py-1 w-full text-[12px]"
+                  />
+                </td>
+
+                <td class="px-4 py-3">${{ product.price }}</td>
+
+                <td class="px-4 py-3">
+                  <input
+                    type="number"
+                    [(ngModel)]="product.markup"
+                    class="border rounded px-2 py-1 w-[60px] text-center text-[12px]"
+                  />
+                </td>
+
+                <td class="px-4 py-3 text-[#3525CD] font-[700]">
+                  ${{ getFinalPrice(product) | number: '1.2-2' }}
+                </td>
+
+                <td class="px-4 py-3">
+                  <div
+                    (click)="toggleVisibility(product)"
+                    class="w-[32px] h-[18px] md:w-[36px] md:h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
+                    [ngClass]="product.isActive ? 'bg-[#4F46E5]' : 'bg-gray-300'"
+                  >
+                    <div
+                      class="w-[14px] h-[14px] md:w-[16px] md:h-[16px] bg-white rounded-full"
+                      [ngClass]="product.isActive ? 'ml-auto' : ''"
+                    ></div>
+                  </div>
+                </td>
+
+                <td class="px-4 py-3 text-right">
+                  <button
+                    (click)="resetToDefault(product)"
+                    class="text-[10px] text-[#3525CD] font-[700] bg-[#3525CD0D] px-2 py-1 rounded"
+                  >
+                    Reset
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="p-4 md:p-6 border-t space-y-3 bg-[#F1F3FF80]">
+      <button
+        (click)="syncProducts()"
+        class="w-full h-[48px] md:h-[52px] bg-[#4F46E5] text-white rounded-xl font-[700] text-[14px] md:text-[16px]"
+      >
+        Sync Products
+      </button>
+
+      <div class="flex flex-col md:flex-row gap-3">
+        <button
+          class="w-full md:flex-1 h-[44px] md:h-[46px] bg-white rounded-xl font-[700] text-[14px] border"
+        >
+          Discard
+        </button>
+
+        <button
+          (click)="saveAllChanges()"
+          class="w-full md:flex-1 h-[44px] md:h-[46px] bg-[#141B2B] text-white rounded-xl font-[700] text-[14px]"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

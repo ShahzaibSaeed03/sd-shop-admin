@@ -1,0 +1,201 @@
+<div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
+
+  <!-- HEADER -->
+  <div class="flex flex-col lg:flex-row lg:justify-between gap-4">
+    <div>
+      <p class="text-[10px] md:text-[12px] text-[#4F46E5] font-[600] uppercase">
+        WEBHOOK LOGS
+        <span class="text-[#464555] mx-1">/</span>
+        <span class="text-[#464555]">STABILITY</span>
+      </p>
+
+      <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B] mt-1">
+        Webhook Logs
+      </h1>
+
+      <p class="text-[13px] md:text-[18px] text-[#464555]">
+        Real-time monitoring of incoming system events.
+      </p>
+    </div>
+
+    <!-- FILTER -->
+    <div class="flex overflow-x-auto bg-[#F1F3FF] rounded-lg p-1 h-[40px]">
+
+      <button
+        (click)="setTab('all')"
+        [ngClass]="activeTab==='all' ? 'bg-white text-[#4F46E5]' : ''"
+        class="px-3 rounded font-[700] text-[12px] whitespace-nowrap"
+      >
+        All Events
+      </button>
+
+      <button
+        (click)="setTab('success')"
+        [ngClass]="activeTab==='success' ? 'bg-white text-green-600' : ''"
+        class="px-3 font-[700] text-[12px] whitespace-nowrap"
+      >
+        Success (200)
+      </button>
+
+      <button
+        (click)="setTab('failed')"
+        [ngClass]="activeTab==='failed' ? 'bg-white text-red-600' : ''"
+        class="px-3 font-[700] text-[12px] whitespace-nowrap"
+      >
+        Failed (5xx)
+      </button>
+
+    </div>
+  </div>
+
+  <!-- DESKTOP TABLE -->
+  <div class="hidden md:block bg-white rounded-xl border overflow-hidden">
+    <table class="w-full">
+
+      <thead class="bg-[#F1F3FF]">
+        <tr class="text-[12px] font-[700] text-[#464555] h-[48px]">
+          <th class="text-left px-6">Event Type</th>
+          <th class="text-left">Order ID</th>
+          <th class="text-left">Status</th>
+          <th class="text-right pr-6">Timestamp</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+
+        <!-- DATA ROW -->
+        <tr class="h-[64px]" *ngFor="let log of paginatedLogs">
+
+          <!-- EVENT -->
+          <td class="px-6 flex items-center gap-2">
+            <img
+              [src]="
+                getStatus(log) === 'FAILED'
+                  ? 'icons/error.png'
+                  : getStatus(log) === 'SUCCESS'
+                    ? 'icons/success.png'
+                    : 'icons/warning-red.png'
+              "
+              class="w-[16px]"
+            />
+            {{ log.payload?.type || 'unknown_event' }}
+          </td>
+
+          <!-- ORDER ID -->
+          <td class="text-[#3525CD] font-[600]">
+            {{ log.payload?.data?.id || '-' }}
+          </td>
+
+          <!-- STATUS -->
+          <td>
+            <span
+              class="px-2 py-[2px] text-[10px] rounded-full"
+              [ngClass]="{
+                'bg-red-100 text-red-600': getStatus(log) === 'FAILED',
+                'bg-green-100 text-green-600': getStatus(log) === 'SUCCESS',
+                'bg-gray-200 text-gray-600': getStatus(log) === 'OK'
+              }"
+            >
+              {{ getStatus(log) }}
+            </span>
+          </td>
+
+          <!-- TIME -->
+          <td class="text-right pr-6 text-[12px]">
+            {{ log.createdAt | date: 'MMM d, HH:mm:ss' }}
+          </td>
+
+        </tr>
+
+        <!-- EMPTY STATE -->
+        <tr *ngIf="paginatedLogs.length === 0">
+          <td colspan="4" class="text-center py-6 text-gray-400">
+            No logs found
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- PAGINATION -->
+    <div class="flex justify-between items-center px-6 py-3 bg-[#F1F3FF] text-[12px]">
+      <span>
+        Showing {{ paginatedLogs.length }} of {{ filteredLogs.length }}
+      </span>
+
+      <div class="flex gap-2">
+        <button
+          class="px-3 py-1 bg-white border rounded"
+          (click)="prevPage()"
+        >
+          Prev
+        </button>
+
+        <button
+          class="px-3 py-1 bg-white border rounded"
+          (click)="nextPage()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MOBILE (kept same static UI as requested) -->
+  <div class="md:hidden flex flex-col gap-3">
+
+    <div class="bg-white border rounded-xl p-3 flex flex-col gap-2" *ngFor="let log of paginatedLogs">
+
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <img
+            [src]="
+              getStatus(log) === 'FAILED'
+                ? 'icons/error.png'
+                : getStatus(log) === 'SUCCESS'
+                  ? 'icons/success.png'
+                  : 'icons/warning-red.png'
+            "
+            class="w-[16px]"
+          />
+          <span class="font-[600] text-[13px]">
+            {{ log.payload?.type || 'unknown_event' }}
+          </span>
+        </div>
+
+        <span
+          class="text-[10px] px-2 py-[2px] rounded-full"
+          [ngClass]="{
+            'bg-red-100 text-red-600': getStatus(log) === 'FAILED',
+            'bg-green-100 text-green-600': getStatus(log) === 'SUCCESS',
+            'bg-gray-200 text-gray-600': getStatus(log) === 'OK'
+          }"
+        >
+          {{ getStatus(log) }}
+        </span>
+      </div>
+
+      <p class="text-[12px] text-[#3525CD] font-[600]">
+        {{ log.payload?.data?.id || '-' }}
+      </p>
+
+      <p class="text-[11px] text-gray-500">
+        {{ log.createdAt | date: 'MMM d, HH:mm:ss' }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="flex justify-end px-2 md:px-6">
+   <button
+  (click)="downloadLogs()"
+  class="text-[#3525CD] text-[12px] font-[700]"
+>
+  Download raw logs (.json)
+</button>
+  </div>
+
+</div>

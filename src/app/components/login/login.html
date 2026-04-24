@@ -1,0 +1,86 @@
+<div class="min-h-screen flex flex-col justify-between items-center bg-[#f5f7fb]">
+    <div class="flex-1 flex items-center justify-center w-full">
+        <div class="w-[448px] rounded-xl border border-gray-200 bg-white 
+              shadow-[0px_12px_32px_0px_rgba(20,27,43,0.05)] px-10 pt-10 pb-14 space-y-10">
+
+            <!-- Logo -->
+            <div class="flex flex-col items-center space-y-4">
+                <div class="w-[56px] h-[56px] rounded-[12px] bg-indigo-100 flex items-center justify-center">
+                    <img src="icons/Icon.png" alt="logo" class="w-[23.75px] h-[22.5px]" />
+                </div>
+                <h1 class="font-extrabold text-[30px] leading-[36px] tracking-[-0.75px] text-center text-gray-900">
+                    SD SHOP
+                </h1>
+                <p class="font-normal text-[14px] leading-[22.75px] tracking-normal text-center text-gray-500">
+                    Only authorized administrators can access this panel
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form class="space-y-5" (ngSubmit)="onLogin(); $event.preventDefault()">
+
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label class="font-semibold text-[12px] leading-[16px] tracking-[0.6px] uppercase text-gray-500">
+                        EMAIL ADDRESS
+                    </label>
+                    <input type="email" [(ngModel)]="email" name="email" placeholder="admin@test.com"
+                        class="w-full h-[50px] px-4 pt-[15px] pb-[16px] rounded-lg border border-gray-300 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-2">
+                    <label class="font-semibold text-[12px] leading-[16px] tracking-[0.6px] uppercase text-gray-500">
+                        PASSWORD
+                    </label>
+                    <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••"
+                        class="w-full h-[50px] px-4 pt-[15px] pb-[16px] rounded-lg border border-gray-300 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <!-- ❌ Error (dynamic) -->
+                <div *ngIf="errorMessage"
+                    class="flex items-center gap-2 bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg">
+                    <span>⚠️</span>
+                    <span>{{ errorMessage }}</span>
+                </div>
+
+                <!-- 🔄 Button -->
+                <button type="submit" [disabled]="isLoading"
+                    class="w-full h-[56px] py-[16px] rounded-lg bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-medium flex items-center justify-center gap-3 transition hover:opacity-90 disabled:opacity-80 disabled:cursor-not-allowed">
+
+                    <!-- 🔄 Spinner -->
+                    <span *ngIf="isLoading"
+                        class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin">
+                    </span>
+                    <span>
+                        {{ isLoading ? 'Authenticating...' : 'Login' }}
+                    </span>
+                </button>
+
+                <!-- 🔹 Divider -->
+                <div class="w-full h-[32px] py-[8px] flex items-center gap-4">
+                    <div class="flex-1 h-[1px] bg-gray-200"></div>
+                    <span class="text-[12px] text-gray-400 font-medium">
+                        OR
+                    </span>
+                    <div class="flex-1 h-[1px] bg-gray-200"></div>
+                </div>
+
+                <!-- 🔹 Google Button -->
+                <button type="button"
+                    class="w-full h-[56px] py-[16px] rounded-lg bg-[#E1E8FD] flex items-center justify-center gap-3 transition hover:opacity-90">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-[20px] h-[20px]"
+                        alt="google" />
+                    <span class="font-sans font-semibold text-[16px] leading-[24px] text-[#3525CD]">
+                        Continue with Google
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <p class="mb-6 text-center text-[15px] text-[#94A3B8] opacity-60">
+        © 2024 Indigo Ledger. Secure Administrative Access.
+    </p>
+
+</div>

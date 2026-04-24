@@ -1,0 +1,245 @@
+<div class="w-full mx-auto min-h-screen flex flex-col gap-10">
+    <div>
+        <p class="text-[12px] uppercase tracking-[0.6px] text-[#4F46E5] font-[600]">
+            <span class="text-[#464555] cursor-pointer hover:underline" (click)="goToWebhookLogs()">
+                WEBHOOK LOGS
+            </span>
+            <span class="text-[#464555] mx-1">/</span>
+            <span class="cursor-pointer hover:underline">
+                STABILITY
+            </span>
+        </p>
+        <div class="w-full h-[72px] flex flex-col gap-[8px]">
+            <h1 class="text-[30px] font-[800] leading-[36px] tracking-[-0.75px] text-[#141B2B]">
+                Stability Dashboard
+            </h1>
+            <p class="text-[18px] font-[400] leading-[28px] text-[#464555]">
+                Monitoring error recovery and transaction integrity.
+            </p>
+        </div>
+    </div>
+
+    <!-- ALERT BOX -->
+    <div class="bg-[#FBECEF] border border-[#BA1A1A1A] rounded-xl p-5 flex gap-4 items-start relative">
+
+        <!-- Icon -->
+        <div class="w-[48px] h-[48px] rounded-full bg-[#FAD1D1] flex items-center justify-center">
+            <i class="fa-solid fa-triangle-exclamation text-[#B42318] text-[18px]"></i>
+        </div>
+
+        <!-- Content -->
+        <div>
+            <h3 class="text-[18px] font-[700] text-[#93000A]">
+                Webhook Failures
+            </h3>
+
+            <p class="text-[14px] text-[#B42318] mt-1 leading-[22px] font-[400]">
+                42 Failed Orders. System failed to process confirmation webhooks for 42 transactions.<br>
+                Inventory sync and customer emails are currently pending.
+            </p>
+        </div>
+
+        <!-- Bottom Border Accent -->
+        <div class="absolute bottom-0 left-0
+            w-[320px] h-[4px]
+            bg-[#BA1A1A]
+            rounded-bl-xl">
+        </div>
+
+    </div>
+
+    <!-- TABLE CARD -->
+    <div class="bg-white border border-[#E5E7EB] rounded-xl overflow-hidden">
+        <div class="flex justify-between items-center px-6 py-4 bg-[#F1F3FF]">
+
+            <div class="flex items-center gap-2">
+
+                <img src="icons/error-red.png" alt="" class="w-[20px] h-[20px]">
+
+                <span class="text-[16px] font-[700] text-[#141B2B]">
+                    Failed Transactions Queue
+                </span>
+
+                <span class="text-[12px] px-2 py-[2px] bg-[#FFFFFF] rounded-md text-[#464555] font-[700]">
+                    42 ITEMS
+                </span>
+
+            </div>
+
+            <!-- Search -->
+            <div class="w-[260px] relative">
+                <input type="text" placeholder="Search"
+                    class="w-full h-[36px] pl-9 pr-3 rounded-lg border border-[#E5E7EB] text-[14px] outline-none" />
+                <i
+                    class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[12px]"></i>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+        <table class="w-full border-collapse">
+
+            <thead class="bg-[#FFFFFF] border-b border-[#C7C4D81A]">
+                <tr class="text-[10px] uppercase text-[#46455599] font-[700] h-[44px]">
+                    <th class="text-left px-6">Order ID</th>
+                    <th class="text-left">Game Name</th>
+                    <th class="text-left">Product Name</th>
+                    <th class="text-left">Status</th>
+                    <th class="text-left">Time</th>
+                    <th class="text-right pr-6">Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y">
+
+                <!-- ROW -->
+                <tr class="h-[64px]">
+                    <td class="px-6 text-[#3525CD] font-[700] text-[12px]">#ORD-9421-X</td>
+                    <td class="font-[600] text-[14px] text-[#141B2B]">Cyberpunk 2077</td>
+                    <td class="text-[14px] text-[#464555] font-[400]">Expansion Pack Bundle</td>
+                    <td>
+                        <span class="bg-[#FFDAD6] text-[#93000A] text-[10px] font-[900] px-3 py-1 rounded-full">
+                            FAILED
+                        </span>
+                    </td>
+                    <td class="text-[12px] text-[#464555] font-[500]">2 mins ago</td>
+                    <td class="pr-6">
+                        <div class="flex justify-end items-center gap-4">
+
+                            <button class="text-[#3525CD] font-[700] text-[12px]">
+                                View Logs
+                            </button>
+
+                            <button
+                                class="border border-[#C7C4D8] px-3 py-1 rounded-lg text-[#3525CD] text-[12px] font-[700] flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right text-[9.33px]"></i>
+                                Retry
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="h-[64px]">
+                    <td class="px-6 text-[#3525CD] font-[700] text-[12px]">#ORD-9420-Y</td>
+                    <td class="font-[600] text-[14px] text-[#141B2B]">Elden Ring</td>
+                    <td class="text-[14px] text-[#464555] font-[400]">Shadow of the Erdtree</td>
+                    <td>
+                        <span class="bg-[#FFDAD6] text-[#93000A] text-[10px] font-[900] px-3 py-1 rounded-full">
+                            FAILED
+                        </span>
+                    </td>
+                    <td class="text-[12px] text-[#464555] font-[500]">14 mins ago</td>
+                    <td class="pr-6">
+                        <div class="flex justify-end items-center gap-4">
+
+                            <button class="text-[#3525CD] font-[700] text-[12px]">
+                                View Logs
+                            </button>
+
+                            <button
+                                class="border border-[#C7C4D8] px-3 py-1 rounded-lg text-[#3525CD] text-[12px] font-[700] flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right text-[9.33px]"></i>
+                                Retry
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="h-[64px]">
+                    <td class="px-6 text-[#3525CD] font-[700] text-[12px]">#ORD-9398-A</td>
+                    <td class="font-[600] text-[14px] text-[#141B2B]">Starfield</td>
+                    <td class="text-[14px] text-[#464555] font-[400]">Premium Edition Upgradee</td>
+                    <td>
+                        <span class="bg-[#FFDAD6] text-[#93000A] text-[10px] font-[900] px-3 py-1 rounded-full">
+                            FAILED
+                        </span>
+                    </td>
+                    <td class="text-[12px] text-[#464555] font-[500]">42 mins ago</td>
+                    <td class="pr-6">
+                        <div class="flex justify-end items-center gap-4">
+
+                            <button class="text-[#3525CD] font-[700] text-[12px]">
+                                View Logs
+                            </button>
+
+                            <button
+                                class="border border-[#C7C4D8] px-3 py-1 rounded-lg text-[#3525CD] text-[12px] font-[700] flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right text-[9.33px]"></i>
+                                Retry
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="h-[64px]">
+                    <td class="px-6 text-[#3525CD] font-[700] text-[12px]">#ORD-9381-C</td>
+                    <td class="font-[600] text-[14px] text-[#141B2B]">Baldur's Gate 3</td>
+                    <td class="text-[14px] text-[#464555] font-[400]">Digital Deluxe Content</td>
+                    <td>
+                        <span class="bg-[#FFDAD6] text-[#93000A] text-[10px] font-[900] px-3 py-1 rounded-full">
+                            FAILED
+                        </span>
+                    </td>
+                    <td class="text-[12px] text-[#464555] font-[500]">1 hour ago</td>
+                    <td class="pr-6">
+                        <div class="flex justify-end items-center gap-4">
+
+                            <button class="text-[#3525CD] font-[700] text-[12px]">
+                                View Logs
+                            </button>
+
+                            <button
+                                class="border border-[#C7C4D8] px-3 py-1 rounded-lg text-[#3525CD] text-[12px] font-[700] flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right text-[9.33px]"></i>
+                                Retry
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="h-[64px]">
+                    <td class="px-6 text-[#3525CD] font-[700] text-[12px]">#ORD-9372-K</td>
+                    <td class="font-[600] text-[14px] text-[#141B2B]">FC 24</td>
+                    <td class="text-[14px] text-[#464555] font-[400]">4600 FC Points</td>
+                    <td>
+                        <span class="bg-[#FFDAD6] text-[#93000A] text-[10px] font-[900] px-3 py-1 rounded-full">
+                            FAILED
+                        </span>
+                    </td>
+                    <td class="text-[12px] text-[#464555] font-[500]">2 hour ago</td>
+                    <td class="pr-6">
+                        <div class="flex justify-end items-center gap-4">
+
+                            <button class="text-[#3525CD] font-[700] text-[12px]">
+                                View Logs
+                            </button>
+
+                            <button
+                                class="border border-[#C7C4D8] px-3 py-1 rounded-lg text-[#3525CD] text-[12px] font-[700] flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right text-[9.33px]"></i>
+                                Retry
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 text-right">
+            <button class="text-[#3525CD] font-[700] text-[14px] flex items-center gap-1 justify-end w-full">
+                Load More Transactions
+                <i class="fa-solid fa-chevron-down text-[12px]"></i>
+            </button>
+        </div>
+
+    </div>
+
+</div>
