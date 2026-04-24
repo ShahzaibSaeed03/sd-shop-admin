@@ -31,7 +31,7 @@ export interface DashboardResponse {
 })
 export class DashboardApi {
 
-  private baseUrl = 'http://localhost:5000/api/';
+  private baseUrl = 'http://76.13.103.115:5000/api/';
 
   constructor(private http: HttpClient) {}
 

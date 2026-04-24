@@ -16,8 +16,8 @@ export class OrderDetails implements OnInit {
   loading = true;
   logsLoading = true;
 
-  API = 'http://localhost:5000/api/orders';
-  LOG_API = 'http://localhost:5000/api/payments';
+  API = 'http://76.13.103.115:5000/api/orders';
+  LOG_API = 'http://76.13.103.115:5000/api/payments';
 
   constructor(
     private route: ActivatedRoute,

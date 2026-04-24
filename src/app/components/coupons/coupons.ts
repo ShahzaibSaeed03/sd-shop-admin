@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Coupons implements OnInit {
 
-  API = 'http://localhost:5000/api/coupons';
+  API = 'http://76.13.103.115:5000/api/coupons';
 
   isOpen = false;
   isAnalyticsOpen = false;
@@ -253,8 +253,8 @@ editCoupon(c: any) {
 
     const API =
       this.form.appliesTo === 'products'
-        ? 'http://localhost:5000/api/products'
-        : 'http://localhost:5000/api/categories';
+        ? 'http://76.13.103.115:5000/api/products'
+        : 'http://76.13.103.115:5000/api/categories';
 
     this.http.get(`${API}?search=${this.searchQuery}`).subscribe({
       next: (res: any) => {
