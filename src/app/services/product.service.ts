@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProductService {
 
-  private API = 'http://localhost:5000/api/products';
+  private API = 'http://76.13.103.115:5000/api/products';
 
   constructor(private http: HttpClient) {}
 
@@ -27,6 +27,6 @@ export class ProductService {
 }
 
 syncProducts() {
-  return this.http.get(`http://localhost:5000/api/supplier/sync-products`, {});
+  return this.http.get(`http://76.13.103.115:5000/api/supplier/sync-products`, {});
 }
 }

@@ -1,19 +1,11 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BannerService } from '../../services/banner.service';
 import { ProductService } from '../../services/product.service';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { SectionService } from '../../services/section.service';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-content-management',
@@ -36,26 +28,24 @@ export class ContentManagement {
 
   // ================= DATA =================
   banners: any[] = [];
-  products: any[] = [];
   selectedDevice: 'desktop' | 'mobile' = 'desktop';
   selectedOption = 'Top Games';
   currentPage = 1;
   itemsPerPage = 10;
 
-
   sectionMap: any = {
     'Top Games': 'top_games',
     'Hot Selling': 'hot_selling',
-    'Featured': 'featured',
-    'New Releases': 'new_releases'
+    Featured: 'featured',
+    'New Releases': 'new_releases',
   };
   sections: any[] = [];
   showGameSelector = false;
   newSection: any = {
     name: '',
     mode: 'api',
-    products: [],
-    openDropdown: false
+    categories: [],
+    openDropdown: false,
   };
   onSearch() {
     clearTimeout(this.searchTimeout);
@@ -64,18 +54,22 @@ export class ContentManagement {
       this.fetchGames();
     }, 400);
   }
- loadSections() {
-  this.sectionService.getSections().subscribe({
-    next: (res: any) => {
+  loadSections() {
+    this.sectionService.getSections().subscribe({
+      next: (res: any) => {
+        console.log('SECTIONS:', res); // 👈 check
 
-      console.log('SECTIONS:', res); // 👈 check
-
-      this.sections = res.map((s: any) => ({
-        ...s,
-        manualProducts: s.products || []
-      }));
-    }
-  });
+        this.sections = res.map((s: any) => ({
+          ...s,
+          manualCategories: s.categories || [],
+        }));
+      },
+    });
+  }
+  removeCategoryFromNewSection(id: string) {
+  this.newSection.categories = this.newSection.categories.filter(
+    (c: any) => c._id !== id
+  );
 }
   fetchGames() {
     if (!this.searchQuery) {
@@ -85,27 +79,28 @@ export class ContentManagement {
 
     this.loading = true;
 
-    this.productService.searchGames(this.searchQuery).subscribe({
+    this.categoryService.searchCategories(this.searchQuery).subscribe({
       next: (res: any) => {
         this.searchResults = res.data || [];
         this.loading = false;
       },
       error: () => {
         this.loading = false;
-      }
+      },
     });
   }
 
-  selectGame(game: any) {
-    const exists = this.products.find(p => p._id === game._id);
+  categories: any[] = [];
+
+  selectCategory(cat: any) {
+    const exists = this.newSection.categories.find((c: any) => c._id === cat._id);
 
     if (exists) {
-      alert('Game already added');
+      alert('Category already added');
       return;
     }
 
-    this.products.unshift(game); // add on top
-    this.openModal = false;
+    this.newSection.categories.push(cat);
   }
   // ================= NEW BANNER =================
   draftBanner: any = {
@@ -113,18 +108,13 @@ export class ContentManagement {
     desktopImage: null,
     mobileImage: null,
     desktopPreview: null,
-    mobilePreview: null
+    mobilePreview: null,
   };
   // ================= UI =================
   openModal = false; // 👈 required by HTML
 
   // ================= OPTIONS =================
-  options = [
-    'Top Games',
-    'Hot Selling',
-    'Featured',
-    'New Releases'
-  ];
+  options = ['Top Games', 'Hot Selling', 'Featured', 'New Releases'];
   // ================= VIEW =================
   @ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
   @ViewChild('modalDropdownWrapper') modalDropdownWrapper!: ElementRef;
@@ -133,72 +123,86 @@ export class ContentManagement {
   constructor(
     private bannerService: BannerService,
     private productService: ProductService,
-    private sectionService: SectionService
-  ) { }
+    private sectionService: SectionService,
+    private categoryService: CategoryService,
+  ) {}
 
   // ================= INIT =================
   ngOnInit() {
     this.loadBanners();
-    this.loadProducts();
     this.loadSections();
+    this.loadCategories();
   }
   setDevice(device: 'desktop' | 'mobile', banner: any) {
     banner.selectedDevice = device;
   }
-  setMode(section: any, mode: 'api' | 'manual') {
+ setMode(section: any, mode: 'api' | 'manual') {
 
-    // 👉 modal case
-    if (!section?._id) {
-      section.mode = mode;
-
-      // reset
-      if (mode === 'api') {
-        section.products = [];
-      }
-
-      return;
-    }
-
-    // 👉 existing section
+  // 👉 NEW SECTION (modal)
+  if (!section?._id) {
     section.mode = mode;
 
-    const payload: any = { mode };
-
     if (mode === 'api') {
-      payload.products = [];
+      section.categories = []; // ✅ correct
     }
 
-    if (mode === 'manual') {
-      payload.apiSource = null;
-    }
-
-    this.sectionService.updateSection(section._id, payload).subscribe();
+    return;
   }
+
+  // 👉 EXISTING SECTION
+  section.mode = mode;
+
+  const payload: any = { mode };
+
+  if (mode === 'api') {
+    payload.categories = [];     // ✅ FIXED (not products)
+  }
+
+  if (mode === 'manual') {
+    payload.apiSource = null;
+  }
+
+  this.sectionService.updateSection(section._id, payload).subscribe();
+}
   openGameSelectorForNewSection() {
     this.showGameSelector = true;
   }
-  addToSection(section: any, product: any) {
-
-    const exists = section.manualProducts.find((p: any) => p._id === product._id);
+  addToSection(section: any, cat: any) {
+    const exists = section.manualCategories.find((c: any) => c._id === cat._id);
     if (exists) return;
 
-    section.manualProducts.push(product);
+    section.manualCategories.push(cat);
 
-    const ids = section.manualProducts.map((p: any) => p._id);
+    const ids = section.manualCategories.map((c: any) => c._id);
 
-    this.sectionService.updateSection(section._id, {
-      products: ids
-    }).subscribe({
-      error: (err) => console.error(err)
-    });
+    this.sectionService
+      .updateSection(section._id, {
+        categories: ids,
+      })
+      .subscribe();
   }
-  get paginatedProducts() {
+
+  // ✅ ADD THIS
+  get paginatedCategories() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    return this.products.slice(start, start + this.itemsPerPage);
+    return this.categories.slice(start, start + this.itemsPerPage);
+  }
+  toggleCategory(cat: any) {
+    const updated = !cat.isActive;
+
+    this.categoryService
+      .updateCategory(cat._id, {
+        isActive: updated,
+      })
+      .subscribe({
+        next: () => (cat.isActive = updated),
+        error: (err) => console.error(err),
+      });
   }
 
+  // ✅ NEW
   get totalPages() {
-    return Math.ceil(this.products.length / this.itemsPerPage);
+    return Math.ceil(this.categories.length / this.itemsPerPage);
   }
 
   nextPage() {
@@ -212,33 +216,32 @@ export class ContentManagement {
       this.currentPage--;
     }
   }
-  removeFromSection(section: any, productId: string) {
+  removeFromSection(section: any, catId: string) {
+    section.manualCategories = section.manualCategories.filter((c: any) => c._id !== catId);
 
-    section.manualProducts = section.manualProducts.filter(
-      (p: any) => p._id !== productId
-    );
+    const ids = section.manualCategories.map((c: any) => c._id);
 
-    const ids = section.manualProducts.map((p: any) => p._id);
-
-    this.sectionService.updateSection(section._id, {
-      products: ids
-    }).subscribe({
-      error: (err) => console.error(err)
-    });
+    this.sectionService
+      .updateSection(section._id, {
+        categories: ids,
+      })
+      .subscribe();
   }
   updateSection(section: any) {
-    this.sectionService.updateSection(section._id, {
-      isActive: section.isActive
-    }).subscribe({
-      error: (err) => console.error(err)
-    });
+    this.sectionService
+      .updateSection(section._id, {
+        isActive: section.isActive,
+      })
+      .subscribe({
+        error: (err) => console.error(err),
+      });
   }
   deleteSection(id: string) {
     if (!confirm('Delete section?')) return;
 
     this.sectionService.deleteSection(id).subscribe({
       next: () => this.loadSections(),
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
   // ================= LOAD =================
@@ -249,16 +252,22 @@ export class ContentManagement {
       next: (res: any) => {
         this.banners = res.map((b: any) => ({
           ...b,
-          selectedDevice: 'desktop' // 👈 per banner
+          selectedDevice: 'desktop', // 👈 per banner
         }));
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
-  loadProducts() {
-    this.productService.getProducts().subscribe({
-      next: (res: any) => this.products = res.data, error: (err) => console.error('Product load error:', err)
+  loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (res: any) => {
+        console.log('CATEGORIES:', res);
+
+        this.categories = res.data || []; // ✅ FIX
+        this.currentPage = 1; // ✅ reset pagination
+      },
+      error: (err) => console.error(err),
     });
   }
 
@@ -271,7 +280,7 @@ export class ContentManagement {
       desktopImage: null,
       mobileImage: null,
       desktopPreview: null,
-      mobilePreview: null
+      mobilePreview: null,
     };
   }
 
@@ -295,7 +304,6 @@ export class ContentManagement {
   }
 
   confirmCreateBanner() {
-
     if (!this.draftBanner.desktopImage) {
       alert('Desktop image required');
       return;
@@ -322,22 +330,24 @@ export class ContentManagement {
           desktopImage: null,
           mobileImage: null,
           desktopPreview: null,
-          mobilePreview: null
+          mobilePreview: null,
         };
 
         this.loadBanners();
       },
-      error: (err) => console.error('Create error:', err)
+      error: (err) => console.error('Create error:', err),
     });
   }
 
   // ================= UPDATE =================
   updateBanner(banner: any) {
-    this.bannerService.updateBanner(banner._id, {
-      link: banner.link
-    }).subscribe({
-      error: (err) => console.error('Update error:', err)
-    });
+    this.bannerService
+      .updateBanner(banner._id, {
+        link: banner.link,
+      })
+      .subscribe({
+        error: (err) => console.error('Update error:', err),
+      });
   }
 
   onReplaceImage(event: any, banner: any) {
@@ -354,7 +364,7 @@ export class ContentManagement {
 
     this.bannerService.updateBanner(banner._id, formData).subscribe({
       next: () => this.loadBanners(),
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
   // ================= DELETE =================
@@ -363,7 +373,7 @@ export class ContentManagement {
 
     this.bannerService.deleteBanner(id).subscribe({
       next: () => this.loadBanners(),
-      error: (err) => console.error('Delete error:', err)
+      error: (err) => console.error('Delete error:', err),
     });
   }
   trackById(index: number, item: any) {
@@ -371,7 +381,6 @@ export class ContentManagement {
   }
   // ================= DRAG =================
   drop(event: CdkDragDrop<any[]>) {
-
     if (event.previousIndex === event.currentIndex) return;
 
     moveItemInArray(this.banners, event.previousIndex, event.currentIndex);
@@ -379,19 +388,19 @@ export class ContentManagement {
     // update order locally
     this.banners = this.banners.map((b, i) => ({
       ...b,
-      order: i
+      order: i,
     }));
 
-    const payload = this.banners.map(b => ({
+    const payload = this.banners.map((b) => ({
       id: b._id,
-      order: b.order
+      order: b.order,
     }));
 
     console.log('UPDATED ORDER:', payload);
 
     this.bannerService.reorder(payload).subscribe({
       next: () => console.log('REORDER SUCCESS'),
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
@@ -399,24 +408,25 @@ export class ContentManagement {
   toggleProduct(product: any) {
     const updated = !product.isActive;
 
-    this.productService.updateProduct(product._id, {
-      isActive: updated
-    }).subscribe({
-      next: () => product.isActive = updated,
-      error: (err) => console.error('Toggle error:', err)
-    });
+    this.productService
+      .updateProduct(product._id, {
+        isActive: updated,
+      })
+      .subscribe({
+        next: () => (product.isActive = updated),
+        error: (err) => console.error('Toggle error:', err),
+      });
   }
 
   // ================= DROPDOWN =================
-selectOption(option: string) {
-  this.selectedOption = option;   // ✅ IMPORTANT
-  this.isDropdownOpen = false;
-  this.loadBanners();
-}
+  selectOption(option: string) {
+    this.selectedOption = option; // ✅ IMPORTANT
+    this.isDropdownOpen = false;
+    this.loadBanners();
+  }
   // ================= OUTSIDE CLICK =================
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
-
     if (
       this.openGameDropdown &&
       this.modalDropdownWrapper &&
@@ -441,45 +451,50 @@ selectOption(option: string) {
       this.isSectionModalOpen = false;
     }
   }
-  removeGameFromNewSection(gameId: string) {
-    this.newSection.products = this.newSection.products.filter(
-      (item: any) => item._id !== gameId
-    );
-  }
+
 createSection() {
 
-  if (!this.newSection.name) {
-    alert('Section name required'); // ✅ ADD THIS
+  // ✅ MANUAL MODE VALIDATION ONLY
+  if (this.newSection.mode === 'manual' && !this.newSection.name) {
+    alert('Section name required');
     return;
   }
 
-  if (this.newSection.mode === 'manual' && this.newSection.products.length === 0) {
-    alert('Add at least 1 product');
+  if (this.newSection.mode === 'manual' && this.newSection.categories.length === 0) {
+    alert('Add at least 1 category');
     return;
   }
+
+  // ✅ FIX: ALWAYS HAVE NAME
+  const finalName =
+    this.newSection.mode === 'api'
+      ? this.selectedOption || 'Section'
+      : this.newSection.name;
 
   const payload = {
-  name: this.newSection.name,
-  mode: this.newSection.mode,
-  apiSource: this.newSection.mode === 'api' 
-    ? this.sectionMap[this.selectedOption]
-    : null,
+    name: finalName, // ✅ IMPORTANT
+    mode: this.newSection.mode,
+    apiSource:
+      this.newSection.mode === 'api'
+        ? this.sectionMap[this.selectedOption]
+        : null,
 
-  // ✅ FIX HERE
-  products: this.newSection.mode === 'manual'
-    ? this.newSection.products.map((p: any) => p._id)
-    : [],
+    categories:
+      this.newSection.mode === 'manual'
+        ? this.newSection.categories.map((c: any) => c._id)
+        : [],
 
-  isActive: true
-};
+    isActive: true,
+  };
 
-console.log('PAYLOAD:', payload);
+  console.log('FINAL PAYLOAD:', payload); // 👈 DEBUG
 
   this.sectionService.createSection(payload).subscribe(() => {
     this.isSectionModalOpen = false;
     this.loadSections();
   });
 }
+
   activeSection: any = null;
   showSectionGameModal = false;
   toggleSectionDropdown(section: any) {
@@ -489,42 +504,4 @@ console.log('PAYLOAD:', payload);
     this.activeSection = section;
     this.showSectionGameModal = true;
   }
-
-  addGameToSection(section: any, game: any) {
-
-    const exists = section.manualProducts.find(
-      (p: any) => p._id === game._id
-    );
-
-    if (exists) return;
-
-    section.manualProducts.push(game);
-
-    const ids = section.manualProducts.map((p: any) => p._id);
-
-    this.sectionService.updateSection(section._id, {
-      products: ids
-    }).subscribe();
-
-    section.openDropdown = false; // close dropdown
-  }
-
-  addGameToNewSection(game: any) {
-
-  if (!this.newSection.products) {
-    this.newSection.products = [];
-  }
-
-  const exists = this.newSection.products.find(
-    (p: any) => p._id === game._id
-  );
-
-  if (exists) return;
-
-  this.newSection.products.push(game);
-
-  console.log('ADDED:', this.newSection.products); // 👈 DEBUG
-}
-
-
 }

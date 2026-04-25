@@ -201,20 +201,18 @@
 
               <div class="flex flex-col max-h-[200px] overflow-y-auto">
                 <div
-                  *ngFor="let game of searchResults"
-                  (click)="selectGame(game)"
+                  *ngFor="let cat of searchResults"
+                  (click)="selectCategory(cat)"
                   class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer"
                 >
                   <img
-                    [src]="game.image || 'https://via.placeholder.com/40'"
-                    class="w-[36px] h-[36px] rounded-[6px]"
+                    [src]="cat.image || 'https://via.placeholder.com/40'"
+                    class="w-[36px] h-[36px] rounded-[6px] object-cover"
                   />
 
                   <div>
-                    <p class="text-[12px] font-[700]">{{ game.name }}</p>
-                    <p class="text-[10px] text-[#94A3B8]">
-                      {{ game.categoryName || 'Game' }}
-                    </p>
+                    <p class="text-[12px] font-[700]">{{ cat.name }}</p>
+                    <p class="text-[10px] text-[#94A3B8]">{{ cat.totalProducts }} Products</p>
                   </div>
                 </div>
               </div>
@@ -236,23 +234,27 @@
 
         <div class="max-h-[470px] overflow-y-auto">
           <div
-            *ngFor="let product of paginatedProducts"
+            *ngFor="let cat of paginatedCategories"
             class="flex items-center px-4 py-3 border-b"
           >
             <div class="flex-1 flex items-center gap-3">
-              <img [src]="product.image" class="w-[40px] h-[40px] rounded object-cover" />
-              <p class="text-[13px] md:text-[14px]">{{ product.name }}</p>
+              <img
+                [src]="cat.image || 'https://via.placeholder.com/40'"
+                class="w-[40px] h-[40px] rounded object-cover"
+              />
+
+              <p class="text-[13px] md:text-[14px]">{{ cat.name }}</p>
             </div>
 
             <div class="w-[80px] flex justify-end">
               <div
-                (click)="toggleProduct(product)"
+                (click)="toggleCategory(cat)"
                 class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
-                [ngClass]="product.isActive ? 'bg-[#3525CD]' : 'bg-gray-300'"
+                [ngClass]="cat.isActive ? 'bg-[#3525CD]' : 'bg-gray-300'"
               >
                 <div
                   class="w-[16px] h-[16px] bg-white rounded-full"
-                  [ngClass]="product.isActive ? 'ml-auto' : ''"
+                  [ngClass]="cat.isActive ? 'ml-auto' : ''"
                 ></div>
               </div>
             </div>
@@ -396,19 +398,19 @@
 
             <div class="flex flex-col max-h-[200px] overflow-y-auto">
               <div
-                *ngFor="let game of searchResults"
-                (click)="addGameToSection(section, game)"
+                *ngFor="let cat of searchResults"
+                (click)="addToSection(section, cat)"
                 class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer"
               >
                 <img
-                  [src]="game.image || 'https://via.placeholder.com/40'"
+                  [src]="cat.image || 'https://via.placeholder.com/40'"
                   class="w-[36px] h-[36px] rounded-[6px]"
                 />
 
                 <div>
-                  <p class="text-[12px] font-[700]">{{ game.name }}</p>
+                  <p class="text-[12px] font-[700]">{{ cat.name }}</p>
                   <p class="text-[10px] text-[#94A3B8]">
-                    {{ game.categoryName || 'Game' }}
+                    {{ cat.categoryName || 'Game' }}
                   </p>
                 </div>
               </div>
@@ -423,29 +425,29 @@
         <!-- SELECTED -->
         <div class="flex flex-col gap-[8px] max-h-[200px] overflow-y-auto pr-1">
           <div
-            *ngFor="let p of section.manualProducts"
+            *ngFor="let cat of section.manualCategories"
             class="flex justify-between items-center bg-[#F8FAFC] px-[10px] md:px-[12px] py-[8px] md:py-[10px] rounded-[8px]"
           >
             <div class="flex items-center gap-[10px]">
               <img
-                [src]="p.image"
+                [src]="cat.image"
                 class="w-[30px] h-[30px] md:w-[32px] md:h-[32px] rounded-[6px]"
               />
-              <p class="text-[12px] md:text-[13px] font-[600]">{{ p.name }}</p>
+              <p class="text-[12px] md:text-[13px] font-[600]">{{ cat.name }}</p>
             </div>
 
             <i
-              (click)="removeFromSection(section, p._id)"
+              (click)="removeFromSection(section, cat._id)"
               class="fa-solid fa-xmark cursor-pointer text-[#94A3B8]"
             >
             </i>
           </div>
 
           <p
-            *ngIf="section.manualProducts.length === 0"
+            *ngIf="section.manualCategories.length === 0"
             class="text-center text-[12px] text-gray-400 py-4"
           >
-            No products selected
+            No categories selected
           </p>
         </div>
       </div>
@@ -495,7 +497,7 @@
     <div class="max-h-[250px] overflow-y-auto">
       <div
         *ngFor="let game of searchResults"
-        (click)="addGameToSection(activeSection, game)"
+        (click)="selectCategory(game)"
         class="flex items-center gap-[10px] px-[8px] py-[6px] hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
       >
         <img
@@ -657,7 +659,7 @@
             <div class="max-h-[200px] overflow-y-auto">
               <div
                 *ngFor="let g of searchResults"
-                (click)="addGameToNewSection(g)"
+                (click)="selectCategory(g)"
                 class="flex items-center gap-[10px] px-[6px] py-[8px] hover:bg-[#F8FAFC] cursor-pointer rounded-[8px]"
               >
                 <img
@@ -682,13 +684,13 @@
           <!-- SELECTED -->
           <div class="mt-2 max-h-[120px] overflow-y-auto flex flex-col gap-1">
             <div
-              *ngFor="let g of newSection.products"
+              *ngFor="let g of newSection.categories"
               class="flex justify-between items-center px-2 py-1 bg-[#F8FAFC] rounded text-[13px]"
             >
               <span class="truncate">{{ g.name }}</span>
 
               <i
-                (click)="removeGameFromNewSection(g._id)"
+                (click)="removeCategoryFromNewSection(g._id)"
                 class="fa-solid fa-xmark cursor-pointer ml-2"
               ></i>
             </div>

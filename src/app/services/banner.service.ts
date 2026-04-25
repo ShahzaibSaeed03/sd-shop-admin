@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BannerService {
 
-  private API = 'http://localhost:5000/api/banners';
+  private API = 'http://76.13.103.115:5000/api/banners';
 
   constructor(private http: HttpClient) {}
 

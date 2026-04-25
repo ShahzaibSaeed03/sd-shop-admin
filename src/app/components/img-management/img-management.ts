@@ -110,31 +110,27 @@ export class ImgManagement implements OnInit {
   }
 
   // ================= UPDATE =================
-  updateCategory(section: any) {
+ updateCategory(section: any) {
 
-    const formData = new FormData();
+  const formData = new FormData();
 
-    formData.append('name', section.name);
-    formData.append('code', section.code);
+  formData.append('name', section.name);
+  formData.append('slug', section.slug);
 
-    if (this.selectedFiles[section._id]) {
-      formData.append('image', this.selectedFiles[section._id]);
-    }
-
-    this.categoryService.updateCategory(section._id, formData)
-      .subscribe({
-        next: () => {
-          this.expandedRowId = null;
-
-          // cleanup
-          delete this.selectedFiles[section._id];
-          delete this.previewImages[section._id];
-
-          this.loadCategories();
-        },
-        error: (err) => console.error(err)
-      });
+  if (section.imageFile) {
+    formData.append('image', section.imageFile);
   }
+
+  this.categoryService.updateCategory(section._id, formData).subscribe({
+    next: () => {
+      section.image = section.preview || section.image;
+      section.preview = null;
+      section.imageFile = null;
+      this.expandedRowId = null;
+    },
+    error: (err) => console.error(err)
+  });
+}
 
   // ================= CANCEL =================
   cancelEdit() {
@@ -147,5 +143,18 @@ export class ImgManagement implements OnInit {
 goToGameManagement(categoryId: string) {
   this.router.navigate(['/game-management', categoryId]);
 }
+onSectionImageChange(event: any, section: any) {
+  const file = event.target.files[0];
+  if (!file) return;
 
+  section.imageFile = file;
+
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    section.preview = reader.result;
+  };
+
+  reader.readAsDataURL(file);
+}
 }
