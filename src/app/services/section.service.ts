@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SectionService {
 
-  private API = 'http://76.13.103.115:5000/api/sections';
+  private API = 'https://api.sdshop.gg/api/sections';
 
   constructor(private http: HttpClient) {}
 

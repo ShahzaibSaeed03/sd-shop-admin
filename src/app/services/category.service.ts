@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
 
-  baseUrl = 'http://76.13.103.115:5000/api/categories';
+  baseUrl = 'https://api.sdshop.gg/api/categories';
 
   constructor(private http: HttpClient) {}
 

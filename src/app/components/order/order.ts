@@ -21,7 +21,7 @@ export class Order implements OnInit {
 
   selectedStatus = 'all';
 
-  API = 'http://76.13.103.115:5000/api/orders';
+  API = 'https://api.sdshop.gg/api/orders';
 
   constructor(private http: HttpClient,private router: Router) { }
 
