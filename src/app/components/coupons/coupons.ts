@@ -20,8 +20,8 @@ export class Coupons implements OnInit {
 
   coupons: any[] = [];
   selectedCoupon: any = null;
-activeCount = 0;
-disabledCount = 0;
+  activeCount = 0;
+  disabledCount = 0;
   // =========================
   // 🔥 DROPDOWN (PRODUCT/CATEGORY)
   // =========================
@@ -29,10 +29,10 @@ disabledCount = 0;
   searchQuery = '';
   searchResults: any[] = [];
   selectedItems: any[] = [];
-currentPage = 1;
-limit = 10;
-totalPages = 1;
-total = 0;
+  currentPage = 1;
+  limit = 10;
+  totalPages = 1;
+  total = 0;
   // =========================
   // FORM
   // =========================
@@ -52,7 +52,7 @@ total = 0;
     avatarFile: null,
     avatarPreview: null
   };
-filterStatus: 'all' | 'active' | 'disabled' = 'all';
+  filterStatus: 'all' | 'active' | 'disabled' = 'all';
   // =========================
   // ANALYTICS
   // =========================
@@ -68,36 +68,36 @@ filterStatus: 'all' | 'active' | 'disabled' = 'all';
   ngOnInit() {
     this.getCoupons();
   }
-setFilter(status: 'all' | 'active' | 'disabled') {
-  this.filterStatus = status;
-  this.currentPage = 1; // reset page
-  this.getCoupons();
-}
+  setFilter(status: 'all' | 'active' | 'disabled') {
+    this.filterStatus = status;
+    this.currentPage = 1; // reset page
+    this.getCoupons();
+  }
   // =========================
   // GET LIST
   // =========================
-getCoupons() {
-  this.loading = true;
+  getCoupons() {
+    this.loading = true;
 
-  this.http.get(`${this.API}?page=${this.currentPage}&limit=${this.limit}&status=${this.filterStatus}`)
-    .subscribe({
-      next: (res: any) => {
-        this.coupons = res.data || [];
-        this.total = res.total || 0;
-        this.totalPages = res.totalPages || 1;
+    this.http.get(`${this.API}?page=${this.currentPage}&limit=${this.limit}&status=${this.filterStatus}`)
+      .subscribe({
+        next: (res: any) => {
+          this.coupons = res.data || [];
+          this.total = res.total || 0;
+          this.totalPages = res.totalPages || 1;
 
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    });
-}
-changePage(page: number) {
+          this.loading = false;
+        },
+        error: () => this.loading = false
+      });
+  }
+  changePage(page: number) {
 
-  if (page < 1 || page > this.totalPages) return;
+    if (page < 1 || page > this.totalPages) return;
 
-  this.currentPage = page;
-  this.getCoupons();
-}
+    this.currentPage = page;
+    this.getCoupons();
+  }
 
   // =========================
   // CREATE / UPDATE
@@ -152,24 +152,28 @@ changePage(page: number) {
     this.resetForm();
     this.getCoupons();
   }
+  openCreateModal() {
+    this.resetForm();
+    this.isOpen = true;
+  }
 
   // =========================
   // EDIT
   // =========================
-editCoupon(c: any) {
-  this.form = {
-    ...c,
-    expiresAt: c.expiresAt ? c.expiresAt.substring(0, 10) : '',
-    avatarFile: null,
-    avatarPreview: c.avatar || null   // 🔥 show existing image
-  };
+  editCoupon(c: any) {
+    this.form = {
+      ...c,
+      expiresAt: c.expiresAt ? c.expiresAt.substring(0, 10) : '',
+      avatarFile: null,
+      avatarPreview: c.avatar || null   // 🔥 show existing image
+    };
 
-  this.selectedItems = c.products?.length
-    ? c.products
-    : c.categories || [];
+    this.selectedItems = c.products?.length
+      ? c.products
+      : c.categories || [];
 
-  this.isOpen = true;
-}
+    this.isOpen = true;
+  }
 
   // =========================
   // TOGGLE STATUS

@@ -12,6 +12,8 @@ export class PaymentStability implements OnInit {
 
   logs: any[] = [];
   filteredLogs: any[] = [];
+  successCount = 0;
+  failedCount = 0;
 
   activeTab: 'all' | 'success' | 'failed' = 'all';
 
@@ -20,7 +22,7 @@ export class PaymentStability implements OnInit {
 
   loading = false;
 
-  constructor(private api: DashboardApi) {}
+  constructor(private api: DashboardApi) { }
 
   ngOnInit(): void {
     this.loadLogs();
@@ -38,31 +40,40 @@ export class PaymentStability implements OnInit {
       error: () => this.loading = false
     });
   }
-downloadLogs() {
-  if (!this.logs || this.logs.length === 0) {
-    alert('No logs to download');
-    return;
+  calculateCounts() {
+    this.successCount = this.logs.filter(
+      (log: any) => this.getStatus(log) === 'SUCCESS'
+    ).length;
+
+    this.failedCount = this.logs.filter(
+      (log: any) => this.getStatus(log) === 'FAILED'
+    ).length;
   }
+  downloadLogs() {
+    if (!this.logs || this.logs.length === 0) {
+      alert('No logs to download');
+      return;
+    }
 
-  // convert to JSON
-  const json = JSON.stringify(this.logs, null, 2);
+    // convert to JSON
+    const json = JSON.stringify(this.logs, null, 2);
 
-  // create blob
-  const blob = new Blob([json], { type: 'application/json' });
+    // create blob
+    const blob = new Blob([json], { type: 'application/json' });
 
-  // create download link
-  const url = window.URL.createObjectURL(blob);
+    // create download link
+    const url = window.URL.createObjectURL(blob);
 
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `webhook-logs-${new Date().toISOString()}.json`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `webhook-logs-${new Date().toISOString()}.json`;
 
-  document.body.appendChild(a);
-  a.click();
+    document.body.appendChild(a);
+    a.click();
 
-  document.body.removeChild(a);
-  window.URL.revokeObjectURL(url);
-}
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
   // ==========================
   // STATUS
   // ==========================

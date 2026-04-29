@@ -42,9 +42,9 @@ export class GameManagement implements OnInit {
       error: (err) => console.error(err)
     });
   }
-getEndIndex(): number {
-  return Math.min(this.page * this.pageSize, this.products.length);
-}
+  getEndIndex(): number {
+    return Math.min(this.page * this.pageSize, this.products.length);
+  }
   goToImageManagement() {
     this.router.navigate(['/img-management']);
   }
@@ -113,5 +113,10 @@ getEndIndex(): number {
 
   prevPage() {
     if (this.page > 1) this.page--;
+  }
+  removeProductImage(product: any) {
+    product.image = null;
+    product.preview = null;
+    product.imageFile = null;
   }
 }

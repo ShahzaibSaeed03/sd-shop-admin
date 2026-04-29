@@ -37,6 +37,7 @@ export class Dashboard implements OnInit {
   // 🔥 LOAD DASHBOARD
   // ==========================
   loadDashboard() {
+    if (this.loading) return;
     this.loading = true;
 
     this.dashboardApi.getDashboard().subscribe({
