@@ -1,4 +1,19 @@
 <div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
+  <div class="w-full flex flex-col gap-[6px] md:gap-[8px]">
+
+    <h1 class="text-[22px] sm:text-[24px] md:text-[30px] font-[800] text-[#141B2B]">
+      Content & Display Control
+    </h1>
+
+    <p class="
+    text-[14px] sm:text-[16px] md:text-[18px]
+    leading-[20px] sm:leading-[24px] md:leading-[28px]
+    text-[#464555]
+  ">
+      Manage homepage banners, game visibility, and content sections.
+    </p>
+
+  </div>
   <div class="flex flex-col lg:flex-row gap-6 lg:gap-[24px] items-start h-full">
     <!-- LEFT -->
     <div class="w-full lg:w-[70%] flex flex-col gap-[24px]">
@@ -9,35 +24,25 @@
           <p class="text-[18px] md:text-[20px] font-[700] text-[#141B2B]">Hero Banners</p>
         </div>
 
-        <button
-          (click)="startAddBanner()"
-          class="px-[14px] md:px-[16px] py-[8px] flex items-center gap-[8px] rounded-[8px] bg-[#E1E8FD]"
-        >
+        <button (click)="startAddBanner()"
+          class="px-[14px] md:px-[16px] py-[8px] flex items-center gap-[8px] rounded-[8px] bg-[#E1E8FD]">
           <i class="fa-solid fa-plus text-[10px] text-[#3525CD]"></i>
-          <span class="text-[13px] md:text-[14px] font-[600] text-[#3525CD]"> Add Banner </span>
+          <span class="text-[13px] md:text-[14px] font-[700] text-[#3525CD] uppercase"> Add Banner </span>
         </button>
       </div>
 
       <!-- ADD BANNER -->
-      <div
-        *ngIf="isAddingBanner"
-        class="w-full p-[16px] flex flex-col gap-[12px] bg-white border rounded-[12px] shadow"
-      >
-        <div
-          class="flex flex-col md:flex-row items-start md:items-center gap-[16px] md:gap-[24px] flex-wrap"
-        >
+      <div *ngIf="isAddingBanner"
+        class="w-full p-[16px] flex flex-col gap-[12px] bg-white border rounded-[12px] shadow">
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-[16px] md:gap-[24px] flex-wrap">
           <div class="w-[10px] text-[#3525CD] hidden md:block">
             <i class="fa-solid fa-grip-vertical"></i>
           </div>
 
           <label
-            class="w-full md:w-[192px] h-[120px] md:h-[108px] bg-gray-200 rounded flex items-center justify-center cursor-pointer overflow-hidden"
-          >
-            <img
-              *ngIf="draftBanner.desktopPreview"
-              [src]="draftBanner.desktopPreview"
-              class="w-full h-full object-cover"
-            />
+            class="w-full md:w-[192px] h-[120px] md:h-[108px] bg-gray-200 rounded flex items-center justify-center cursor-pointer overflow-hidden">
+            <img *ngIf="draftBanner.desktopPreview" [src]="draftBanner.desktopPreview"
+              class="w-full h-full object-cover" />
             <p *ngIf="!draftBanner.desktopPreview" class="text-xs text-[#3525CD]">Upload</p>
             <input type="file" hidden (change)="onDraftImage($event)" />
           </label>
@@ -48,10 +53,7 @@
           </div>
 
           <div class="flex flex-row md:flex-col gap-2 md:ml-auto w-full md:w-auto">
-            <button
-              (click)="confirmCreateBanner()"
-              class="bg-[#3525CD] text-white px-3 py-1 rounded w-full md:w-auto"
-            >
+            <button (click)="confirmCreateBanner()" class="bg-[#3525CD] text-white px-3 py-1 rounded w-full md:w-auto">
               Confirm
             </button>
             <button (click)="isAddingBanner = false" class="w-full md:w-auto">Cancel</button>
@@ -60,37 +62,24 @@
       </div>
 
       <!-- BANNERS -->
-      <div
-        cdkDropList
-        [cdkDropListData]="banners"
-        (cdkDropListDropped)="drop($event)"
-        class="flex flex-col gap-[16px] max-h-[600px] overflow-y-auto pr-1 overflow-x-hidden"
-      >
-        <div
-          *ngFor="let banner of banners; trackBy: trackById"
-          cdkDrag
-          class="w-full lg:w-[621.33px] min-h-[142px] p-[12px] md:p-[16px] flex flex-col md:flex-row items-start md:items-center gap-[16px] md:gap-[24px] bg-white border border-[#C7C4D826] rounded-[12px] shadow-[0px_1px_2px_0px_#0000000D]"
-        >
+      <div cdkDropList [cdkDropListData]="banners" (cdkDropListDropped)="drop($event)"
+        class="flex flex-col gap-[16px] max-h-[600px] overflow-y-auto pr-1 overflow-x-hidden">
+        <div *ngFor="let banner of banners; trackBy: trackById" cdkDrag
+          class="w-full min-h-[142px] p-[12px] md:p-[16px] flex flex-col md:flex-row items-start md:items-center gap-[16px] md:gap-[24px] bg-white border border-[#C7C4D826] rounded-[12px] shadow-[0px_1px_2px_0px_#0000000D]">
           <!-- DRAG -->
-          <div
-            cdkDragHandle
-            class="w-[24px] hidden md:flex self-stretch items-center justify-center text-[#C7C4D8] cursor-move"
-          >
+          <div cdkDragHandle
+            class="w-[24px] hidden md:flex self-stretch items-center justify-center text-[#C7C4D8] cursor-move">
             <i class="fa-solid fa-grip-vertical text-[12px]"></i>
           </div>
 
           <!-- IMAGE -->
           <div
-            class="w-full md:w-[192px] h-[140px] md:h-[108px] bg-gray-200 rounded-[8px] overflow-hidden flex-shrink-0"
-          >
-            <img
-              [src]="
+            class="w-full md:w-[192px] h-[140px] md:h-[108px] bg-gray-200 rounded-[8px] overflow-hidden flex-shrink-0">
+            <img [src]="
                 banner.selectedDevice === 'mobile'
                   ? banner.mobileImage || banner.desktopImage
                   : banner.desktopImage
-              "
-              class="w-full h-full object-cover"
-            />
+              " class="w-full h-full object-cover" />
           </div>
 
           <!-- LINK -->
@@ -98,52 +87,37 @@
             <p class="text-[10px] font-[700] uppercase tracking-[1px] text-[#94A3B8]">
               Redirect URL
             </p>
-            <input
-              type="text"
-              [(ngModel)]="banner.link"
-              (blur)="updateBanner(banner)"
-              class="w-full h-[36px] px-[12px] py-[8px] rounded-[8px] bg-[#F1F3FF] text-[12px] outline-none"
-            />
+            <input type="text" [(ngModel)]="banner.link" (blur)="updateBanner(banner)"
+              class="w-full h-[36px] px-[12px] py-[8px] rounded-[8px] bg-[#F1F3FF] text-[12px] outline-none" />
           </div>
 
           <!-- RIGHT -->
           <div
-            class="flex flex-row md:flex-col items-center md:items-end gap-[8px] md:ml-auto w-full md:w-auto justify-between"
-          >
+            class="flex flex-row md:flex-col items-center md:items-end gap-[8px] md:ml-auto w-full md:w-auto justify-between">
             <!-- DEVICE SWITCH -->
             <div
-              class="w-[66.25px] h-[32.5px] flex items-center justify-center gap-[8px] px-[8px] py-[4px] rounded-[8px] bg-[#F8FAFC]"
-            >
-              <i
-                (click)="setDevice('desktop', banner)"
-                class="fa-solid fa-desktop text-[12px] cursor-pointer"
+              class="w-[66.25px] h-[32.5px] flex items-center justify-center gap-[8px] px-[8px] py-[4px] rounded-[8px] bg-[#F8FAFC]">
+              <i (click)="setDevice('desktop', banner)" class="fa-solid fa-desktop text-[12px] cursor-pointer"
                 [ngClass]="
                   banner.selectedDevice === 'desktop' ? 'text-[#3525CD]' : 'text-[#94A3B8]'
-                "
-              >
+                ">
               </i>
 
-              <i
-                (click)="setDevice('mobile', banner)"
-                class="fa-solid fa-mobile-screen text-[14px] cursor-pointer"
-                [ngClass]="banner.selectedDevice === 'mobile' ? 'text-[#3525CD]' : 'text-[#94A3B8]'"
-              >
+              <i (click)="setDevice('mobile', banner)" class="fa-solid fa-mobile-screen text-[14px] cursor-pointer"
+                [ngClass]="banner.selectedDevice === 'mobile' ? 'text-[#3525CD]' : 'text-[#94A3B8]'">
               </i>
             </div>
 
             <!-- ACTIONS -->
             <div class="flex items-center gap-[8px]">
               <label
-                class="w-[100px] md:w-[109.75px] h-[32px] px-[12px] py-[8px] rounded-[8px] text-[#3525CD] text-[12px] font-[600] flex items-center justify-center cursor-pointer text-center"
-              >
+                class="w-[100px] md:w-[109.75px] h-[32px] px-[12px] py-[8px] rounded-[8px] text-[#3525CD] text-[12px] font-[600] flex items-center justify-center cursor-pointer text-center">
                 Replace Image
                 <input type="file" hidden (change)="onReplaceImage($event, banner)" />
               </label>
 
-              <button
-                (click)="deleteBanner(banner._id)"
-                class="w-[36px] h-[36px] md:w-[40px] md:h-[40px] rounded-[8px] flex items-center justify-center"
-              >
+              <button (click)="deleteBanner(banner._id)"
+                class="w-[36px] h-[36px] md:w-[40px] md:h-[40px] rounded-[8px] flex items-center justify-center">
                 <img src="icons/trash.png" class="w-[16px] h-[18px]" />
               </button>
             </div>
@@ -162,53 +136,34 @@
         </div>
 
         <div class="relative inline-block w-full sm:w-auto">
-          <button
-            (click)="openGameDropdown = !openGameDropdown"
-            class="w-full sm:w-[86.49px] h-[27px] flex items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-[8px] bg-[#E1E8FD]"
-          >
+          <button (click)="openGameDropdown = !openGameDropdown"
+            class="w-full sm:w-[86.49px] h-[27px] flex items-center justify-center gap-[6px] px-[2px] py-[6px] rounded-[8px] bg-[#E1E8FD]">
             <i class="fa-solid fa-plus text-[10px] text-[#3525CD]"></i>
             <span class="text-[10px] font-[700] uppercase text-[#3525CD]"> ADD GAME </span>
           </button>
 
           <!-- popup -->
-          <div
-            *ngIf="openGameDropdown"
-            class="absolute top-[120%] right-0 w-full sm:w-[260px] bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-50"
-          >
+          <div *ngIf="openGameDropdown"
+            class="absolute top-[120%] right-0 w-full sm:w-[260px] bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-50">
             <div class="w-full flex flex-col gap-[12px]">
               <!-- Search -->
-              <div
-                class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]"
-              >
+              <div class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]">
                 <i class="fa-solid fa-magnifying-glass text-[10px] text-[#94A3B8]"></i>
-                <input
-                  type="text"
-                  [(ngModel)]="searchQuery"
-                  (input)="onSearch()"
-                  placeholder="Search games..."
-                  class="w-full bg-transparent outline-none text-[12px]"
-                />
+                <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search games..."
+                  class="w-full bg-transparent outline-none text-[12px]" />
               </div>
 
               <p *ngIf="loading" class="text-center text-sm">Loading...</p>
 
-              <p
-                *ngIf="!loading && searchResults.length === 0"
-                class="text-center text-sm text-gray-400"
-              >
+              <p *ngIf="!loading && searchResults.length === 0" class="text-center text-sm text-gray-400">
                 No games found
               </p>
 
               <div class="flex flex-col max-h-[200px] overflow-y-auto">
-                <div
-                  *ngFor="let cat of searchResults"
-                  (click)="selectCategory(cat)"
-                  class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer"
-                >
-                  <img
-                    [src]="cat.image || 'https://via.placeholder.com/40'"
-                    class="w-[36px] h-[36px] rounded-[6px] object-cover"
-                  />
+                <div *ngFor="let cat of searchResults" (click)="selectCategory(cat)"
+                  class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer">
+                  <img [src]="cat.image || 'https://via.placeholder.com/40'"
+                    class="w-[36px] h-[36px] rounded-[6px] object-cover" />
 
                   <div>
                     <p class="text-[12px] font-[700]">{{ cat.name }}</p>
@@ -233,39 +188,22 @@
         </div>
 
         <div class="max-h-[470px] overflow-y-auto">
-          <div
-            *ngFor="let cat of paginatedCategories"
-            class="flex items-center px-4 py-3 border-b"
-          >
+          <div *ngFor="let cat of paginatedCategories" class="flex items-center px-4 py-3 border-b">
             <div class="flex-1 flex items-center gap-3">
-              <img
-                [src]="cat.image || 'https://via.placeholder.com/40'"
-                class="w-[40px] h-[40px] rounded object-cover"
-              />
+              <img [src]="cat.image || 'https://via.placeholder.com/40'"
+                class="w-[40px] h-[40px] rounded object-cover" />
 
               <p class="text-[13px] md:text-[14px]">{{ cat.name }}</p>
             </div>
 
             <div class="w-[80px] flex justify-end">
-              <div
-                (click)="toggleCategory(cat)"
-                class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
-                [ngClass]="cat.isActive ? 'bg-[#3525CD]' : 'bg-gray-300'"
-              >
-                <div
-                  class="w-[16px] h-[16px] bg-white rounded-full"
-                  [ngClass]="cat.isActive ? 'ml-auto' : ''"
-                ></div>
+              <div class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
+                [ngClass]="cat.isActive ? 'bg-[#3525CD33]' : 'bg-[#E2E8F0]'" (click)="toggleCategory(cat)">
+                <div class="w-[16px] h-[16px] bg-[#3525CD] rounded-full"
+                  [ngClass]="cat.isActive ? 'bg-[#3525CD] ml-auto' : 'bg-white'"></div>
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- PAGINATION -->
-        <div class="flex justify-between px-4 py-3 text-sm">
-          <button (click)="prevPage()">Prev</button>
-          <p>Page {{ currentPage }} / {{ totalPages }}</p>
-          <button (click)="nextPage()">Next</button>
         </div>
       </div>
     </div>
@@ -275,7 +213,7 @@
 
 <!-- ================= CONTENT SECTIONS ================= -->
 
-<div class="w-full lg:w-[960px] flex flex-col gap-[24px] px-3 md:px-0">
+<div class="w-full flex flex-col gap-[24px] px-3 md:px-0">
   <!-- HEADER -->
   <div class="flex items-center gap-[8px]">
     <img src="icons/content.png" alt="" />
@@ -285,8 +223,7 @@
   <!-- LOOP -->
   <div *ngFor="let section of sections">
     <div
-      class="w-full bg-white border border-[#C7C4D826] rounded-[12px] p-[12px] md:p-[16px] flex flex-col gap-[16px] shadow"
-    >
+      class="w-full bg-white border border-[#C7C4D826] rounded-[12px] p-[12px] md:p-[16px] flex flex-col gap-[16px] shadow">
       <!-- HEADER -->
       <div class="flex flex-col md:flex-row justify-between items-start gap-3">
         <div>
@@ -300,56 +237,96 @@
 
         <div class="flex flex-wrap items-center gap-[8px] md:gap-[12px]">
           <!-- VISIBILITY -->
-          <div
-            class="flex items-center gap-2 bg-[#F8FAFC] px-[10px] py-[4px] rounded-[8px] cursor-pointer"
-            (click)="section.isActive = !section.isActive; updateSection(section)"
-          >
+          <div class="flex items-center gap-2 bg-[#F8FAFC] px-[10px] py-[4px] rounded-[8px] cursor-pointer"
+            (click)="section.isActive = !section.isActive; updateSection(section)">
             <span class="text-[10px] font-[700] text-[#64748B]">Visible</span>
 
-            <div
-              class="w-[28px] h-[16px] rounded-full flex items-center px-[2px]"
-              [ngClass]="section.isActive ? 'bg-[#3525CD]' : 'bg-gray-300'"
-            >
-              <div
-                class="w-[12px] h-[12px] bg-white rounded-full transition-all"
-                [ngClass]="section.isActive ? 'ml-auto' : 'ml-0'"
-              ></div>
+            <div class="w-[28px] h-[16px] rounded-full flex items-center px-[2px]"
+              [ngClass]="section.isActive ? 'bg-[#3525CD33]' : 'bg-[#E2E8F0]'">
+              <div class="w-[12px] h-[12px] rounded-full transition-all"
+                [ngClass]="section.isActive ? 'bg-[#3525CD] ml-auto' : 'bg-white'"></div>
             </div>
           </div>
 
           <!-- MODE -->
-          <span
-            class="px-[10px] py-[4px] rounded-full bg-[#E1E8FD] text-[#3525CD] text-[10px] font-[700] uppercase"
-          >
-            {{ section.mode === 'api' ? 'API Dynamic' : 'Manual' }}
-          </span>
+          <!-- MODE / ACTION -->
+          <ng-container *ngIf="section.mode === 'api'; else manualBtn">
+
+            <!-- ✅ API MODE -->
+            <span
+              class="w-full sm:w-fit bg-[#E1E8FD] text-[#3525CD] px-[10px] py-[6px] rounded-[8px] text-[12px] font-[700] flex items-center gap-[6px]">
+              <img src="icons/api-dynamic.png" class="w-[12px] h-[12px]" />
+              API Dynamic
+            </span>
+
+          </ng-container>
+
+          <!-- ✅ MANUAL MODE -->
+          <ng-template #manualBtn>
+            <div class="relative inline-block w-full sm:w-auto">
+              <button (click)="toggleSectionDropdown(section)"
+                class="w-full sm:w-fit bg-[#E1E8FD] text-[#3525CD] px-[10px] py-[6px] rounded-[8px] text-[12px] font-[700]">
+                + Add Game
+              </button>
+
+              <!-- DROPDOWN -->
+              <div *ngIf="section.openDropdown"
+                class="absolute top-[120%] right-0 w-full sm:w-[280px] bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-50">
+                <!-- Search -->
+                <div class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]">
+                  <i class="fa-solid fa-magnifying-glass text-[10px] text-[#94A3B8]"></i>
+                  <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search games..."
+                    class="w-full bg-transparent outline-none text-[12px]" />
+                </div>
+
+                <p *ngIf="loading" class="text-center text-sm">Loading...</p>
+
+                <p *ngIf="!loading && searchResults.length === 0" class="text-center text-sm text-gray-400">
+                  No games found
+                </p>
+
+                <div class="flex flex-col max-h-[200px] overflow-y-auto">
+                  <div *ngFor="let cat of searchResults" (click)="addToSection(section, cat)"
+                    class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer">
+                    <img [src]="cat.image || 'https://via.placeholder.com/40'"
+                      class="w-[36px] h-[36px] rounded-[6px]" />
+
+                    <div>
+                      <p class="text-[12px] font-[700]">{{ cat.name }}</p>
+                      <p class="text-[10px] text-[#94A3B8]">
+                        {{ cat.categoryName || 'Game' }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <button (click)="section.openDropdown = false" class="text-sm text-red-500">
+                  Close
+                </button>
+              </div>
+            </div>
+          </ng-template>
         </div>
       </div>
 
       <!-- TABS -->
       <div class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex p-[4px]">
-        <div
-          (click)="setMode(section, 'api')"
+        <div (click)="setMode(section, 'api')"
           class="flex-1 flex items-center justify-center rounded-[6px] text-[11px] md:text-[12px] font-[700] cursor-pointer"
-          [ngClass]="section.mode === 'api' ? 'bg-white text-[#3525CD]' : 'text-[#64748B]'"
-        >
+          [ngClass]="section.mode === 'api' ? 'bg-white text-[#3525CD]' : 'text-[#64748B]'">
           API Data
         </div>
 
-        <div
-          (click)="setMode(section, 'manual')"
+        <div (click)="setMode(section, 'manual')"
           class="flex-1 flex items-center justify-center rounded-[6px] text-[11px] md:text-[12px] font-[700] cursor-pointer"
-          [ngClass]="section.mode === 'manual' ? 'bg-white text-[#3525CD]' : 'text-[#64748B]'"
-        >
+          [ngClass]="section.mode === 'manual' ? 'bg-white text-[#3525CD]' : 'text-[#64748B]'">
           Manual Selection
         </div>
       </div>
 
       <!-- API MODE -->
-      <div
-        *ngIf="section.mode === 'api'"
-        class="w-full min-h-[120px] bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] flex flex-col items-center justify-center gap-[8px] text-center px-2"
-      >
+      <div *ngIf="section.mode === 'api'"
+        class="w-full min-h-[120px] bg-[#F8FAFC] border border-[#E2E8F0] rounded-[10px] flex flex-col items-center justify-center gap-[8px] text-center px-2">
         <i class="fa-solid fa-wand-magic-sparkles text-[#3525CD] text-[18px]"></i>
 
         <p class="text-[11px] md:text-[12px] font-[500] text-[#3525CD]">
@@ -359,94 +336,21 @@
 
       <!-- MANUAL MODE -->
       <div *ngIf="section.mode === 'manual'" class="flex flex-col gap-[8px] relative">
-        <!-- ADD GAME DROPDOWN BUTTON -->
-        <div class="relative inline-block w-full sm:w-auto">
-          <button
-            (click)="toggleSectionDropdown(section)"
-            class="w-full sm:w-fit bg-[#E1E8FD] text-[#3525CD] px-[10px] py-[6px] rounded-[8px] text-[12px] font-[700]"
-          >
-            + Add Game
-          </button>
-
-          <!-- DROPDOWN -->
-          <div
-            *ngIf="section.openDropdown"
-            class="absolute top-[120%] left-0 w-full sm:w-[280px] bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-50"
-          >
-            <!-- Search -->
-            <div
-              class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]"
-            >
-              <i class="fa-solid fa-magnifying-glass text-[10px] text-[#94A3B8]"></i>
-              <input
-                type="text"
-                [(ngModel)]="searchQuery"
-                (input)="onSearch()"
-                placeholder="Search games..."
-                class="w-full bg-transparent outline-none text-[12px]"
-              />
-            </div>
-
-            <p *ngIf="loading" class="text-center text-sm">Loading...</p>
-
-            <p
-              *ngIf="!loading && searchResults.length === 0"
-              class="text-center text-sm text-gray-400"
-            >
-              No games found
-            </p>
-
-            <div class="flex flex-col max-h-[200px] overflow-y-auto">
-              <div
-                *ngFor="let cat of searchResults"
-                (click)="addToSection(section, cat)"
-                class="flex items-center gap-[10px] px-[6px] py-[8px] rounded-[8px] hover:bg-[#F8FAFC] cursor-pointer"
-              >
-                <img
-                  [src]="cat.image || 'https://via.placeholder.com/40'"
-                  class="w-[36px] h-[36px] rounded-[6px]"
-                />
-
-                <div>
-                  <p class="text-[12px] font-[700]">{{ cat.name }}</p>
-                  <p class="text-[10px] text-[#94A3B8]">
-                    {{ cat.categoryName || 'Game' }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <button (click)="section.openDropdown = false" class="text-sm text-red-500">
-              Close
-            </button>
-          </div>
-        </div>
 
         <!-- SELECTED -->
         <div class="flex flex-col gap-[8px] max-h-[200px] overflow-y-auto pr-1">
-          <div
-            *ngFor="let cat of section.manualCategories"
-            class="flex justify-between items-center bg-[#F8FAFC] px-[10px] md:px-[12px] py-[8px] md:py-[10px] rounded-[8px]"
-          >
+          <div *ngFor="let cat of section.manualCategories"
+            class="flex justify-between items-center bg-[#F8FAFC] px-[10px] md:px-[12px] py-[8px] md:py-[10px] rounded-[8px]">
             <div class="flex items-center gap-[10px]">
-              <img
-                [src]="cat.image"
-                class="w-[30px] h-[30px] md:w-[32px] md:h-[32px] rounded-[6px]"
-              />
+              <img [src]="cat.image" class="w-[30px] h-[30px] md:w-[32px] md:h-[32px] rounded-[6px]" />
               <p class="text-[12px] md:text-[13px] font-[600]">{{ cat.name }}</p>
             </div>
 
-            <i
-              (click)="removeFromSection(section, cat._id)"
-              class="fa-solid fa-xmark cursor-pointer text-[#94A3B8]"
-            >
+            <i (click)="removeFromSection(section, cat._id)" class="fa-solid fa-xmark cursor-pointer text-[#94A3B8]">
             </i>
           </div>
 
-          <p
-            *ngIf="section.manualCategories.length === 0"
-            class="text-center text-[12px] text-gray-400 py-4"
-          >
+          <p *ngIf="section.manualCategories.length === 0" class="text-center text-[12px] text-gray-400 py-4">
             No categories selected
           </p>
         </div>
@@ -455,20 +359,15 @@
       <!-- FOOTER -->
       <div class="flex items-center gap-[12px] text-[#94A3B8] pt-2">
         <i class="fa-solid fa-grip-vertical text-[14px] cursor-move"></i>
-        <i
-          (click)="deleteSection(section._id)"
-          class="fa-solid fa-trash text-[14px] cursor-pointer"
-        ></i>
+        <i (click)="deleteSection(section._id)" class="fa-solid fa-trash text-[14px] cursor-pointer"></i>
       </div>
     </div>
   </div>
 
   <!-- ADD SECTION BUTTON -->
   <div class="flex justify-center">
-    <button
-      (click)="isSectionModalOpen = true"
-      class="w-full sm:w-auto px-[20px] py-[10px] border border-[#3525CD4D] rounded-[10px] text-[#3525CD] font-[700] flex items-center justify-center gap-[6px]"
-    >
+    <button (click)="isSectionModalOpen = true"
+      class="w-full sm:w-auto px-[20px] py-[10px] border border-[#3525CD4D] rounded-[10px] text-[#3525CD] font-[700] flex items-center justify-center gap-[6px]">
       <i class="fa-solid fa-plus"></i>
       Create New Section
     </button>
@@ -477,33 +376,18 @@
 
 <!-- ================= ADD GAME MODAL ================= -->
 
-<div
-  *ngIf="showSectionGameModal"
-  class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-3"
->
-  <div
-    class="w-full max-w-[400px] bg-white rounded-[12px] p-[14px] md:p-[16px] flex flex-col gap-[12px]"
-  >
+<div *ngIf="showSectionGameModal" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-3">
+  <div class="w-full max-w-[400px] bg-white rounded-[12px] p-[14px] md:p-[16px] flex flex-col gap-[12px]">
     <!-- SEARCH -->
-    <input
-      type="text"
-      [(ngModel)]="searchQuery"
-      (input)="onSearch()"
-      placeholder="Search games..."
-      class="w-full h-[36px] px-[10px] border rounded-[8px] text-[13px] md:text-[14px]"
-    />
+    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search games..."
+      class="w-full h-[36px] px-[10px] border rounded-[8px] text-[13px] md:text-[14px]" />
 
     <!-- RESULTS -->
     <div class="max-h-[250px] overflow-y-auto">
-      <div
-        *ngFor="let game of searchResults"
-        (click)="selectCategory(game)"
-        class="flex items-center gap-[10px] px-[8px] py-[6px] hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer"
-      >
-        <img
-          [src]="game.image || 'https://via.placeholder.com/40'"
-          class="w-[28px] h-[28px] md:w-[30px] md:h-[30px] rounded-[6px]"
-        />
+      <div *ngFor="let game of searchResults" (click)="selectCategory(game)"
+        class="flex items-center gap-[10px] px-[8px] py-[6px] hover:bg-[#F8FAFC] rounded-[6px] cursor-pointer">
+        <img [src]="game.image || 'https://via.placeholder.com/40'"
+          class="w-[28px] h-[28px] md:w-[30px] md:h-[30px] rounded-[6px]" />
 
         <p class="text-[12px] md:text-[13px] font-[600] truncate">
           {{ game.name }}
@@ -512,10 +396,7 @@
     </div>
 
     <!-- CLOSE -->
-    <button
-      (click)="showSectionGameModal = false"
-      class="text-red-500 text-[12px] md:text-[13px] text-center"
-    >
+    <button (click)="showSectionGameModal = false" class="text-red-500 text-[12px] md:text-[13px] text-center">
       Close
     </button>
   </div>
@@ -527,18 +408,15 @@
 
 <div *ngIf="isSectionModalOpen" class="fixed inset-0 flex items-center justify-center z-50 px-3">
   <!-- MODAL -->
-  <div
-    #modalWrapper
-    class="w-full max-w-[900px] bg-white rounded-[16px] p-[16px] md:p-[24px] shadow-[0px_40px_80px_rgba(0,0,0,0.2)] relative overflow-visible"
-  >
+  <div #modalWrapper
+    class="w-full max-w-[900px] bg-white rounded-[16px] p-[16px] md:p-[24px] shadow-[0px_40px_80px_rgba(0,0,0,0.2)] relative overflow-visible">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start gap-3">
       <div>
         <h2 class="text-[20px] md:text-[24px] font-[700] text-[#141B2B]">New Section</h2>
 
         <span
-          class="mt-2 inline-flex items-center gap-1 px-2 py-[2px] bg-[#6FFBBE4D] text-[#005236] text-[10px] font-[700] rounded-full"
-        >
+          class="mt-2 inline-flex items-center gap-1 px-2 py-[2px] bg-[#6FFBBE4D] text-[#005236] text-[10px] font-[700] rounded-full">
           ● VISIBILITY: ON
         </span>
       </div>
@@ -549,15 +427,11 @@
       </div>
     </div>
     <!-- SECTION NAME -->
-    <div *ngIf="newSection.mode === 'manual'">
+    <div class="mt-6" *ngIf="newSection.mode === 'manual'">
       <p class="text-[10px] font-[700] uppercase text-[#464555] mb-2">Section Name</p>
 
-      <input
-        type="text"
-        [(ngModel)]="newSection.name"
-        placeholder="Enter section name..."
-        class="max-w-3xl h-[42px] px-3 bg-[#F1F3FF] rounded-[8px] text-[13px] outline-none"
-      />
+      <input type="text" [(ngModel)]="newSection.name" placeholder="Enter section name..."
+        class="max-w-3xl h-[42px] px-3 bg-[#F1F3FF] rounded-[8px] text-[13px] outline-none" />
     </div>
     <!-- Body -->
     <div class="mt-6 flex flex-col lg:flex-row gap-6 lg:gap-8">
@@ -568,21 +442,15 @@
           <p class="text-[10px] font-[700] uppercase text-[#464555] mb-2">Content Mode</p>
 
           <div class="flex bg-[#F1F3FF] p-1 rounded-[8px] h-[40px]">
-            <button
-              (click)="setMode(newSection, 'manual')"
-              class="flex-1 text-[11px] md:text-[12px] font-[600]"
+            <button (click)="setMode(newSection, 'manual')" class="flex-1 text-[11px] md:text-[12px] font-[600]"
               [ngClass]="
                 newSection.mode === 'manual' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'
-              "
-            >
+              ">
               Manual Curated
             </button>
 
-            <button
-              (click)="setMode(newSection, 'api')"
-              class="flex-1 text-[11px] md:text-[12px] font-[700]"
-              [ngClass]="newSection.mode === 'api' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
-            >
+            <button (click)="setMode(newSection, 'api')" class="flex-1 text-[11px] md:text-[12px] font-[700]"
+              [ngClass]="newSection.mode === 'api' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'">
               Use API Section
             </button>
           </div>
@@ -592,80 +460,50 @@
         <div *ngIf="newSection.mode === 'api'" class="relative">
           <p class="text-[10px] font-[700] uppercase text-[#464555] mb-2">Select API Endpoint</p>
 
-          <div
-            (click)="isDropdownOpen = !isDropdownOpen"
-            class="h-[46px] px-3 flex items-center justify-between bg-[#F1F3FF] rounded-[8px] cursor-pointer text-[13px]"
-          >
+          <div (click)="isDropdownOpen = !isDropdownOpen"
+            class="h-[46px] px-3 flex items-center justify-between bg-[#F1F3FF] rounded-[8px] cursor-pointer text-[13px]">
             {{ selectedOption }}
 
             <i class="fa-solid fa-chevron-down text-[12px] text-[#3525CD]"></i>
           </div>
 
-          <div
-            *ngIf="isDropdownOpen"
-            class="absolute mt-2 w-full bg-white rounded-[12px] shadow z-[9999]"
-          >
-            <div
-              *ngFor="let item of options"
-              (click)="selectedOption = item; isDropdownOpen = false"
-              class="px-4 py-3 cursor-pointer flex justify-between items-center text-[13px]"
-            >
+          <div *ngIf="isDropdownOpen" class="absolute mt-2 w-full bg-white rounded-[12px] shadow z-[9999]">
+            <div *ngFor="let item of options" (click)="selectedOption = item; isDropdownOpen = false"
+              class="px-4 py-3 cursor-pointer flex justify-between items-center text-[13px]">
               {{ item }}
 
-              <i
-                *ngIf="selectedOption === item"
-                class="fa-solid fa-check text-[#3525CD] text-[10px]"
-              ></i>
+              <i *ngIf="selectedOption === item" class="fa-solid fa-check text-[#3525CD] text-[10px]"></i>
             </div>
           </div>
         </div>
 
         <!-- MANUAL MODE -->
         <div *ngIf="newSection.mode === 'manual'" class="relative">
-          <button
-            (click)="newSection.openDropdown = !newSection.openDropdown"
-            class="w-full bg-[#E1E8FD] text-[#3525CD] py-2 rounded text-[12px] font-[700]"
-          >
+          <button (click)="newSection.openDropdown = !newSection.openDropdown"
+            class="w-full bg-[#E1E8FD] text-[#3525CD] py-2 rounded text-[12px] font-[700]">
             + Add Games
           </button>
 
           <!-- DROPDOWN -->
-          <div
-            *ngIf="newSection.openDropdown"
-            class="absolute top-[110%] left-0 w-full bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-[9999]"
-          >
-            <div
-              class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]"
-            >
+          <div *ngIf="newSection.openDropdown"
+            class="absolute top-[110%] left-0 w-full bg-white rounded-[12px] p-[12px] flex flex-col gap-[12px] shadow z-[9999]">
+            <div class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] flex items-center px-[10px] gap-[6px]">
               <i class="fa-solid fa-magnifying-glass text-[10px] text-[#94A3B8]"></i>
-              <input
-                type="text"
-                [(ngModel)]="searchQuery"
-                (input)="onSearch()"
-                placeholder="Search games..."
-                class="w-full bg-transparent outline-none text-[12px]"
-              />
+              <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search games..."
+                class="w-full bg-transparent outline-none text-[12px]" />
             </div>
 
             <p *ngIf="loading" class="text-center text-sm">Loading...</p>
 
-            <p
-              *ngIf="!loading && searchResults.length === 0"
-              class="text-center text-sm text-gray-400"
-            >
+            <p *ngIf="!loading && searchResults.length === 0" class="text-center text-sm text-gray-400">
               No games found
             </p>
 
             <div class="max-h-[200px] overflow-y-auto">
-              <div
-                *ngFor="let g of searchResults"
-                (click)="selectCategory(g)"
-                class="flex items-center gap-[10px] px-[6px] py-[8px] hover:bg-[#F8FAFC] cursor-pointer rounded-[8px]"
-              >
-                <img
-                  [src]="g.image || 'https://via.placeholder.com/40'"
-                  class="w-[30px] h-[30px] md:w-[32px] md:h-[32px] rounded-[6px]"
-                />
+              <div *ngFor="let g of searchResults" (click)="selectCategory(g)"
+                class="flex items-center gap-[10px] px-[6px] py-[8px] hover:bg-[#F8FAFC] cursor-pointer rounded-[8px]">
+                <img [src]="g.image || 'https://via.placeholder.com/40'"
+                  class="w-[30px] h-[30px] md:w-[32px] md:h-[32px] rounded-[6px]" />
 
                 <div>
                   <p class="text-[12px] font-[700]">{{ g.name }}</p>
@@ -683,25 +521,18 @@
 
           <!-- SELECTED -->
           <div class="mt-2 max-h-[120px] overflow-y-auto flex flex-col gap-1">
-            <div
-              *ngFor="let g of newSection.categories"
-              class="flex justify-between items-center px-2 py-1 bg-[#F8FAFC] rounded text-[13px]"
-            >
+            <div *ngFor="let g of newSection.categories"
+              class="flex justify-between items-center px-2 py-1 bg-[#F8FAFC] rounded text-[13px]">
               <span class="truncate">{{ g.name }}</span>
 
-              <i
-                (click)="removeCategoryFromNewSection(g._id)"
-                class="fa-solid fa-xmark cursor-pointer ml-2"
-              ></i>
+              <i (click)="removeCategoryFromNewSection(g._id)" class="fa-solid fa-xmark cursor-pointer ml-2"></i>
             </div>
           </div>
         </div>
 
         <!-- SAVE -->
-        <button
-          (click)="createSection()"
-          class="bg-[#3525CD] text-white py-2 rounded text-[13px] md:text-[14px] font-[600]"
-        >
+        <button (click)="createSection()"
+          class="bg-[#3525CD] text-white py-2 rounded text-[13px] md:text-[14px] font-[600]">
           Save Section
         </button>
       </div>
@@ -709,9 +540,14 @@
       <!-- RIGHT -->
       <div class="flex-1 flex items-center justify-center">
         <div
-          class="w-full h-[140px] md:h-[161px] bg-[#F1F3FF80] border rounded flex flex-col items-center justify-center text-center px-2"
-        >
-          <p class="text-[12px] md:text-[14px]">Live Preview Not Available</p>
+          class="w-full h-[140px] md:h-[161px] bg-[#F1F3FF80] border rounded flex flex-col items-center justify-center text-center px-2">
+          <img src="icons/section.png" alt="" class="w-[33px] h-[33px] mb-2">
+          <p class="text-[12px] md:text-[14px] font-[700] text-[#141B2B]">
+            Live Preview Not Available
+          </p>
+          <p class="text-[12px] font-[400] text-[#464555]">
+            API content is dynamically fetched in production
+          </p>
         </div>
       </div>
     </div>

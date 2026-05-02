@@ -13,7 +13,7 @@
             </p>
         </div>
 
-        <button (click)="isOpen = true"
+        <button (click)="openCreateModal()"
             class="w-full md:w-[173px] h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[#4F46E5] text-white">
             <i class="fa-solid fa-plus text-[14px]"></i>
             <span class="text-[13px] md:text-[14px] font-bold">
@@ -31,14 +31,12 @@
             <i
                 class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px]"></i>
 
-            <input type="text"
-                placeholder="Search coupon or affiliate..."
+            <input type="text" placeholder="Search coupon or affiliate..."
                 class="w-full h-[44px] pl-10 pr-4 rounded-lg bg-white border text-sm outline-none" />
         </div>
 
         <!-- TABS -->
-        <div
-            class="flex overflow-x-auto bg-[#F1F3FF] rounded-lg p-1 h-[36px] w-full md:w-[210px]">
+        <div class="flex overflow-x-auto bg-[#F1F3FF] rounded-lg p-1 h-[36px] w-full md:w-[210px]">
 
             <button (click)="setFilter('all')"
                 [ngClass]="filterStatus==='all' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
@@ -89,27 +87,42 @@
                     </td>
 
                     <td>
-                        {{ c.affiliateName || 'No affiliate' }}
+                        <div class="flex items-center gap-[10px]">
+                            <img [src]="c.avatar || 'https://via.placeholder.com/40'"
+                                class="w-[32px] h-[32px] rounded-full object-cover" />
+                            <div class="flex flex-col">
+                                <span class="text-[12px] font-[700] text-[#141B2B]">
+                                    {{ c.affiliateName || 'No affiliate' }}
+                                </span>
+                                <span class="text-[10px] text-[#94A3B8]">
+                                    {{ c.affiliateName || 'No affiliate' }}
+                                </span>
+                            </div>
+                        </div>
                     </td>
 
                     <td>
                         <button (click)="openAnalytics(c)"
-                            class="text-[#3525CD] text-[12px] font-semibold">
-                            View
+                            class="flex items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-[8px] border border-[#C7C4D84D] bg-[#fff]">
+                            <img src="icons/analytics.png" class="w-[16.5px] h-[12.75px]" />
+                            <span class="text-[12px] font-semibold text-[#3525CD]">View</span>
                         </button>
                     </td>
 
                     <td>
-                        <span class="text-[12px]"
-                            [ngClass]="c.isActive ? 'text-green-600' : 'text-red-600'">
+                        <span
+                            class="inline-flex items-center justify-center w-[57.53px] h-[20px] px-[10px] py-[2px] rounded-full text-[12px] font-bold"
+                            [ngClass]="c.isActive ? 'bg-[#6FFBBE] text-[#005236]' : 'bg-[#FECACA] text-[#991B1B]'">
                             {{ c.isActive ? 'Active' : 'Disabled' }}
                         </span>
                     </td>
 
-                    <td class="pr-6 text-right">
-                        <button (click)="editCoupon(c)" class="text-[#3525CD] text-[12px]">
-                            Edit
-                        </button>
+                    <td class="pr-6">
+                        <div class="flex items-center justify-end gap-[8px]">
+                            <img src="icons/pencil.png" class="w-[15px] cursor-pointer" (click)="editCoupon(c)" />
+                            <img src="icons/dont.png" class="w-[16.67px] cursor-pointer"
+                                (click)="deleteCoupon(c._id)" />
+                        </div>
                     </td>
 
                 </tr>
@@ -146,13 +159,11 @@
             <!-- ACTION -->
             <div class="flex justify-between items-center mt-2">
 
-                <button (click)="openAnalytics(c)"
-                    class="text-[#3525CD] text-[12px] font-[600]">
+                <button (click)="openAnalytics(c)" class="text-[#3525CD] text-[12px] font-[600]">
                     Analytics
                 </button>
 
-                <button (click)="editCoupon(c)"
-                    class="text-[#3525CD] text-[12px] font-[600]">
+                <button (click)="editCoupon(c)" class="text-[#3525CD] text-[12px] font-[600]">
                     Edit
                 </button>
 
@@ -165,19 +176,36 @@
     <!-- FOOTER -->
     <div class="flex flex-col md:flex-row justify-between gap-3 text-[12px] text-[#464555]">
 
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 text-[12px] font-[600]">
+            <!-- TOTAL -->
+            <span class="flex items-center gap-1 text-[#46455599]">
+                <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                {{ total }} TOTAL
+            </span>
 
-            <span>● {{ total }} TOTAL</span>
-            <span>● {{ activeCount }} ACTIVE</span>
-            <span>● {{ disabledCount }} DISABLED</span>
+            <!-- ACTIVE -->
+            <span class="flex items-center gap-1 text-[#46455599]">
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                {{ activeCount }} ACTIVE
+            </span>
 
+            <!-- DISABLED -->
+            <span class="flex items-center gap-1 text-[#46455599]">
+                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                {{ disabledCount }} DISABLED
+            </span>
         </div>
 
-        <div class="flex gap-2">
-
-            <button (click)="changePage(currentPage - 1)">‹</button>
-            <span>Page {{ currentPage }} / {{ totalPages }}</span>
-            <button (click)="changePage(currentPage + 1)">›</button>
+        <div class="flex items-center gap-2 text-[12px] font-[600] text-[#141B2B]">
+            <button (click)="changePage(currentPage - 1)" class="text-gray-400 hover:text-[#141B2B] transition">
+                ‹
+            </button>
+            <span>
+                PAGE {{ currentPage }} OF {{ totalPages }}
+            </span>
+            <button (click)="changePage(currentPage + 1)" class="text-gray-400 hover:text-[#141B2B] transition">
+                ›
+            </button>
 
         </div>
 
@@ -189,16 +217,13 @@
 <div *ngIf="isOpen" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"></div>
 
 <!-- Drawer -->
-<div *ngIf="isOpen"
-     class="fixed inset-0 z-[9999] flex justify-end md:justify-end">
+<div *ngIf="isOpen" class="fixed inset-0 z-[9999] flex justify-end md:justify-end">
 
     <!-- OVERLAY -->
-    <div class="absolute inset-0 bg-black/30"
-         (click)="isOpen=false"></div>
+    <div class="absolute inset-0 bg-black/30" (click)="isOpen=false"></div>
 
     <!-- DRAWER -->
-    <div
-        class="relative w-full md:w-[480px] h-full bg-[#F9F9FF] shadow-2xl flex flex-col
+    <div class="relative w-full md:w-[480px] h-full bg-[#F9F9FF] shadow-2xl flex flex-col
                md:rounded-none rounded-t-[16px]">
 
         <!-- HEADER -->
@@ -231,8 +256,7 @@
             </div>
 
             <!-- INPUTS -->
-            <input [(ngModel)]="form.code"
-                placeholder="Coupon Code"
+            <input [(ngModel)]="form.code" placeholder="Coupon Code"
                 class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]" />
 
             <select [(ngModel)]="form.type"
@@ -241,8 +265,7 @@
                 <option value="fixed">Fixed</option>
             </select>
 
-            <input type="number" [(ngModel)]="form.value"
-                placeholder="Discount Value"
+            <input type="number" [(ngModel)]="form.value" placeholder="Discount Value"
                 class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]" />
 
             <select [(ngModel)]="form.appliesTo"
@@ -268,16 +291,12 @@
                 <div *ngIf="openDropdown"
                     class="absolute top-[110%] left-0 w-full bg-white rounded-[12px] p-[10px] md:p-[12px] flex flex-col gap-[10px] shadow z-[9999]">
 
-                    <input type="text"
-                        [(ngModel)]="searchQuery"
-                        (input)="onSearch()"
-                        placeholder="Search..."
+                    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search..."
                         class="w-full h-[34px] px-3 bg-[#F1F3FF] rounded text-[12px]" />
 
                     <div class="max-h-[200px] overflow-y-auto">
 
-                        <div *ngFor="let item of searchResults"
-                            (click)="selectItem(item)"
+                        <div *ngFor="let item of searchResults" (click)="selectItem(item)"
                             class="flex items-center justify-between p-2 hover:bg-gray-50 cursor-pointer">
 
                             <div class="flex gap-2 items-center">
@@ -286,14 +305,12 @@
                                 <span class="text-[12px]">{{ item.name }}</span>
                             </div>
 
-                            <i *ngIf="isSelected(item)"
-                                class="fa-solid fa-check text-green-500 text-[12px]"></i>
+                            <i *ngIf="isSelected(item)" class="fa-solid fa-check text-green-500 text-[12px]"></i>
                         </div>
 
                     </div>
 
-                    <button (click)="openDropdown=false"
-                        class="text-red-500 text-[12px]">
+                    <button (click)="openDropdown=false" class="text-red-500 text-[12px]">
                         Close
                     </button>
 
@@ -302,16 +319,13 @@
             </div>
 
             <!-- EXTRA -->
-            <input type="number" [(ngModel)]="form.minOrderAmount"
-                placeholder="Minimum Order Amount"
+            <input type="number" [(ngModel)]="form.minOrderAmount" placeholder="Minimum Order Amount"
                 class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
 
-            <input type="number" [(ngModel)]="form.maxDiscount"
-                placeholder="Max Discount"
+            <input type="number" [(ngModel)]="form.maxDiscount" placeholder="Max Discount"
                 class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
 
-            <input type="number" [(ngModel)]="form.usageLimit"
-                placeholder="Usage Limit"
+            <input type="number" [(ngModel)]="form.usageLimit" placeholder="Usage Limit"
                 class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
 
             <input type="date" [(ngModel)]="form.expiresAt"
@@ -327,12 +341,10 @@
 
                 <p class="text-[12px] font-bold">Affiliate (Optional)</p>
 
-                <input [(ngModel)]="form.affiliateName"
-                    placeholder="Affiliate Name"
+                <input [(ngModel)]="form.affiliateName" placeholder="Affiliate Name"
                     class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
 
-                <input [(ngModel)]="form.affiliateSlug"
-                    placeholder="Affiliate Link"
+                <input [(ngModel)]="form.affiliateSlug" placeholder="Affiliate Link"
                     class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
 
                 <!-- UPLOAD -->
@@ -340,11 +352,9 @@
                             flex flex-col items-center justify-center text-gray-400 text-[12px] bg-white cursor-pointer relative"
                     (click)="fileInput.click()">
 
-                    <input #fileInput type="file" class="hidden"
-                        (change)="onAvatarUpload($event)" />
+                    <input #fileInput type="file" class="hidden" (change)="onAvatarUpload($event)" />
 
-                    <img *ngIf="form.avatarPreview"
-                        [src]="form.avatarPreview"
+                    <img *ngIf="form.avatarPreview" [src]="form.avatarPreview"
                         class="absolute inset-0 w-full h-full object-cover rounded-xl" />
 
                     <ng-container *ngIf="!form.avatarPreview">
@@ -365,8 +375,7 @@
                 Save Coupon
             </button>
 
-            <button (click)="isOpen=false"
-                class="w-full md:flex-1 text-indigo-600 text-[14px]">
+            <button (click)="isOpen=false" class="w-full md:flex-1 text-indigo-600 text-[14px]">
                 Cancel
             </button>
 
@@ -379,33 +388,33 @@
 <div *ngIf="isAnalyticsOpen" class="fixed inset-0 bg-black/40 backdrop-blur-[6px] z-40 transition-all">
 </div>
 
-<div *ngIf="isAnalyticsOpen"
-     class="fixed inset-0 z-[9999] flex justify-end">
+<div *ngIf="isAnalyticsOpen" class="fixed inset-0 z-[9999] flex justify-end">
 
     <!-- OVERLAY -->
-    <div class="absolute inset-0 bg-black/30"
-         (click)="isAnalyticsOpen=false"></div>
+    <div class="absolute inset-0 bg-black/30" (click)="isAnalyticsOpen=false"></div>
 
     <!-- DRAWER -->
-    <div
-        class="relative w-full md:w-[480px] h-full bg-[#F8F9FF]
+    <div class="relative w-full md:w-[480px] h-full bg-[#F8F9FF]
                shadow-[0px_20px_60px_rgba(0,0,0,0.25)]
                flex flex-col
                md:rounded-none rounded-t-[16px]">
 
         <!-- HEADER -->
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 px-4 md:px-6 py-4 md:py-5 border-b bg-[#F1F3FF]">
+        <div
+            class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 px-4 md:px-6 py-4 md:py-5 border-b bg-[#F1F3FF]">
 
             <div class="flex items-start gap-3">
 
-                <div class="w-[36px] h-[36px] md:w-[44px] md:h-[44px] bg-[#4F46E5] rounded-xl flex items-center justify-center">
+                <div
+                    class="w-[36px] h-[36px] md:w-[44px] md:h-[44px] bg-[#4F46E5] rounded-xl flex items-center justify-center">
                     <img src="icons/coupon-analytics.png" class="w-[16px] md:w-[18px]">
                 </div>
 
                 <div>
                     <h2 class="text-[16px] md:text-[20px] font-[700] text-[#141B2B] leading-tight">
                         Coupon Analytics
-                        <span class="ml-2 text-[8px] md:text-[9px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]">
+                        <span
+                            class="ml-2 text-[8px] md:text-[9px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]">
                             LIVE
                         </span>
                     </h2>
@@ -476,7 +485,8 @@
                     </p>
                 </div>
 
-                <div class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#EEF2FF] rounded-full flex items-center justify-center">
+                <div
+                    class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#EEF2FF] rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-ticket text-[#4F46E5] text-[12px] md:text-[14px]"></i>
                 </div>
 
@@ -499,7 +509,8 @@
                     </p>
                 </div>
 
-                <div class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#E6F9F0] rounded-full flex items-center justify-center">
+                <div
+                    class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#E6F9F0] rounded-full flex items-center justify-center">
                     <i class="fa-solid fa-user text-[#059669] text-[12px] md:text-[14px]"></i>
                 </div>
 

@@ -1,9 +1,6 @@
-<div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
-  <!-- ⚠️ ALERT -->
-  <div
-    *ngIf="webhookFails > 0"
-    class="w-full p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-[#FFDAD6] border rounded-[12px]"
-  >
+<div class="w-full mx-auto min-h-screen flex flex-col gap-4 md:gap-6 px-3 md:px-0 pb-2">
+  <div *ngIf="webhookFails > 0"
+    class="w-full p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 bg-[#FFDAD6] border rounded-[12px]">
     <div class="flex items-start md:items-center gap-3">
       <div class="w-[40px] h-[40px] flex items-center justify-center bg-[#BA1A1A] rounded">
         <img src="icons/warning.png" class="w-[18px]" />
@@ -19,10 +16,8 @@
       </div>
     </div>
 
-    <button
-      routerLink="/payment-stability"
-      class="w-full md:w-auto h-[32px] px-4 rounded bg-[#93000A] text-white text-[12px] font-[700]"
-    >
+    <button routerLink="/payment-stability"
+      class="w-full md:w-auto h-[32px] px-4 rounded bg-[#93000A] text-white text-[12px] font-[700]">
       View Logs
     </button>
   </div>
@@ -32,71 +27,85 @@
     <!-- FAILED -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
       <p class="text-[10px] md:text-[12px] text-gray-500">FAILED ORDERS</p>
-      <div class="flex items-center gap-2">
+      <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-[#BA1A1A]">
           {{ stats.failed }}
         </span>
-        <span class="px-2 py-[2px] bg-[#BA1A1A] text-white text-[10px] rounded">FAILED</span>
+        <span class="px-2 py-[2px] bg-[#BA1A1A] text-white text-[10px] rounded-full">FAILED</span>
       </div>
     </div>
 
     <!-- PENDING -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
       <p class="text-[10px] md:text-[12px] text-gray-500">PENDING</p>
-      <div class="flex items-center gap-2">
+      <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-gray-400">
           {{ stats.pending }}
         </span>
-        <span class="px-2 py-[2px] bg-gray-400 text-white text-[10px] rounded">PENDING</span>
+        <span class="px-2 py-[2px] bg-gray-400 text-white text-[10px] rounded-full">PENDING</span>
       </div>
     </div>
 
     <!-- TOTAL -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
       <p class="text-[10px] md:text-[12px] text-gray-500">TOTAL</p>
-      <span class="text-[22px] md:text-[36px] font-[800] text-gray-900">
-        {{ stats.total }}
-      </span>
+      <div class="flex items-end gap-2">
+        <span class="text-[22px] md:text-[36px] font-[800] text-gray-900">
+          {{ stats.total }}
+        </span>
+        <span class="px-2 py-[2px] rounded-full bg-[#141B2B] text-white text-[10px] font-[700]">
+          ALL TIME
+        </span>
+      </div>
     </div>
 
     <!-- ACTIVE GAMES -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
       <p class="text-[10px] md:text-[12px] text-gray-500">VISIBLE GAMES</p>
-      <div class="flex items-center gap-2">
+      <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-green-700">
           {{ stats.activeGames }}
         </span>
-        <span class="px-2 py-[2px] bg-green-700 text-white text-[10px] rounded">ACTIVE</span>
+        <span class="px-2 py-[2px] rounded-full bg-green-700 text-white text-[10px]">ACTIVE</span>
       </div>
     </div>
   </div>
 
   <!-- 🟪 NAV -->
   <div class="w-full bg-white border rounded-[12px] flex overflow-x-auto md:grid md:grid-cols-4">
-    <div
-      class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer"
-      routerLink="/order"
-    >
+    <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/order">
       Orders
+      <span class="flex items-center px-2">
+        <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
+      </span>
     </div>
-    <div
-      class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer"
-      routerLink="/pricing"
-    >
+    <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/pricing">
       Pricing
+      <span class="flex items-center px-2">
+        <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
+      </span>
     </div>
-    <div
-      class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer"
-      routerLink="/coupons"
-    >
+    <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/coupons">
       Coupons
+      <span class="flex items-center px-2">
+        <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
+      </span>
     </div>
-    <div
-      class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer"
-      routerLink="/payment-stability"
-    >
+    <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer"
+      routerLink="/payment-stability">
       Webhook Logs
+      <span class="flex items-center px-2">
+        <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
+      </span>
     </div>
+  </div>
+  <div class="flex items-center justify-between">
+
+    <h2 class="text-[18px] leading-[24px] md:leading-[28px] font-[700] tracking-[-0.3px] md:tracking-[-0.45px] text-[#141B2B]
+    ">
+      Failed Orders Queue
+    </h2>
+    <i class="fas fa-rotate-right text-[#141B2B] text-[10px] cursor-pointer opacity-80" (click)="loadDashboard()" [class.animate-spin]="loading"></i>
   </div>
 
   <!-- 🟫 TABLE -->
@@ -129,23 +138,17 @@
             </td>
 
             <td class="px-6 py-4">
-              <span class="px-2 py-[2px] bg-red-100 text-red-600 text-[10px] rounded">
+              <span class="px-2 py-[2px] bg-red-100 text-red-700 text-[10px] rounded-full">
                 {{ o.status | uppercase }}
               </span>
             </td>
 
             <td class="px-6 py-4 flex justify-end gap-2">
-              <button
-                *ngIf="o.status === 'paid' && o.supplierStatus !== 'completed'"
-                class="bg-[#3525CD] text-white px-3 py-1 text-[10px] rounded"
-                (click)="retry(o.id)"
-              >
+              <button *ngIf="o.status === 'paid' && o.supplierStatus !== 'completed'"
+                class="bg-[#3525CD] text-white px-3 py-1 text-[10px] rounded" (click)="retry(o.id)">
                 Retry
               </button>
-              <button
-                routerLink="/payment-stability"
-                class="bg-[#E1E8FD] text-[#3525CD] px-3 py-1 text-[10px] rounded"
-              >
+              <button routerLink="/payment-stability" class="bg-[#E1E8FD] text-[#3525CD] px-3 py-1 text-[10px] rounded">
                 Logs
               </button>
             </td>
@@ -171,18 +174,12 @@
         <p class="text-[12px] text-gray-500">{{ o.product }}</p>
 
         <div class="flex gap-2">
-          <button
-            *ngIf="o.status === 'paid' && o.supplierStatus !== 'completed'"
-            class="bg-[#3525CD] text-white px-3 py-1 text-[10px] rounded"
-            (click)="retry(o.id)"
-          >
+          <button *ngIf="o.status === 'paid' && o.supplierStatus !== 'completed'"
+            class="bg-[#3525CD] text-white px-3 py-1 text-[10px] rounded" (click)="retry(o.id)">
             Retry
           </button>
 
-          <button
-            routerLink="/payment-stability"
-            class="flex-1 bg-[#E1E8FD] text-[#3525CD] py-1 rounded text-[11px]"
-          >
+          <button routerLink="/payment-stability" class="flex-1 bg-[#E1E8FD] text-[#3525CD] py-1 rounded text-[11px]">
             Logs
           </button>
         </div>

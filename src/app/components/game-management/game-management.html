@@ -51,20 +51,21 @@
 
                     <div class="w-[112px] flex justify-center">
                         <div class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
-                            [ngClass]="product.isActive ? 'bg-[#3525CD]' : 'bg-[#E5E7EB]'"
+                            [ngClass]="product.isActive ? 'bg-[#3525CD33]' : 'bg-[#E2E8F0]'"
                             (click)="toggleStatus(product)">
-                            <div class="w-[16px] h-[16px] bg-white rounded-full"
-                                [ngClass]="product.isActive ? 'ml-auto' : ''"></div>
+                            <div class="w-[16px] h-[16px] bg-[#3525CD] rounded-full"
+                                [ngClass]="product.isActive ? 'bg-[#3525CD] ml-auto' : 'bg-white'"></div>
                         </div>
                     </div>
 
-                    <div class="w-[126px] text-center text-[10px]">
-                        {{ product.custom ? 'CUSTOM' : 'API' }}
+                    <div class="w-[126px] text-center">
+                        <span class="px-[8px] py-[2px] text-[10px] rounded-full" [ngClass]="product.custom ? 'bg-green-100 text-green-600' : 'bg-[#E2E8F0] text-[#64748B]'">
+                            {{ product.custom ? 'CUSTOM' : 'API' }}
+                        </span>
                     </div>
 
                     <div class="w-[122px] flex justify-center">
-                        <i class="fa-solid fa-chevron-down cursor-pointer"
-                            (click)="toggleExpand(product)"></i>
+                        <i class="fa-solid fa-chevron-down cursor-pointer" (click)="toggleExpand(product)"></i>
                     </div>
 
                 </div>
@@ -84,8 +85,7 @@
                             </p>
                         </div>
 
-                        <i (click)="toggleExpand(product)"
-                            class="fa-solid fa-chevron-down text-[12px]"></i>
+                        <i (click)="toggleExpand(product)" class="fa-solid fa-chevron-down text-[12px]"></i>
                     </div>
 
                     <!-- CONTROLS -->
@@ -103,66 +103,108 @@
                 </div>
 
                 <!-- EXPAND -->
-                <div *ngIf="expandedProductId === product._id"
-                    class="bg-[#F1F3FF] px-3 md:px-[16px] py-[16px]">
+                <div *ngIf="expandedProductId === product._id" class="bg-[#F8FAFC] px-3 md:px-[16px] py-[16px]">
 
-                    <div class="bg-white rounded-[12px] p-3 md:p-[16px] flex flex-col lg:flex-row gap-[16px]">
+  <div class="bg-white rounded-[12px] p-[12px] md:p-[16px] flex flex-col lg:flex-row gap-[16px] md:gap-[20px] shadow-[0px_1px_2px_0px_#0000000D]">
 
-                        <!-- IMAGE -->
-                        <div class="w-full lg:w-[260px] flex justify-center">
-                            <img [src]="getPreview(product)"
-                                class="w-full max-w-[256px] h-[200px] md:h-[256px] object-cover rounded-[10px]" />
-                        </div>
+    <!-- IMAGE -->
+    <div class="w-full lg:w-[260px] flex justify-center">
+      <img
+        [src]="getPreview(product)"
+        class="w-full max-w-[256px] h-[200px] md:h-[256px] object-cover rounded-[10px]"
+      />
+    </div>
 
-                        <!-- FORM -->
-                        <div class="flex-1 flex flex-col gap-[14px]">
+    <!-- FORM -->
+    <div class="flex-1 flex flex-col gap-[14px]">
 
-                            <!-- UPLOAD -->
-                            <input type="file" hidden #fileInput
-                                (change)="onProductImageSelect($event, product)" />
+      <!-- INFO -->
+      <div class="flex items-center gap-[6px] text-[13px] md:text-[14px] text-[#464555] font-[500]">
+        <img src="icons/circle-info.png" class="w-[18px] h-[18px]" />
+        <span>Using API image (fallback)</span>
+      </div>
 
-                            <div (click)="fileInput.click()"
-                                class="border border-dashed rounded-[12px] h-[160px] md:h-[182px] flex flex-col items-center justify-center gap-[6px] cursor-pointer text-center px-2">
+      <!-- HIDDEN INPUT -->
+      <input type="file" hidden #fileInput (change)="onProductImageSelect($event, product)" />
 
-                                <p class="text-[13px] md:text-[14px] font-[600]">
-                                    Upload new image
-                                </p>
+      <!-- UPLOAD BOX -->
+      <div
+        (click)="fileInput.click()"
+        class="border border-dashed border-[#C7C4D8] rounded-[12px] h-[160px] md:h-[182px] flex flex-col items-center justify-center gap-[6px] cursor-pointer text-center px-2 bg-[#F1F3FF4D]"
+      >
+        <img src="icons/upload.png" class="w-[26px] h-[20px]" />
 
-                                <p class="text-[11px] md:text-[12px] text-[#464555]">
-                                    PNG, JPG or WebP
-                                </p>
+        <p class="text-[13px] md:text-[14px] font-[600] text-[#141B2B]">
+          Drag & drop new product image
+        </p>
 
-                            </div>
+        <p class="text-[11px] md:text-[12px] text-[#464555]">
+          PNG, JPG or WebP (Max 2MB)
+        </p>
 
-                            <!-- ACTION -->
-                            <div class="flex flex-col md:flex-row justify-between gap-3">
+        <button
+          class="mt-[6px] w-[95px] h-[30px] bg-[#E1E8FD] rounded-[6px] flex items-center justify-center"
+        >
+          <span class="text-[12px] font-[700] text-[#3525CD]">
+            Select File
+          </span>
+        </button>
+      </div>
 
-                                <div class="flex gap-[12px] text-[12px]">
-                                    <span class="text-[#64748B] cursor-pointer">Replace</span>
-                                    <span class="text-red-500 cursor-pointer">Remove</span>
-                                </div>
+      <!-- ACTION ROW -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
 
-                                <div class="flex gap-[8px]">
+        <!-- LEFT ACTIONS -->
+        <div class="flex gap-[16px] text-[12px] items-center">
 
-                                    <button (click)="expandedProductId = null"
-                                        class="px-[12px] py-[6px] bg-[#E1E8FD] rounded text-[12px] w-full md:w-auto">
-                                        Cancel
-                                    </button>
+          <div
+            (click)="fileInput.click()"
+            class="flex items-center gap-[6px] text-[#64748B] cursor-pointer font-[700]"
+          >
+            <i class="fa-regular fa-image text-[13px]"></i>
+            Replace Image
+          </div>
 
-                                    <button (click)="updateProduct(product)"
-                                        class="px-[14px] py-[6px] bg-[#3525CD] text-white rounded text-[12px] w-full md:w-auto">
-                                        Save
-                                    </button>
+          <div
+            (click)="removeProductImage(product)"
+            class="flex items-center gap-[6px] text-[#BA1A1A] cursor-pointer font-[700]"
+          >
+            <i class="fa-solid fa-trash text-[13px]"></i>
+            Remove Image
+          </div>
 
-                                </div>
+        </div>
 
-                            </div>
+        <!-- RIGHT BUTTONS -->
+        <div class="flex gap-[8px] w-full md:w-auto">
 
-                        </div>
+          <button
+            (click)="expandedProductId = null"
+            class="flex-1 md:flex-none px-[14px] py-[6px] bg-[#E1E8FD] rounded-[6px] h-[36px]"
+          >
+            <span class="text-[13px] md:text-[14px] font-[600] text-[#464555]">
+              Cancel
+            </span>
+          </button>
 
-                    </div>
+          <button
+            (click)="updateProduct(product)"
+            class="flex-1 md:flex-none px-[14px] py-[6px] bg-[#3525CD] rounded-[6px] h-[36px]"
+          >
+            <span class="text-[13px] md:text-[14px] font-[700] text-white">
+              Save Changes
+            </span>
+          </button>
 
-                </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
             </div>
 
@@ -177,10 +219,8 @@
 
                     <button (click)="prevPage()" class="w-[28px] h-[28px] bg-white rounded">‹</button>
 
-                    <button *ngFor="let p of [].constructor(totalPages); let i = index"
-                        (click)="goToPage(i+1)"
-                        class="w-[28px] h-[28px] rounded"
-                        [ngClass]="page === (i+1) ? 'bg-[#3525CD] text-white' : ''">
+                    <button *ngFor="let p of [].constructor(totalPages); let i = index" (click)="goToPage(i+1)"
+                        class="w-[28px] h-[28px] rounded" [ngClass]="page === (i+1) ? 'bg-[#3525CD] text-white' : ''">
                         {{ i + 1 }}
                     </button>
 
