@@ -16,8 +16,8 @@ export class OrderDetails implements OnInit {
   loading = true;
   logsLoading = true;
 
-  API = 'https://api.sdshop.gg/api/orders';
-  LOG_API = 'https://api.sdshop.gg/api/payments';
+  API = 'http://localhost:5000/api/orders';
+  LOG_API = 'http://localhost:5000/api/payments';
 
   constructor(
     private route: ActivatedRoute,

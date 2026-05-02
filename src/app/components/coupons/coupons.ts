@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Coupons implements OnInit {
 
-  API = 'https://api.sdshop.gg/api/coupons';
+  API = 'http://localhost:5000/api/coupons';
 
   isOpen = false;
   isAnalyticsOpen = false;
@@ -253,8 +253,8 @@ editCoupon(c: any) {
 
     const API =
       this.form.appliesTo === 'products'
-        ? 'https://api.sdshop.gg/api/products'
-        : 'https://api.sdshop.gg/api/categories';
+        ? 'http://localhost:5000/api/products'
+        : 'http://localhost:5000/api/categories';
 
     this.http.get(`${API}?search=${this.searchQuery}`).subscribe({
       next: (res: any) => {
