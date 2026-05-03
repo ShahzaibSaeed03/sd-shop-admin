@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class AuthService {
 
-  private API = 'http://localhost:5000/api/auth'; // 🔥 change if needed
+  private API = 'https://api.sdshop.gg/api/auth'; // 🔥 change if needed
 
   constructor(private http: HttpClient) {}
 

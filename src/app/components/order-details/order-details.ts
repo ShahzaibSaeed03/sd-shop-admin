@@ -16,8 +16,8 @@ export class OrderDetails implements OnInit {
   loading = true;
   logsLoading = true;
 
-  API = 'http://localhost:5000/api/orders';
-  LOG_API = 'http://localhost:5000/api/payments';
+  API = 'https://api.sdshop.gg/api/orders';
+  LOG_API = 'https://api.sdshop.gg/api/payments';
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +51,8 @@ export class OrderDetails implements OnInit {
     this.http.get(`${this.LOG_API}/order/${orderId}`).subscribe({
       next: (res: any) => {
         this.logs = res.data || [];
+
+
         this.logsLoading = false;
       },
       error: () => this.logsLoading = false
@@ -74,13 +76,11 @@ export class OrderDetails implements OnInit {
   // STATUS HELPER
   // ==========================
   getLogStatus(log: any) {
-    const type = log.payload?.type || '';
-
-    if (type.includes('failed')) return 'ERROR';
-    if (type.includes('succeeded')) return 'SUCCESS';
-
-    return 'INFO';
-  }
+  const action = log.payload?.action || '';
+  if (action.includes('failed')) return 'ERROR';
+  if (action.includes('approved') || action.includes('succeeded')) return 'SUCCESS';
+  return 'INFO';
+}
 
   // ==========================
   // DOWNLOAD JSON (WORKING)

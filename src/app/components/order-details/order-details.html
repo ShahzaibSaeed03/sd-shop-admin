@@ -10,13 +10,16 @@
         ←
       </button>
 
-      <div>
+      <div class="flex gap-2  items-center">
         <h1 class="text-[20px] font-[700]">
           Order #{{ order._id }}
         </h1>
 
         <p class="text-[13px] text-gray-500">
-          {{ order.user?.email || '-' }}
+          {{ order.user?.email || order.email }}
+        </p>
+         <p class="text-[13px] text-gray-500">
+          {{ order.cpf || '-' }}
         </p>
       </div>
 
@@ -81,12 +84,13 @@
         <b class="text-indigo-600">{{ formatPrice(order.price) }}</b>
       </div>
 
-      <div>
-        <p class="text-xs">Profit</p>
-        <b class="text-green-600">
-          +{{ formatPrice((order.price || 0) - (order.originalPrice || 0)) }}
-        </b>
-      </div>
+      <!-- ✅ Only show profit if payment status is success -->
+<div >
+  <p class="text-xs">Profit</p>
+  <b class="text-green-600" *ngIf="order.status === 'paid'">
+    +{{ formatPrice((order.price || 0) - (order.originalPrice || 0)) }}
+  </b>
+</div>
 
     </div>
 
@@ -100,53 +104,94 @@
 
   </div>
 
-  <!-- LOGS -->
-  <div class="bg-white border rounded-xl p-5">
+<!-- LOGS -->
+<div class="bg-white border rounded-xl p-5">
 
-    <div class="flex justify-between mb-4">
-      <b>TRANSACTION LOGS</b>
+  <div class="flex justify-between mb-4">
+    <b>TRANSACTION LOGS</b>
+    <button (click)="downloadLogs()" class="text-indigo-600 text-sm font-bold">
+      DOWNLOAD RAW
+    </button>
+  </div>
 
-      <button (click)="downloadLogs()"
-        class="text-indigo-600 text-sm font-bold">
-        DOWNLOAD RAW
-      </button>
+  <div class="bg-gray-50 p-4 rounded text-xs font-mono space-y-3">
+
+    <!-- LOADING -->
+    <div *ngIf="logsLoading" class="text-gray-400">Loading logs...</div>
+
+    <!-- EMPTY -->
+    <div *ngIf="!logsLoading && logs.length === 0" class="text-gray-400">
+      No logs available
     </div>
 
-    <div class="bg-gray-50 p-4 rounded text-xs font-mono space-y-2">
+    <!-- REAL LOGS -->
+    <div *ngFor="let log of logs" class="border-b border-gray-200 pb-3">
 
-      <!-- LOADING -->
-      <div *ngIf="logsLoading">Loading logs...</div>
+      <!-- LOG HEADER -->
+      <div class="flex items-center gap-2 mb-1">
 
-      <!-- EMPTY -->
-      <div *ngIf="!logsLoading && logs.length === 0">
-        No logs available
-      </div>
+        <span class="text-gray-400">
+          {{ log.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}
+        </span>
 
-      <!-- REAL LOGS -->
-      <div *ngFor="let log of logs">
+        <span class="font-bold"
+          [ngClass]="{
+            'text-red-500': log.payload?.action?.includes('failed'),
+            'text-green-600': log.payload?.action?.includes('approved') || log.payload?.action?.includes('succeeded'),
+            'text-blue-600': !log.payload?.action?.includes('failed') && !log.payload?.action?.includes('approved')
+          }">
+          [{{ log.payload?.action | uppercase }}]
+        </span>
 
         <span class="text-gray-500">
-          {{ log.createdAt | date:'HH:mm:ss' }}
+          type: {{ log.payload?.type }}
         </span>
 
-        <span class="ml-2 font-bold"
-          [ngClass]="{
-            'text-red-500': getLogStatus(log) === 'ERROR',
-            'text-green-600': getLogStatus(log) === 'SUCCESS',
-            'text-blue-600': getLogStatus(log) === 'INFO'
-          }">
-
-          [{{ getLogStatus(log) }}]
-
+        <span *ngIf="log.payload?.live_mode" class="text-green-600">
+          [LIVE]
         </span>
 
-        {{ log.payload?.type || 'event' }}
+        <span *ngIf="!log.payload?.live_mode" class="text-yellow-500">
+          [SANDBOX]
+        </span>
+
+      </div>
+
+      <!-- LOG BODY -->
+      <div class="pl-2 space-y-1 text-gray-600">
+
+        <div>
+          <span class="text-gray-400">payment_id: </span>
+          <span class="text-indigo-600 font-bold">{{ log.payload?.data?.id }}</span>
+        </div>
+
+        <div>
+          <span class="text-gray-400">api_version: </span>
+          {{ log.payload?.api_version }}
+        </div>
+
+        <div>
+          <span class="text-gray-400">date_created: </span>
+          {{ log.payload?.date_created | date:'yyyy-MM-dd HH:mm:ss' }}
+        </div>
+
+        <div>
+          <span class="text-gray-400">user_id: </span>
+          {{ log.payload?.user_id }}
+        </div>
+
+        <div>
+          <span class="text-gray-400">source: </span>
+          {{ log.headers?.referer || '-' }}
+        </div>
 
       </div>
 
     </div>
 
   </div>
+
+</div>
 
 </div>
 
