@@ -10,6 +10,7 @@ import { PaymentStability } from './components/payment-stability/payment-stabili
 import { StabilityDashboard } from './components/stability-dashboard/stability-dashboard';
 import { Order } from './components/order/order';
 import { OrderDetails } from './components/order-details/order-details';
+import { UserManagement } from './components/user-management/user-management';
 
 export const routes: Routes = [
     
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'coupons', component: Coupons },
   { path: 'payment-stability', component: PaymentStability },
   { path: 'payment-dashboard', component: StabilityDashboard },
+  { path: 'user-management', component: UserManagement },
   { path: '**', redirectTo: '' }
   
 ];
