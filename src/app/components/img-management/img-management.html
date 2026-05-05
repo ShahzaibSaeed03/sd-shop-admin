@@ -1,9 +1,9 @@
 <div class="w-full flex flex-col gap-[24px] px-3 md:px-0">
   <!-- HEADER -->
   <div class="w-full flex flex-col gap-[8px]">
-    <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Game Directory</h1>
+    <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Diretório de Jogos</h1>
     <p class="text-[14px] md:text-[18px] text-[#464555]">
-      Manage global inventory, visibility states, and metadata overrides.
+      Gerencie o invetário global, estados de visibilidade e substituições de metadados.
     </p>
   </div>
 
@@ -12,12 +12,12 @@
     <!-- DESKTOP HEADER -->
     <div class="hidden md:flex w-full bg-[#F1F3FF] text-[11px] font-[700] uppercase text-[#64748B]">
       <div class="w-[120px] px-[16px] py-[12px]">Status</div>
-      <div class="w-[260px] px-[16px] py-[12px]">Game / Product</div>
-      <div class="w-[140px] px-[16px] py-[12px]">Source</div>
-      <div class="w-[120px] px-[16px] py-[12px]">Visible</div>
-      <div class="w-[120px] px-[16px] py-[12px]">Products</div>
-      <div class="w-[120px] px-[16px] py-[12px]">Manage</div>
-      <div class="w-[80px] px-[16px] py-[12px]">Actions</div>
+      <div class="w-[260px] px-[16px] py-[12px]">Jogo / ProduTO</div>
+      <div class="w-[140px] px-[16px] py-[12px]">ORIGEM</div>
+      <div class="w-[120px] px-[16px] py-[12px]">VISIBILIDADE</div>
+      <div class="w-[120px] px-[16px] py-[12px]">ProduTOS</div>
+      <div class="w-[120px] px-[16px] py-[12px]">GERENCIAR</div>
+      <div class="w-[80px] px-[16px] py-[12px]">AÇÕES</div>
     </div>
 
     <!-- LOOP -->
@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="w-[120px] text-[13px]">{{ section.totalProducts || 0 }} Products</div>
+        <div class="w-[120px] text-[13px]">{{ section.totalProducts || 0 }} Produtos</div>
 
         <div class="w-[120px] text-[#3525CD] text-[12px] font-[700] cursor-pointer"
           (click)="goToGameManagement(section._id)">
@@ -82,7 +82,7 @@
 
         <!-- MIDDLE -->
         <div class="flex justify-between items-center">
-          <div class="text-[12px]">{{ section.totalProducts || 0 }} Products</div>
+          <div class="text-[12px]">{{ section.totalProducts || 0 }} Produtos</div>
 
           <div class="flex items-center gap-2">
             <div class="w-[36px] h-[20px] rounded-full flex items-center px-[2px] cursor-pointer"
@@ -105,7 +105,7 @@
         <!-- IMAGE -->
         <div class="w-full lg:w-[260px]">
           <p class="text-[11px] font-[700] text-[#64748B] uppercase mb-[6px]">
-            Current Display Asset
+            imagem atual de exibição
           </p>
 
           <label class="block cursor-pointer">
@@ -117,10 +117,10 @@
           <!-- META INFO -->
           <div class="flex justify-between text-[10px] mt-[6px]">
             <span class="text-[#464555]">
-              1920×1080px • PNG • 2.4MB
+              1920x1080px • PNG • 2.4MB
             </span>
             <span class="text-red-500 font-[700] cursor-pointer" (click)="removeSectionImage(section)">
-              DELETE ASSET
+              deletar imagem
             </span>
           </div>
         </div>
@@ -132,7 +132,7 @@
           <div class="flex flex-col md:flex-row gap-[12px]">
             <div class="flex-1">
               <p class="text-[11px] font-[700] text-[#64748B] uppercase mb-[4px]">
-                Display Name
+                NOME DE EXIBIÇÃO
               </p>
               <input [(ngModel)]="section.name"
                 class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] px-[10px] outline-none" />
@@ -140,7 +140,7 @@
 
             <div class="flex-1">
               <p class="text-[11px] font-[700] text-[#64748B] uppercase mb-[4px]">
-                Internal Slug
+                SLUG INTERNO
               </p>
               <input [(ngModel)]="section.slug"
                 class="w-full h-[36px] bg-[#F1F3FF] rounded-[8px] px-[10px] outline-none" />
@@ -152,10 +152,10 @@
             class="w-full h-[120px] border border-dashed border-[#C7C4D8] rounded-[10px] flex flex-col items-center justify-center gap-[6px] bg-[#F1F3FF4D] cursor-pointer">
             <img src="icons/upload.png" class="w-[28px] h-[28px]" />
             <p class="text-[13px] font-[500] text-center">
-              Click to upload or drag and drop
+              Clique para enviar ou arraste e solte
             </p>
             <p class="text-[11px] text-[#464555] text-center">
-              SVG, PNG, JPG or GIF (max. 800×400px)
+              WEBP, PNG ou JPG(min. 240x250px)
             </p>
 
             <!-- HIDDEN INPUT -->
@@ -169,7 +169,7 @@
             <div class="flex items-center gap-[8px] cursor-pointer">
               <i class="fa-solid fa-rotate-left text-[#3525CD] text-[14px]"></i>
               <span class="text-[13px] font-[600] text-[#3525CD]">
-                Revert to API Data
+                Reverter para API Data
               </span>
             </div>
 
@@ -177,12 +177,12 @@
             <div class="flex gap-[8px] w-full sm:w-auto">
               <button class="flex-1 sm:flex-none px-[12px] py-[6px] bg-[#E1E8FD] rounded-[8px] text-[12px]"
                 (click)="expandedRowId = null">
-                Cancel
+                Cancelar
               </button>
 
               <button class="flex-1 sm:flex-none px-[14px] py-[6px] bg-[#3525CD] text-white rounded-[8px] text-[12px]"
                 (click)="updateCategory(section)">
-                Save Changes
+                Salvar 
               </button>
             </div>
           </div>
@@ -195,10 +195,10 @@
   <!-- PAGINATION -->
   <div class="flex flex-col md:flex-row justify-between gap-2 px-[16px] py-[12px] text-[12px] bg-[#F1F3FF4D]">
     <span>
-      Showing {{ (currentPage - 1) * limit + 1 }}
+      Mostrando {{ (currentPage - 1) * limit + 1 }}
       -
       {{ currentPage * limit > total ? total : currentPage * limit }}
-      of {{ total }} games
+      de {{ total }} jogos
     </span>
 
     <div class="flex gap-[6px]">

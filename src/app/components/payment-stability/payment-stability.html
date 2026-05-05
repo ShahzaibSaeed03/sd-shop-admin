@@ -4,17 +4,17 @@
   <div class="flex flex-col lg:flex-row lg:justify-between gap-4">
     <div>
       <p class="text-[10px] md:text-[12px] text-[#4F46E5] font-[600] uppercase">
-        WEBHOOK LOGS
+        LOGS de WEBHOOK
         <span class="text-[#464555] mx-1">/</span>
-        <span class="text-[#464555]">STABILITY</span>
+        <span class="text-[#464555]">ESTABILIDADE</span>
       </p>
 
       <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B] mt-1">
-        Webhook Logs
+        Logs de Webhook
       </h1>
 
       <p class="text-[13px] md:text-[18px] text-[#464555]">
-        Real-time monitoring of incoming system events.
+        Monitoramento em tempo real dos eventos recebidos do sistema.
       </p>
     </div>
 
@@ -23,17 +23,17 @@
 
       <button (click)="setTab('all')" [ngClass]="activeTab==='all' ? 'bg-white text-[#4F46E5]' : ''"
         class="px-3 rounded font-[700] text-[12px] whitespace-nowrap">
-        All Events
+        Todos os Eventos
       </button>
 
       <button (click)="setTab('success')" [ngClass]="activeTab==='success' ? 'bg-white text-green-600' : ''"
         class="px-3 font-[700] text-[12px] whitespace-nowrap">
-        Success ({{ successCount }})
+        Sucesso ({{ successCount }})
       </button>
 
       <button (click)="setTab('failed')" [ngClass]="activeTab==='failed' ? 'bg-white text-red-600' : ''"
         class="px-3 font-[700] text-[12px] whitespace-nowrap">
-        Failed ({{ failedCount }})
+        Falhou ({{ failedCount }})
       </button>
 
     </div>
@@ -45,10 +45,10 @@
 
       <thead class="bg-[#F1F3FF]">
         <tr class="text-[12px] font-[700] text-[#464555] h-[48px]">
-          <th class="text-left px-6">Event Type</th>
-          <th class="text-left">Order ID</th>
+          <th class="text-left px-6">Tipo de evento</th>
+          <th class="text-left">ID do pedido</th>
           <th class="text-left">Status</th>
-          <th class="text-right pr-6">Timestamp</th>
+          <th class="text-right pr-6">data e hora</th>
         </tr>
       </thead>
 
@@ -111,16 +111,16 @@
     <!-- PAGINATION -->
     <div class="flex justify-between items-center px-6 py-3 bg-[#F1F3FF] text-[12px]">
       <span>
-        Showing {{ paginatedLogs.length }} of {{ filteredLogs.length }}
+        Mostrando {{ paginatedLogs.length }} of {{ filteredLogs.length }}
       </span>
 
       <div class="flex gap-2">
         <button class="px-3 py-1 bg-white border rounded" (click)="prevPage()">
-          Prev
+          Anterior
         </button>
 
         <button class="px-3 py-1 bg-white border rounded" (click)="nextPage()">
-          Next
+          Próximo
         </button>
       </div>
     </div>

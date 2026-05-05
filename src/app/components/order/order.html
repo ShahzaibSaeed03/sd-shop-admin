@@ -6,10 +6,10 @@
         <!-- TITLE -->
         <div>
             <p class="text-[11px] md:text-[12px] font-[700] text-[#3525CD] uppercase">
-                ADMINPANEL ORDERS
+                PAINEL ADMINISTRATIVO DE PEDIDOS
             </p>
             <h1 class="text-[22px] md:text-[30px] font-[700] text-[#141B2B]">
-                Order Management
+                Gerenciamento de Pedidos
             </h1>
         </div>
 
@@ -39,7 +39,7 @@
 
                     <div (click)="clearGameFilter(); toggleDropdown=false"
                         class="px-3 py-2 text-[13px] hover:bg-gray-100 cursor-pointer">
-                        All Games
+                        Genshin Impact
                     </div>
 
                     <div *ngFor="let game of games" (click)="filterByGame(game); toggleDropdown=false"
@@ -63,25 +63,25 @@
                 <button (click)="changeStatus('pending'); toggleDropdown=false"
                     [ngClass]="selectedStatus === 'pending' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
                     class="px-3 text-[12px] font-[600] whitespace-nowrap">
-                    Pending
+                    Pendente
                 </button>
 
                 <button (click)="changeStatus('paid'); toggleDropdown=false"
                     [ngClass]="selectedStatus === 'paid' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
                     class="px-3 text-[12px] font-[600] whitespace-nowrap">
-                    Paid
+                    Pago
                 </button>
 
                 <button (click)="changeStatus('failed'); toggleDropdown=false"
                     [ngClass]="selectedStatus === 'failed' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
                     class="px-3 text-[12px] font-[600] whitespace-nowrap">
-                    Failed
+                    Falhou
                 </button>
 
                 <button (click)="changeStatus('cancelled'); toggleDropdown=false"
                     [ngClass]="selectedStatus === 'cancelled' ? 'bg-white text-[#3525CD]' : 'text-[#464555]'"
                     class="px-3 text-[12px] font-[600] whitespace-nowrap">
-                    Cancelled
+                    Cancelado
                 </button>
 
             </div>
@@ -98,11 +98,11 @@
 
             <thead class="bg-[#F1F3FF80]">
                 <tr class="text-[11px] uppercase text-[#464555] font-[700] h-[44px]">
-                    <th class="text-left px-6">Order ID</th>
-                    <th class="text-left">Date</th>
+                    <th class="text-left px-6">ID DO PEDIDO</th>
+                    <th class="text-left">Data</th>
                     <th class="text-left">Status</th>
                     <th class="text-left">Total</th>
-                    <th class="text-right pr-6">Actions</th>
+                    <th class="text-right pr-6">Ações</th>
                 </tr>
             </thead>
 
@@ -138,7 +138,7 @@
 
                     <td class="pr-6 text-right">
                         <button (click)="viewOrder(order)" class="text-[#3525CD] text-[12px] font-[700]">
-                            View
+                            Ver
                         </button>
                     </td>
 
@@ -177,7 +177,7 @@
                     </span>
 
                     <button (click)="viewOrder(order)" class="text-[#3525CD] text-[12px] font-[700]">
-                        View
+                        Ver
                     </button>
 
                 </div>
@@ -190,7 +190,7 @@
         <div class="flex flex-col md:flex-row justify-between gap-2 px-4 md:px-6 py-3 text-[12px]">
 
             <span>
-                Showing {{ orders.length }} of {{ total }}
+                Mostrando {{ orders.length }} de {{ total }} resultados
             </span>
 
             <div class="flex gap-2">

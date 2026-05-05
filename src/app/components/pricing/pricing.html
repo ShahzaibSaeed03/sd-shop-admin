@@ -1,10 +1,9 @@
 <div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
   <!-- HEADER -->
   <div class="w-full md:w-[632px] flex flex-col gap-[8px]">
-    <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Games Pricing Overview</h1>
+    <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Visão Geral de Preços dos Jogos</h1>
     <p class="text-[14px] md:text-[18px] text-[#464555]">
-      Manage individual game markups and override global pricing logic.
-    </p>
+      Gerencie margens de lucro por jogo e sobrescreva a lógica global de preços. As alterações são aplicadas em tempo real na loja. </p>
   </div>
 
   <!-- TABLE WRAPPER -->
@@ -12,9 +11,9 @@
     <!-- HEADER -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 px-[16px] py-[14px] border-b">
       <div class="flex items-center gap-[10px] flex-wrap">
-        <p class="text-[16px] md:text-[18px] font-[600] text-[#141B2B]">Game-Level Controls</p>
+        <p class="text-[16px] md:text-[18px] font-[600] text-[#141B2B]">Controle por Jogo</p>
         <span class="px-[10px] py-[2px] bg-[#E2E8F0] text-[12px] rounded-full text-[#64748B]">
-          {{ products.length }} {{ products.length === 1 ? 'Game' : 'Games' }}
+          {{ products.length }} {{ products.length === 1 ? 'Jogo' : 'Jogos' }}
         </span>
       </div>
     </div>
@@ -22,10 +21,10 @@
     <!-- DESKTOP HEADER -->
     <div
       class="hidden md:flex px-[16px] py-[12px] text-[12px] font-[700] uppercase text-[#64748B] border-b bg-[#F1F3FF]">
-      <div class="w-[320px]">Game Name</div>
-      <div class="w-[228px]">Markup (%)</div>
-      <div class="w-[234px]">Pricing Status</div>
-      <div class="w-[175px] text-end">Actions</div>
+      <div class="w-[320px]">Nome do Jogo</div>
+      <div class="w-[228px]">Margem (%)</div>
+      <div class="w-[234px]">Status de Preço</div>
+      <div class="w-[175px] text-end">Ações</div>
     </div>
 
     <!-- LOOP -->
@@ -50,7 +49,8 @@
         <div class="w-[234px]">
           <span class="inline-flex items-center gap-[6px] px-[10px] py-[3px] font-[600] rounded-full text-[12px]"
             [ngClass]="product.markup > 0 ? 'bg-[#6FFBBE] text-[#005236]' : 'bg-[#D0E1FB] text-[#54647A]'">
-            <span class="w-[6px] h-[6px] rounded-full" [ngClass]="product.markup > 0 ? 'bg-[#005236]' : 'bg-[#54647A]'"></span>
+            <span class="w-[6px] h-[6px] rounded-full"
+              [ngClass]="product.markup > 0 ? 'bg-[#005236]' : 'bg-[#54647A]'"></span>
             {{ product.markup > 0 ? 'Override Active' : 'Using Global' }}
           </span>
         </div>
@@ -99,8 +99,8 @@
     <!-- FOOTER -->
     <div class="flex flex-col md:flex-row justify-between gap-2 px-[16px] py-[14px] text-[12px] bg-[#F1F3FF80]">
       <span>
-        Showing {{ products.length ? (page - 1) * pageSize + 1 : 0 }} -
-        {{ Math.min(page * pageSize, products.length) }} of {{ products.length }}
+        Mostrando {{ products.length ? (page - 1) * pageSize + 1 : 0 }} -
+        {{ Math.min(page * pageSize, products.length) }} de {{ products.length }} jogos
       </span>
 
       <div class="flex gap-2 flex-wrap">
@@ -133,7 +133,7 @@
             {{ selectedProduct?.name }}
             <span
               class="ml-2 text-[9px] md:text-[10px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]">
-              OVERRIDE ACTIVE
+              personalizado
             </span>
           </h2>
 
@@ -152,10 +152,10 @@
     <div class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
       <!-- GAME LEVEL -->
       <div class="flex flex-col gap-[12px]">
-        <h2 class="text-[12px] md:text-[14px] font-[700] uppercase">GAME-LEVEL SETTINGS</h2>
+        <h2 class="text-[12px] md:text-[14px] font-[700] uppercase">COnfigurações por jogo</h2>
 
         <div class="w-full bg-[#F1F3FF] rounded-[12px] px-[12px] md:px-[16px] py-[12px] md:py-[14px]">
-          <p class="text-[11px] md:text-[12px] font-[700] mb-[6px]">DEFAULT MARKUP (%)</p>
+          <p class="text-[11px] md:text-[12px] font-[700] mb-[6px]">Margem Padrão (%)</p>
 
           <div
             class="w-full md:w-[220px] h-[42px] bg-white rounded-[8px] px-[12px] flex items-center justify-between text-[14px] font-[700]">
@@ -169,7 +169,7 @@
       <!-- PRODUCT TABLE -->
       <div>
         <h2 class="text-[12px] md:text-[14px] font-[700] uppercase mb-2">
-          PRODUCT-LEVEL OVERRIDES
+          Personalização por produto
         </h2>
 
         <!-- MOBILE: horizontal scroll -->
@@ -177,13 +177,13 @@
           <table class="w-[900px] md:w-full border-collapse">
             <thead>
               <tr class="text-[11px] md:text-[12px] font-[700] bg-[#EEF2FF]">
-                <th class="px-4 py-3 text-left">PRODUCT</th>
-                <th class="px-4 py-3 text-left">DISPLAY</th>
+                <th class="px-4 py-3 text-left">NOME DO PRODUTO </th>
+                <th class="px-4 py-3 text-left">NOME DE EXIBIÇÃO</th>
                 <th class="px-4 py-3 text-left">PRICE</th>
-                <th class="px-4 py-3 text-left">%</th>
+                <th class="px-4 py-3 text-left">MARGEM %</th>
                 <th class="px-4 py-3 text-left">FINAL</th>
                 <th class="px-4 py-3 text-left">STATUS</th>
-                <th class="px-4 py-3 text-right">ACTION</th>
+                <th class="px-4 py-3 text-right">AÇÕES</th>
               </tr>
             </thead>
 
@@ -221,7 +221,7 @@
                 <td class="px-4 py-3 text-right">
                   <button (click)="resetToDefault(product)"
                     class="text-[10px] text-[#3525CD] font-[700] bg-[#3525CD0D] px-2 py-1 rounded">
-                    Reset
+                    Restaurar Padrão
                   </button>
                 </td>
               </tr>
@@ -235,17 +235,17 @@
     <div class="p-4 md:p-6 border-t space-y-3 bg-[#F1F3FF80]">
       <button (click)="syncProducts()"
         class="w-full h-[48px] md:h-[52px] bg-[#4F46E5] text-white rounded-xl font-[700] text-[14px] md:text-[16px]">
-        Sync Products
+        Sincronizar Produtos da API
       </button>
 
       <div class="flex flex-col md:flex-row gap-3">
         <button class="w-full md:flex-1 h-[44px] md:h-[46px] bg-white rounded-xl font-[700] text-[14px] border">
-          Discard
+          Descartar Alterações
         </button>
 
         <button (click)="saveAllChanges()"
           class="w-full md:flex-1 h-[44px] md:h-[46px] bg-[#141B2B] text-white rounded-xl font-[700] text-[14px]">
-          Save Changes
+          Salvar
         </button>
       </div>
     </div>

@@ -12,7 +12,7 @@
 
       <div class="flex gap-2  items-center">
         <h1 class="text-[20px] font-[700]">
-          Order #{{ order._id }}
+          Pedido #{{ order._id }}
         </h1>
 
         <p class="text-[13px] text-gray-500">
@@ -42,21 +42,21 @@
     <div class="grid grid-cols-3 gap-4">
 
       <div>
-        <p class="text-xs text-gray-500">GAME</p>
+        <p class="text-xs text-gray-500">NOME DO JOGO</p>
         <h2 class="font-bold">
           {{ order.product?.name || 'Unknown Game' }}
         </h2>
       </div>
 
       <div>
-        <p class="text-xs text-gray-500">PRODUCT</p>
+        <p class="text-xs text-gray-500">NOME DO PRODUTO</p>
         <h2 class="font-bold">
           {{ order.product?.name }}
         </h2>
       </div>
 
       <div>
-        <p class="text-xs text-gray-500">QTY</p>
+        <p class="text-xs text-gray-500">QuantiDADE</p>
         <h2 class="text-xl font-bold text-indigo-600">01</h2>
       </div>
 
@@ -70,23 +70,23 @@
     <div class="bg-white border rounded-xl p-5 flex-1 grid grid-cols-4 gap-4">
 
       <div>
-        <p class="text-xs">API</p>
+        <p class="text-xs">CUSTO DA API</p>
         <b>{{ formatPrice(order.originalPrice || order.price) }}</b>
       </div>
 
       <div>
-        <p class="text-xs">Markup</p>
+        <p class="text-xs">Cashback</p>
         <b class="text-green-600">0%</b>
       </div>
 
       <div>
-        <p class="text-xs">Final</p>
+        <p class="text-xs">Preço FINAL</p>
         <b class="text-indigo-600">{{ formatPrice(order.price) }}</b>
       </div>
 
       <!-- ✅ Only show profit if payment status is success -->
 <div >
-  <p class="text-xs">Profit</p>
+  <p class="text-xs">LUCRO</p>
   <b class="text-green-600" *ngIf="order.status === 'paid'">
     +{{ formatPrice((order.price || 0) - (order.originalPrice || 0)) }}
   </b>
@@ -99,7 +99,7 @@
       *ngIf="order.status === 'paid' && order.supplierStatus !== 'completed'"
       (click)="retryOrder()"
       class="px-6 bg-indigo-600 text-white rounded-xl font-bold">
-      Retry
+      Reprocessar pedido
     </button>
 
   </div>
@@ -108,7 +108,7 @@
 <div class="bg-white border rounded-xl p-5">
 
   <div class="flex justify-between mb-4">
-    <b>TRANSACTION LOGS</b>
+    <b>Logs da Transação</b>
     <button (click)="downloadLogs()" class="text-indigo-600 text-sm font-bold">
       DOWNLOAD RAW
     </button>

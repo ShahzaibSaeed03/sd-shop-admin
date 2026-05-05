@@ -8,17 +8,17 @@
 
       <div>
         <p class="text-[13px] md:text-[14px] font-[700] text-[#93000A]">
-          Critical Warning: Webhook Failures
+          Aviso Crítico: Falhas de Webhook Detectadas
         </p>
         <p class="text-[11px] md:text-[12px] text-[#93000A]">
-          {{ webhookFails }} failed attempts in last 15 minutes
+          {{ webhookFails }} tentativas de entrega falharam nos últimos 15 minutos. A sincronização de pagamentos pode estar atrasada.
         </p>
       </div>
     </div>
 
     <button routerLink="/payment-stability"
       class="w-full md:w-auto h-[32px] px-4 rounded bg-[#93000A] text-white text-[12px] font-[700]">
-      View Logs
+      Ver Logs
     </button>
   </div>
 
@@ -26,29 +26,29 @@
   <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-[24px]">
     <!-- FAILED -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
-      <p class="text-[10px] md:text-[12px] text-gray-500">FAILED ORDERS</p>
+      <p class="text-[10px] md:text-[12px] text-gray-500">PEDIDOS COM FALHA</p>
       <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-[#BA1A1A]">
           {{ stats.failed }}
         </span>
-        <span class="px-2 py-[2px] bg-[#BA1A1A] text-white text-[10px] rounded-full">FAILED</span>
+        <span class="px-2 py-[2px] bg-[#BA1A1A] text-white text-[10px] rounded-full">FALHOU</span>
       </div>
     </div>
 
     <!-- PENDING -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
-      <p class="text-[10px] md:text-[12px] text-gray-500">PENDING</p>
+      <p class="text-[10px] md:text-[12px] text-gray-500">Pedidos penDENTES</p>
       <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-gray-400">
           {{ stats.pending }}
         </span>
-        <span class="px-2 py-[2px] bg-gray-400 text-white text-[10px] rounded-full">PENDING</span>
+        <span class="px-2 py-[2px] bg-gray-400 text-white text-[10px] rounded-full">PENDENTE</span>
       </div>
     </div>
 
     <!-- TOTAL -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
-      <p class="text-[10px] md:text-[12px] text-gray-500">TOTAL</p>
+      <p class="text-[10px] md:text-[12px] text-gray-500">Total de pedidos</p>
       <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-gray-900">
           {{ stats.total }}
@@ -61,12 +61,12 @@
 
     <!-- ACTIVE GAMES -->
     <div class="p-4 md:p-[24px] bg-white border rounded-[12px] flex flex-col gap-2">
-      <p class="text-[10px] md:text-[12px] text-gray-500">VISIBLE GAMES</p>
+      <p class="text-[10px] md:text-[12px] text-gray-500">Jogos VIsíveis</p>
       <div class="flex items-end gap-2">
         <span class="text-[22px] md:text-[36px] font-[800] text-green-700">
           {{ stats.activeGames }}
         </span>
-        <span class="px-2 py-[2px] rounded-full bg-green-700 text-white text-[10px]">ACTIVE</span>
+        <span class="px-2 py-[2px] rounded-full bg-green-700 text-white text-[10px]">ATIVOS</span>
       </div>
     </div>
   </div>
@@ -74,19 +74,19 @@
   <!-- 🟪 NAV -->
   <div class="w-full bg-white border rounded-[12px] flex overflow-x-auto md:grid md:grid-cols-4">
     <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/order">
-      Orders
+      Ordens
       <span class="flex items-center px-2">
         <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
       </span>
     </div>
     <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/pricing">
-      Pricing
+      Preços
       <span class="flex items-center px-2">
         <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
       </span>
     </div>
     <div class="min-w-[150px] md:min-w-0 flex justify-center items-center py-3 cursor-pointer" routerLink="/coupons">
-      Coupons
+      Cupons
       <span class="flex items-center px-2">
         <i class="fas fa-chevron-right text-[#CBD5E1] text-[10px] leading-none"></i>
       </span>
@@ -103,7 +103,7 @@
 
     <h2 class="text-[18px] leading-[24px] md:leading-[28px] font-[700] tracking-[-0.3px] md:tracking-[-0.45px] text-[#141B2B]
     ">
-      Failed Orders Queue
+      Fila de Pedidos com Falha
     </h2>
     <i class="fas fa-rotate-right text-[#141B2B] text-[10px] cursor-pointer opacity-80" (click)="loadDashboard()" [class.animate-spin]="loading"></i>
   </div>
@@ -115,11 +115,11 @@
       <table class="w-full">
         <thead class="bg-[#F1F3FF]">
           <tr class="text-[10px] font-[700] text-[#464555]">
-            <th class="px-6 py-3 text-left">Order ID</th>
-            <th class="px-6 py-3 text-left">Game</th>
-            <th class="px-6 py-3 text-left">Product</th>
+            <th class="px-6 py-3 text-left">ID DO PEDIDO</th>
+            <th class="px-6 py-3 text-left">NOME DO JOGO</th>
+            <th class="px-6 py-3 text-left">ProdutO</th>
             <th class="px-6 py-3 text-left">Status</th>
-            <th class="px-6 py-3 text-right">Actions</th>
+            <th class="px-6 py-3 text-right">Ações</th>
           </tr>
         </thead>
 
@@ -149,7 +149,7 @@
                 Retry
               </button>
               <button routerLink="/payment-stability" class="bg-[#E1E8FD] text-[#3525CD] px-3 py-1 text-[10px] rounded">
-                Logs
+                Ver Logs
               </button>
             </td>
           </tr>
@@ -180,7 +180,7 @@
           </button>
 
           <button routerLink="/payment-stability" class="flex-1 bg-[#E1E8FD] text-[#3525CD] py-1 rounded text-[11px]">
-            Logs
+            Ver Logs
           </button>
         </div>
       </div>
@@ -188,11 +188,11 @@
 
     <!-- FOOTER -->
     <div class="flex flex-col md:flex-row justify-between gap-2 px-4 py-3 bg-[#F1F3FF] text-[12px]">
-      <span> Showing {{ paginatedOrders.length }} of {{ failedOrders.length }} failed </span>
+      <span> Mostrando {{ paginatedOrders.length }} de {{ failedOrders.length }} pedidos com falha </span>
 
       <div class="flex gap-2">
-        <button class="px-3 py-1 bg-white border rounded" (click)="prevPage()">Prev</button>
-        <button class="px-3 py-1 bg-white border rounded" (click)="nextPage()">Next</button>
+        <button class="px-3 py-1 bg-white border rounded" (click)="prevPage()">Anterior</button>
+        <button class="px-3 py-1 bg-white border rounded" (click)="nextPage()">Próximo</button>
       </div>
     </div>
   </div>

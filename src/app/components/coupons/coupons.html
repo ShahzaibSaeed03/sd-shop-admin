@@ -6,10 +6,10 @@
 
         <div class="flex flex-col gap-[6px]">
             <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">
-                Coupons & Affiliates
+                Cupons & Afiliados
             </h1>
             <p class="text-[14px] md:text-[18px] text-[#464555]">
-                Manage promotional campaigns and partnerships.
+                Gerencie campanhas promocionais e parcerias estratégicas.
             </p>
         </div>
 
@@ -17,7 +17,7 @@
             class="w-full md:w-[173px] h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[#4F46E5] text-white">
             <i class="fa-solid fa-plus text-[14px]"></i>
             <span class="text-[13px] md:text-[14px] font-bold">
-                Create Coupon
+                Criar Cupom
             </span>
         </button>
 
@@ -41,19 +41,19 @@
             <button (click)="setFilter('all')"
                 [ngClass]="filterStatus==='all' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
                 class="flex-1 text-[12px] font-[700] rounded-md whitespace-nowrap">
-                All
+                Todos
             </button>
 
             <button (click)="setFilter('active')"
                 [ngClass]="filterStatus==='active' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
                 class="flex-1 text-[12px] font-[700] whitespace-nowrap">
-                Active
+                Ativo
             </button>
 
             <button (click)="setFilter('disabled')"
                 [ngClass]="filterStatus==='disabled' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
                 class="flex-1 text-[12px] font-[700] whitespace-nowrap">
-                Disabled
+                Inativo
             </button>
 
         </div>
@@ -67,12 +67,12 @@
 
             <thead class="bg-[#F1F3FF80]">
                 <tr class="text-[12px] font-[700] text-[#464555] h-[48px]">
-                    <th class="px-6 text-left">Coupon Code</th>
-                    <th class="text-left">Discount</th>
-                    <th class="text-left">Affiliate</th>
-                    <th class="text-left">Analytics</th>
+                    <th class="px-6 text-left">Código do cupom</th>
+                    <th class="text-left">DESCONTO (%)</th>
+                    <th class="text-left">AFILIADO</th>
+                    <th class="text-left">Análises</th>
                     <th class="text-left">Status</th>
-                    <th class="text-right pr-6">Actions</th>
+                    <th class="text-right pr-6">Ações</th>
                 </tr>
             </thead>
 
@@ -105,7 +105,7 @@
                         <button (click)="openAnalytics(c)"
                             class="flex items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-[8px] border border-[#C7C4D84D] bg-[#fff]">
                             <img src="icons/analytics.png" class="w-[16.5px] h-[12.75px]" />
-                            <span class="text-[12px] font-semibold text-[#3525CD]">View</span>
+                            <span class="text-[12px] font-semibold text-[#3525CD]">Ver</span>
                         </button>
                     </td>
 
@@ -113,7 +113,7 @@
                         <span
                             class="inline-flex items-center justify-center w-[57.53px] h-[20px] px-[10px] py-[2px] rounded-full text-[12px] font-bold"
                             [ngClass]="c.isActive ? 'bg-[#6FFBBE] text-[#005236]' : 'bg-[#FECACA] text-[#991B1B]'">
-                            {{ c.isActive ? 'Active' : 'Disabled' }}
+                            {{ c.isActive ? 'Ativo' : 'Inativo' }}
                         </span>
                     </td>
 
@@ -143,7 +143,7 @@
 
                 <span class="text-[10px] px-2 py-[2px] rounded-full"
                     [ngClass]="c.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
-                    {{ c.isActive ? 'Active' : 'Disabled' }}
+                    {{ c.isActive ? 'Ativo' : 'Inativo' }}
                 </span>
             </div>
 
@@ -160,7 +160,7 @@
             <div class="flex justify-between items-center mt-2">
 
                 <button (click)="openAnalytics(c)" class="text-[#3525CD] text-[12px] font-[600]">
-                    Analytics
+                    Análises
                 </button>
 
                 <button (click)="editCoupon(c)" class="text-[#3525CD] text-[12px] font-[600]">
@@ -180,19 +180,19 @@
             <!-- TOTAL -->
             <span class="flex items-center gap-1 text-[#46455599]">
                 <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                {{ total }} TOTAL
+                {{ total }} Cupons no total
             </span>
 
             <!-- ACTIVE -->
             <span class="flex items-center gap-1 text-[#46455599]">
                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                {{ activeCount }} ACTIVE
+                {{ activeCount }} cupons ativos
             </span>
 
             <!-- DISABLED -->
             <span class="flex items-center gap-1 text-[#46455599]">
                 <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
-                {{ disabledCount }} DISABLED
+                {{ disabledCount }} 56 Expirados / desabilitados
             </span>
         </div>
 
@@ -201,7 +201,7 @@
                 ‹
             </button>
             <span>
-                PAGE {{ currentPage }} OF {{ totalPages }}
+                PÁGINA {{ currentPage }} DE {{ totalPages }}
             </span>
             <button (click)="changePage(currentPage + 1)" class="text-gray-400 hover:text-[#141B2B] transition">
                 ›
@@ -231,10 +231,10 @@
 
             <div>
                 <h2 class="text-[16px] md:text-[20px] font-bold text-[#141B2B]">
-                    Create New Coupon
+                    Criar novo Cupom
                 </h2>
                 <p class="text-[11px] md:text-[12px] text-[#464555] mt-1">
-                    Define promotion rules and partnerships.
+                    Defina regras de promoção e atribua parcerias
                 </p>
             </div>
 
@@ -251,7 +251,7 @@
             <div class="flex items-center gap-[6px]">
                 <img src="icons/coupon.png" class="w-[14px]" />
                 <p class="text-[11px] md:text-[12px] font-[900] uppercase text-[#464555]">
-                    Coupon Configuration
+                    ConfiguraÇÃO DO CUPOM
                 </p>
             </div>
 
@@ -372,11 +372,11 @@
 
             <button (click)="createCoupon()"
                 class="w-full md:flex-1 bg-[#4F46E5] text-white py-2 rounded-lg text-[14px]">
-                Save Coupon
+                Salvar
             </button>
 
             <button (click)="isOpen=false" class="w-full md:flex-1 text-indigo-600 text-[14px]">
-                Cancel
+                Cancelar
             </button>
 
         </div>
@@ -412,10 +412,10 @@
 
                 <div>
                     <h2 class="text-[16px] md:text-[20px] font-[700] text-[#141B2B] leading-tight">
-                        Coupon Analytics
+                        Desempenho do Cupom
                         <span
                             class="ml-2 text-[8px] md:text-[9px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]">
-                            LIVE
+                            ATIVO
                         </span>
                     </h2>
 
@@ -444,20 +444,20 @@
                 <div class="flex items-center gap-[6px] mb-3">
                     <i class="fa-regular fa-calendar text-[#64748B] text-[11px]"></i>
                     <p class="text-[10px] md:text-[11px] font-[700] uppercase text-[#64748B]">
-                        DATE RANGE
+                        SELECIONAR PERíODO
                     </p>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3">
 
                     <div class="flex-1">
-                        <label class="text-[10px] font-[700] text-[#94A3B8]">START</label>
+                        <label class="text-[10px] font-[700] text-[#94A3B8]">DATA INICIAL</label>
                         <input type="date" [(ngModel)]="analytics.startDate"
                             class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]" />
                     </div>
 
                     <div class="flex-1">
-                        <label class="text-[10px] font-[700] text-[#94A3B8]">END</label>
+                        <label class="text-[10px] font-[700] text-[#94A3B8]">DATA FINAL</label>
                         <input type="date" [(ngModel)]="analytics.endDate"
                             class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]" />
                     </div>
@@ -470,7 +470,7 @@
 
                 <div>
                     <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
-                        COUPON REVENUE
+                        RECEITA DO CUPOM
                     </p>
 
                     <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
@@ -497,7 +497,7 @@
 
                 <div>
                     <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
-                        TOTAL REVENUE
+                        RECEITA TOTAL DO AFILIADO
                     </p>
 
                     <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
@@ -523,7 +523,7 @@
 
             <button (click)="isAnalyticsOpen=false"
                 class="w-full h-[48px] md:h-[52px] bg-[#E1E8FD] text-[#3525CD] rounded-xl font-[700] text-[14px] md:text-[16px]">
-                Close Details
+                Fechar
             </button>
 
         </div>
