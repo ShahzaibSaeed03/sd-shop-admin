@@ -1,0 +1,262 @@
+:host {
+  width: 100%;
+  display: block;
+}
+
+/* =========================
+   CKEDITOR WRAPPER
+========================= */
+
+.ck-editor-wrapper {
+  width: 100%;
+}
+
+/* =========================
+   FULL EDITOR
+========================= */
+
+::ng-deep .ck.ck-editor {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+::ng-deep .ck.ck-toolbar {
+  border: 1px solid #dbe1ea !important;
+  border-bottom: none !important;
+  background: #ffffff !important;
+  padding: 10px !important;
+  border-radius: 16px 16px 0 0 !important;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+::ng-deep .ck.ck-button {
+  border-radius: 10px !important;
+}
+
+::ng-deep .ck.ck-button:hover {
+  background: #eef2ff !important;
+}
+
+::ng-deep .ck.ck-button.ck-on {
+  background: #3525cd !important;
+  color: #ffffff !important;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+
+::ng-deep .ck.ck-dropdown .ck-button {
+  min-width: 120px;
+}
+
+/* =========================
+   EDITOR BOX
+========================= */
+
+::ng-deep .ck.ck-editor__main > .ck-editor__editable {
+  min-height: 500px !important;
+  max-height: 900px;
+  overflow-y: auto;
+  padding: 34px !important;
+  border: 1px solid #dbe1ea !important;
+  border-radius: 0 0 16px 16px !important;
+  background: #ffffff !important;
+  font-size: 15px;
+  line-height: 1.9;
+  color: #141b2b;
+}
+
+/* =========================
+   FOCUS
+========================= */
+
+::ng-deep .ck.ck-editor__main > .ck-editor__editable.ck-focused {
+  border-color: #3525cd !important;
+  box-shadow: 0 0 0 4px rgba(53, 37, 205, 0.1);
+}
+
+/* =========================
+   CONTENT BASE
+========================= */
+
+::ng-deep .ck-content {
+  font-family: Inter, sans-serif;
+  color: #141b2b;
+}
+
+/* =========================
+   HEADINGS
+========================= */
+
+::ng-deep .ck-content h1,
+::ng-deep .ck-content h2,
+::ng-deep .ck-content h3 {
+  display: block !important;
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* H1 */
+
+::ng-deep .ck-content h1 {
+  font-size: 2.4rem !important;
+  font-weight: 800 !important;
+  margin-top: 34px;
+  margin-bottom: 18px;
+}
+
+/* H2 */
+
+::ng-deep .ck-content h2 {
+  font-size: 1.9rem !important;
+  margin-top: 28px;
+  margin-bottom: 16px;
+}
+
+/* H3 */
+
+::ng-deep .ck-content h3 {
+  font-size: 1.5rem !important;
+  margin-top: 22px;
+  margin-bottom: 14px;
+}
+
+/* =========================
+   PARAGRAPH
+========================= */
+
+::ng-deep .ck-content p {
+  font-size: 15px;
+  line-height: 1.9;
+  margin: 14px 0;
+  color: #334155;
+}
+
+/* =========================
+   STRONG
+========================= */
+
+::ng-deep .ck-content strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* =========================
+   LISTS
+========================= */
+
+::ng-deep .ck-content ul {
+  list-style: disc !important;
+  padding-left: 32px !important;
+  margin: 20px 0;
+}
+
+::ng-deep .ck-content ol {
+  list-style: decimal !important;
+  padding-left: 32px !important;
+  margin: 20px 0;
+}
+
+::ng-deep .ck-content li {
+  margin-bottom: 10px;
+  line-height: 1.8;
+  color: #334155;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+::ng-deep .ck-content a {
+  color: #3525cd;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* =========================
+   IMAGES
+========================= */
+
+::ng-deep .ck-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin: 28px auto;
+  display: block;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   IMAGE CAPTION
+========================= */
+
+::ng-deep .ck-content .image > figcaption {
+  font-size: 13px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* =========================
+   TABLES
+========================= */
+
+::ng-deep .ck-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+::ng-deep .ck-content table td,
+::ng-deep .ck-content table th {
+  border: 1px solid #dbe1ea;
+  padding: 12px;
+}
+
+::ng-deep .ck-content table th {
+  background: #f8fafc;
+  font-weight: 700;
+}
+
+/* =========================
+   BLOCKQUOTE
+========================= */
+
+::ng-deep .ck-content blockquote {
+  border-left: 4px solid #3525cd;
+  background: #f8faff;
+  padding: 20px;
+  margin: 24px 0;
+  border-radius: 0 12px 12px 0;
+  color: #475569;
+  font-style: italic;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::ng-deep .ck-editor__editable_inline::-webkit-scrollbar {
+  width: 8px;
+}
+
+::ng-deep .ck-editor__editable_inline::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 20px;
+}
+
+::ng-deep .ck-editor__editable_inline::-webkit-scrollbar-track {
+  background: transparent;
+}

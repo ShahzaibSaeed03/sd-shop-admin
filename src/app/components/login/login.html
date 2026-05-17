@@ -4,8 +4,11 @@
               shadow-[0px_12px_32px_0px_rgba(20,27,43,0.05)] px-10 pt-10 pb-14 space-y-10">
             <!-- Logo -->
             <div class="flex flex-col items-center space-y-4">
-                <div class="w-[56px] h-[56px] rounded-[12px] bg-indigo-100 flex items-center justify-center">
-                    <img src="icons/Icon.png" alt="logo" class="w-[23.75px] h-[22.5px]" />
+                <div class="w-[56px] h-[56px] rounded-[12px] bg-gradient-to-br from-[#7C3AED] to-[#6D28D9] flex items-center justify-center shadow-md">
+                    <!-- Diamond / Gem icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-[26px] h-[26px]">
+                        <path d="M6.5 3h11l4.5 6-10 12L2 9l4.5-6zM7.2 4.5L4.2 8.5h4.3l1.3-4H7.2zm5.6 0l-1.3 4h1.0l-1.3-4zm2.6 0L14.2 8.5h4.6l-3-4h-0.4zM9.2 10l2.8 8.5L14.8 10H9.2z"/>
+                    </svg>
                 </div>
                 <h1 class="font-extrabold text-[30px] leading-[36px] tracking-[-0.75px] text-center text-gray-900">
                     SD SHOP
@@ -21,9 +24,9 @@
                 <!-- Email -->
                 <div class="space-y-2">
                     <label class="font-semibold text-[12px] leading-[16px] tracking-[0.6px] uppercase text-gray-500">
-                        EMAIL ADDRESS
+                        EMAIL
                     </label>
-                    <input type="email" [(ngModel)]="email" name="email" placeholder="admin@test.com"
+                    <input type="email" [(ngModel)]="email" name="email" placeholder="admin@sdshop.gg"
                         class="w-full h-[50px] px-4 pt-[15px] pb-[16px] rounded-lg border border-gray-300 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
 
@@ -39,7 +42,9 @@
                 <!-- ❌ Error (dynamic) -->
                 <div *ngIf="errorMessage"
                     class="flex items-center gap-2 bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg">
-                    <span>⚠️</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 flex-shrink-0">
+                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.9.9 0 100-1.8.9.9 0 000 1.8z" clip-rule="evenodd"/>
+                    </svg>
                     <span>{{ errorMessage }}</span>
                 </div>
 
@@ -52,7 +57,7 @@
                         class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin">
                     </span>
                     <span>
-                        {{ isLoading ? 'Authenticating...' : 'Login' }}
+                        {{ isLoading ? 'Autenticando...' : 'Entrar' }}
                     </span>
                 </button>
 
@@ -60,20 +65,13 @@
                 <div class="w-full h-[32px] py-[8px] flex items-center gap-4">
                     <div class="flex-1 h-[1px] bg-gray-200"></div>
                     <span class="text-[12px] text-gray-400 font-medium">
-                        OR
+                        OU
                     </span>
                     <div class="flex-1 h-[1px] bg-gray-200"></div>
                 </div>
 
                 <!-- 🔹 Google Button -->
-                <button type="button"
-                    class="w-full h-[56px] py-[16px] rounded-lg bg-[#E1E8FD] flex items-center justify-center gap-3 transition hover:opacity-90">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-[20px] h-[20px]"
-                        alt="google" />
-                    <span class="font-sans font-semibold text-[16px] leading-[24px] text-[#3525CD]">
-                        Continue with Google
-                    </span>
-                </button>
+             
             </form>
         </div>
     </div>

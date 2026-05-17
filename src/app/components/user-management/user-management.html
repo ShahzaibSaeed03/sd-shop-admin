@@ -1,201 +1,325 @@
 <div class="w-full mx-auto min-h-screen flex flex-col gap-10">
-    <div class="w-full h-[72px] flex flex-col gap-[8px]">
-        <h1 class="text-[30px] font-[800] leading-[36px] tracking-[-0.75px] text-[#141B2B]">
-            Gerenciamento de Usuários
-        </h1>
-        <p class="text-[18px] font-[400] leading-[28px] text-[#464555]">
-            Gerencie campanhas promocionais e parcerias estratégicas.
+  <!-- HEADER -->
+  <div class="w-full h-[72px] flex flex-col gap-[8px]">
+    <h1 class="text-[30px] font-[800] leading-[36px] tracking-[-0.75px] text-[#141B2B]">
+      User Management
+    </h1>
+
+    <p class="text-[18px] font-[400] leading-[28px] text-[#464555]">
+      Manage users, roles, purchases and cashback statistics.
+    </p>
+  </div>
+
+  <!-- TABLE -->
+  <div class="rounded-[12px] overflow-hidden">
+    <!-- TOP -->
+    <div class="flex items-center justify-between h-[40px]">
+      <div class="flex items-center gap-[10px]">
+        <p class="text-[18px] font-[600] text-[#141B2B]">User List</p>
+
+        <span class="px-[10px] py-[2px] bg-[#E2E8F0] text-[12px] rounded-full text-[#64748B]">
+          {{ users.length }} Users
+        </span>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="mt-6 bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <table class="w-full border-collapse">
+        <!-- HEAD -->
+        <thead class="bg-[#F1F3FF80]">
+          <tr class="h-[48px]">
+            <th class="px-6 text-left text-[12px] font-[700] uppercase text-[#464555B2]">User</th>
+
+            <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">Role</th>
+
+            <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">Email</th>
+
+            <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">Status</th>
+
+            <th class="text-right pr-6 text-[12px] font-[700] uppercase text-[#464555B2]">
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody class="divide-y">
+          <tr *ngFor="let user of users" class="h-[72px]">
+            <!-- USER -->
+            <td class="px-6">
+              <div class="flex items-center gap-[8px]">
+                <img
+                  [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.name"
+                  class="w-[38px] h-[38px] rounded-full object-cover"
+                />
+
+                <div>
+                  <p class="font-[700] text-[15px] text-[#141B2B]">
+                    {{ user.name }}
+                  </p>
+
+                  <p class="text-[12px] text-gray-500">
+                    {{ user._id }}
+                  </p>
+                </div>
+              </div>
+            </td>
+
+            <!-- ROLE -->
+            <td>
+              <select
+                [value]="user.role"
+                (change)="changeRole(user, $event)"
+                class="h-[36px] px-3 rounded-[8px] border border-[#E2E8F0] text-[13px] outline-none"
+              >
+                <option value="user">User</option>
+
+                <option value="admin">Admin</option>
+              </select>
+            </td>
+
+            <!-- EMAIL -->
+            <td class="text-[#464555] text-[14px]">
+              {{ user.email }}
+            </td>
+
+            <!-- STATUS -->
+            <td>
+              <span
+                class="inline-flex items-center justify-center min-w-[80px] h-[24px] px-[12px] rounded-full text-[11px] font-[700]"
+                [ngClass]="{
+                  'bg-[#DCFCE7] text-[#166534]': user.isActive !== false,
+
+                  'bg-[#FEE2E2] text-[#991B1B]': user.isActive === false,
+                }"
+              >
+                {{ user.isActive === false ? 'Inactive' : 'Active' }}
+              </span>
+            </td>
+
+            <!-- ACTIONS -->
+            <td class="pr-6">
+              <div class="flex justify-end items-center gap-3">
+                <button
+                  (click)="openDetails(user)"
+                  class="flex items-center gap-1 px-4 h-[32px] rounded-lg bg-[#4F46E5] text-white text-[12px] font-[700]"
+                >
+                  Details
+                </button>
+
+                <button (click)="deleteUser(user)" class="text-[red] text-[12px] font-[700]">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div
+      class="flex justify-between items-center px-[16px] py-[14px] text-[12px] text-[#64748B] bg-[#F1F3FF4D]"
+    >
+      <span> Showing {{ users.length }} users </span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- USER DETAILS MODAL -->
+<!-- ===================================================== -->
+
+<div
+  *ngIf="selectedUser"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[4px] p-6"
+>
+  <div class="w-full max-w-[1100px] max-h-[92vh] overflow-y-auto bg-white rounded-[24px] p-6">
+    <!-- TOP -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-[28px] font-[800] text-[#141B2B]">User Details</h2>
+
+        <p class="text-[14px] text-gray-500 mt-1">
+          Purchase history, cashback and spending analytics
         </p>
+      </div>
+
+      <button
+        (click)="closeDetails()"
+        class="w-[40px] h-[40px] rounded-full bg-[#F1F5F9] hover:bg-[#E2E8F0]"
+      >
+        ✕
+      </button>
     </div>
-    <div class="rounded-[12px] overflow-hidden">
-        <div class="flex items-center justify-between h-[40px]">
-            <div class="flex items-center gap-[10px]">
-                <p class="text-[18px] font-[600] text-[#141B2B]">
-                    Lista de Usuários
-                </p>
-                <span class="px-[10px] py-[2px] bg-[#E2E8F0] text-[12px] rounded-full text-[#64748B]">
-                    {{ users.length }} Usuários
+
+    <!-- USER INFO -->
+    <div class="flex items-center gap-4 mb-8">
+      <img
+        [src]="
+          selectedUser.user.avatar || 'https://ui-avatars.com/api/?name=' + selectedUser.user.name
+        "
+        class="w-[70px] h-[70px] rounded-full object-cover border"
+      />
+
+      <div>
+        <h3 class="text-[22px] font-[800] text-[#141B2B]">
+          {{ selectedUser.user.name }}
+        </h3>
+
+        <p class="text-[14px] text-gray-500">
+          {{ selectedUser.user.email }}
+        </p>
+
+        <span
+          class="inline-flex mt-2 px-3 py-1 rounded-full bg-[#EEF2FF] text-[#3525CD] text-[11px] font-[700] uppercase"
+        >
+          {{ selectedUser.user.role }}
+        </span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <!-- TOTAL ORDERS -->
+      <div class="bg-[#F8FAFC] rounded-[14px] p-5">
+        <p class="text-[12px] text-gray-500">Total Orders</p>
+
+        <h3 class="text-[28px] font-[800] mt-2">
+          {{ selectedUser.stats.totalOrders }}
+        </h3>
+      </div>
+
+      <!-- TOTAL SPENT -->
+      <div class="bg-[#F8FAFC] rounded-[14px] p-5">
+        <p class="text-[12px] text-gray-500">Total Spent</p>
+
+        <h3 class="text-[28px] font-[800] mt-2">R$ {{ totalPaidAmount.toFixed(2) }}</h3>
+      </div>
+
+      <!-- CASHBACK USED -->
+      <div class="bg-[#F8FAFC] rounded-[14px] p-5">
+        <p class="text-[12px] text-gray-500">Cashback Used</p>
+
+        <h3 class="text-[28px] font-[800] mt-2">R$ {{ selectedUser.stats.totalCashbackUsed }}</h3>
+      </div>
+
+      <!-- CASHBACK EARNED -->
+      <div class="bg-[#F8FAFC] rounded-[14px] p-5">
+        <p class="text-[12px] text-gray-500">Cashback Earned</p>
+
+        <h3 class="text-[28px] font-[800] mt-2">R$ {{ selectedUser.stats.totalCashbackEarned }}</h3>
+      </div>
+
+      <!-- COUPON -->
+      <div class="bg-[#F8FAFC] rounded-[14px] p-5">
+        <p class="text-[12px] text-gray-500">Voucher Discount</p>
+
+        <h3 class="text-[28px] font-[800] mt-2">R$ {{ selectedUser.stats.totalCouponDiscount }}</h3>
+      </div>
+    </div>
+
+    <!-- PURCHASES -->
+    <div class="bg-white border rounded-[18px] overflow-hidden">
+      <!-- TITLE -->
+      <div class="px-5 h-[60px] flex items-center border-b bg-[#F8FAFC]">
+        <h3 class="text-[18px] font-[700] text-[#141B2B]">Purchase History</h3>
+      </div>
+
+      <!-- TABLE -->
+      <table class="w-full">
+        <thead class="bg-[#FCFCFD]">
+          <tr class="h-[50px] border-b">
+            <th class="text-left px-5 text-[12px] uppercase text-[#64748B]">Product</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Paid</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Cashback</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Coupon</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Coins</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Payment</th>
+
+            <th class="text-left text-[12px] uppercase text-[#64748B]">Status</th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody>
+          <tr *ngFor="let item of selectedUser.purchasedProducts" class="border-b h-[86px]">
+            <!-- PRODUCT -->
+            <td class="px-5">
+              <div class="flex items-center gap-3">
+                <img
+                  [src]="item.productImage"
+                  class="w-[56px] h-[56px] rounded-[12px] object-cover border"
+                />
+
+                <div>
+                  <p class="font-[700] text-[14px] text-[#141B2B]">
+                    {{ item.productName }}
+                  </p>
+
+                  <p class="text-[12px] text-gray-500 mt-1">
+                    {{ item.createdAt | date: 'medium' }}
+                  </p>
+                </div>
+              </div>
+            </td>
+
+            <!-- PAID -->
+            <td class="text-[14px] font-[700]">R$ {{ item.paidAmount }}</td>
+
+            <!-- CASHBACK -->
+            <td class="text-[14px]">R$ {{ item.cashbackUsed }}</td>
+
+            <!-- COUPON -->
+            <td class="text-[14px]">
+              <div class="flex flex-col">
+                <span> R$ {{ item.couponDiscount }} </span>
+
+                <span class="text-[11px] text-gray-400">
+                  {{ item.couponCode || '-' }}
                 </span>
-            </div>
-            <button (click)="isAddUserOpen = true"
-                class="px-[16px] py-[8px] bg-[#E1E8FD] rounded-[8px] text-[#3525CD] text-[12px] font-[700] flex items-center gap-[6px]">
-                <i class="fa-solid fa-plus text-[10px]"></i>
-                Adicionar Usuário
-            </button>
-        </div>
-        <div class="mt-6 bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <table class="w-full border-collapse">
-                <thead class="bg-[#F1F3FF80]">
-                    <tr class="h-[48px]">
-                        <th class="px-6 text-left text-[12px] font-[700] uppercase text-[#464555B2]">
-                            Usuários
-                        </th>
-                        <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">
-                            Função
-                        </th>
-                        <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">
-                            Email
-                        </th>
-                        <th class="text-left text-[12px] font-[700] uppercase text-[#464555B2]">
-                            Status
-                        </th>
-                        <th class="text-right pr-6 text-[12px] font-[700] uppercase text-[#464555B2]">
-                            Ações
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
-                    <tr *ngFor="let user of users" class="h-[72px]">
-                        <td class="px-6">
-                            <div class="flex items-center gap-[8px] w-[180px] h-[24px]">
-                                <img [src]="user.avatar" class="w-[28px] h-[28px] rounded-full" />
-                                <span class="font-[700] text-[16px] text-[#141B2B]">
-                                    {{ user.name }}
-                                </span>
-                            </div>
-                        </td>
-                        <td class="font-[600] text-[16px]">
-                            {{ user.role }}
-                        </td>
-                        <td class="text-[#464555] text-[14px]">
-                            {{ user.email }}
-                        </td>
-                        <td>
-                            <span
-                                class="inline-flex items-center justify-center w-[70px] h-[20px] px-[10px] py-[2px] rounded-[9999px]"
-                                [ngClass]="{
-                        'bg-[#6FFBBE]': user.status === 'Active',
-                        'bg-[#FECACA]': user.status === 'Inactive'
-                    }">
-                                <span class="text-[12px] font-bold" [ngClass]="{
-                            'text-[#005236]': user.status === 'Active',
-                            'text-[#991B1B]': user.status === 'Inactive'
-                        }">
-                                    {{ user.status }}
-                                </span>
-                            </span>
-                        </td>
-                        <td class="pr-6">
-                            <div class="flex justify-end items-center gap-3">
-                                <button
-                                    class="flex items-center gap-1 px-3 h-[28px] rounded-lg bg-[#4F46E5] text-white text-[12px] font-[700]">
-                                    Detalhe
-                                </button>
-                                <button class="text-[red] text-[12px] font-[700]">
-                                    Deletar
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+              </div>
+            </td>
 
-        <div class="flex justify-between items-center px-[16px] py-[14px] text-[12px] text-[#64748B] bg-[#F1F3FF4D]">
-            <span>Mostrando {{ users.length }} usuários</span>
-        </div>
+            <!-- COINS -->
+            <td class="text-[14px]">
+              {{ item.coinsUsed }}
+            </td>
+
+            <!-- PAYMENT -->
+            <td>
+              <span
+                class="px-3 py-1 rounded-full bg-[#EEF2FF] text-[#3525CD] text-[11px] font-[700] uppercase"
+              >
+                {{ item.paymentMethod }}
+              </span>
+            </td>
+
+            <!-- STATUS -->
+            <td>
+              <span
+                class="px-3 py-1 rounded-full text-[11px] font-[700]"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': item.status === 'paid',
+
+                  'bg-red-100 text-red-700': item.status === 'failed',
+
+                  'bg-yellow-100 text-yellow-700':
+                    item.status === 'pending' || item.status === 'pending_payment',
+                }"
+              >
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</div>
-
-<!-- Overlay -->
-<div *ngIf="isAddUserOpen" (click)="isAddUserOpen=false"
-    class="fixed inset-0 bg-black/40 backdrop-blur-[6px] z-40 transition-all">
-</div>
-
-<!-- Modal -->
-<div *ngIf="isAddUserOpen" class="fixed inset-0 flex items-center justify-center z-50">
-
-    <div class="w-[440px] bg-white rounded-[20px] p-[24px] shadow-[0px_50px_100px_rgba(0,0,0,0.25)] relative">
-
-        <!-- Top Glow -->
-        <div class="absolute top-0 left-0 w-full h-[6px] bg-gradient-to-r from-[#3525CD] to-[#6366F1] rounded-t-[20px]">
-        </div>
-
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-5 mt-2">
-
-            <div>
-                <h2 class="text-[20px] font-[800] text-[#141B2B]">
-                    Adicionar Novo Usuário
-                </h2>
-                <p class="text-[12px] text-[#64748B]">
-                    Crie e atribua funções instantaneamente
-                </p>
-            </div>
-
-            <div (click)="isAddUserOpen=false"
-                class="w-[32px] h-[32px] flex items-center justify-center rounded-full hover:bg-[#F1F3FF] cursor-pointer transition">
-                <i class="fa-solid fa-xmark text-[#64748B]"></i>
-            </div>
-
-        </div>
-
-        <!-- Form -->
-        <div class="flex flex-col gap-4">
-
-            <!-- Input Group -->
-            <div class="flex flex-col gap-[6px]">
-                <label class="text-[11px] font-[700] uppercase text-[#64748B]">
-                    Nome do Usuário
-                </label>
-
-                <input type="text" placeholder="Digite o nome completo"
-                    class="h-[42px] px-3 bg-[#F8FAFF] border border-[#E2E8F0] rounded-[10px] text-[13px] focus:border-[#3525CD] focus:ring-2 focus:ring-[#3525CD1A] outline-none transition" />
-            </div>
-
-            <div class="flex flex-col gap-[6px]">
-                <label class="text-[11px] font-[700] uppercase text-[#64748B]">
-                    Email
-                </label>
-
-                <input type="email" placeholder="example@email.com"
-                    class="h-[42px] px-3 bg-[#F8FAFF] border border-[#E2E8F0] rounded-[10px] text-[13px] focus:border-[#3525CD] focus:ring-2 focus:ring-[#3525CD1A] outline-none transition" />
-            </div>
-
-            <div class="flex gap-3">
-
-                <!-- Role -->
-                <div class="flex-1 flex flex-col gap-[6px]">
-                    <label class="text-[11px] font-[700] uppercase text-[#64748B]">
-                        Função
-                    </label>
-
-                    <input type="text" placeholder="Admin / Manager"
-                        class="h-[42px] px-3 bg-[#F8FAFF] border border-[#E2E8F0] rounded-[10px] text-[13px] focus:border-[#3525CD] focus:ring-2 focus:ring-[#3525CD1A] outline-none transition" />
-                </div>
-
-                <!-- Status -->
-                <div class="flex-1 flex flex-col gap-[6px]">
-                    <label class="text-[11px] font-[700] uppercase text-[#64748B]">
-                        Status
-                    </label>
-
-                    <select
-                        class="h-[42px] px-3 bg-[#F8FAFF] border border-[#E2E8F0] rounded-[10px] text-[13px] focus:border-[#3525CD] outline-none">
-                        <option>Ativo</option>
-                        <option>Inativo</option>
-                    </select>
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- Buttons -->
-        <div class="flex gap-3 mt-6">
-
-            <button (click)="isAddUserOpen=false"
-                class="flex-1 h-[42px] bg-[#F1F5F9] rounded-[10px] text-[13px] font-[600] hover:bg-[#E2E8F0] transition">
-                Cancelar
-            </button>
-
-            <button
-                class="flex-1 h-[42px] bg-gradient-to-r from-[#3525CD] to-[#6366F1] text-white rounded-[10px] text-[13px] font-[700] shadow-md hover:opacity-90 transition">
-                Adicionar Usuário
-            </button>
-
-        </div>
-
-    </div>
-
+  </div>
 </div>

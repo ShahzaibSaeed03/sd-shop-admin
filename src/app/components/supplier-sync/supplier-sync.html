@@ -1,0 +1,409 @@
+<div class="w-full min-h-screen bg-[#F6F8FC] p-6">
+
+  <!-- ================================================= -->
+  <!-- HERO -->
+  <!-- ================================================= -->
+<!-- ================================================= -->
+<!-- SIMPLE HERO -->
+<!-- ================================================= -->
+
+<div
+  class="w-full rounded-[28px] bg-gradient-to-r from-[#4F46E5] to-[#7C3AED] p-8 shadow-lg">
+
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+
+    <!-- LEFT -->
+    <div class="max-w-[700px]">
+
+      <!-- ICON -->
+      <div
+        class="w-[70px] h-[70px] rounded-[22px] bg-white/10 border border-white/10 flex items-center justify-center">
+
+        <i class="fa-solid fa-arrows-rotate text-white text-[28px]"></i>
+
+      </div>
+
+      <!-- TITLE -->
+      <h1 class="text-[42px] font-[900] text-white mt-6 leading-tight">
+        Central de Sincronização
+      </h1>
+
+      <!-- DESC -->
+      <p class="text-[15px] leading-[28px] text-white/80 mt-4">
+        Sincronize categorias e produtos automaticamente com o fornecedor.
+      </p>
+
+      <!-- TAGS -->
+      <div class="flex flex-wrap gap-3 mt-6">
+
+        <div
+          class="h-[40px] px-4 rounded-full bg-white/10 border border-white/10 text-white text-[13px] font-[700] flex items-center gap-2">
+
+          <i class="fa-solid fa-layer-group text-[12px]"></i>
+          Categorias
+
+        </div>
+
+        <div
+          class="h-[40px] px-4 rounded-full bg-white/10 border border-white/10 text-white text-[13px] font-[700] flex items-center gap-2">
+
+          <i class="fa-solid fa-box text-[12px]"></i>
+          Produtos
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex flex-col sm:flex-row gap-4">
+
+      <!-- CLEAN -->
+      <button
+        (click)="cleanupProducts()"
+        [disabled]="cleanupLoading"
+        class="h-[54px] px-6 rounded-[18px] bg-white/10 border border-white/15 text-white text-[14px] font-[800] hover:bg-white/20 transition-all">
+
+        <i class="fa-solid fa-trash mr-2"></i>
+
+        {{ cleanupLoading ? 'Limpando...' : 'Limpar Produtos' }}
+
+      </button>
+
+      <!-- SYNC -->
+      <button
+        (click)="runSync()"
+        [disabled]="loading"
+        class="h-[54px] px-7 rounded-[18px] bg-white text-[#4F46E5] text-[14px] font-[900] hover:scale-[1.02] transition-all">
+
+        <i class="fa-solid fa-bolt mr-2"></i>
+
+        {{ loading ? 'Sincronizando...' : 'Executar Sync' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- ================================================= -->
+  <!-- STATS -->
+  <!-- ================================================= -->
+
+  <div
+    *ngIf="result"
+    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mt-7">
+
+    <!-- CARD -->
+    <div
+      class="group bg-white border border-[#E2E8F0] rounded-[28px] p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+
+      <div class="flex items-start justify-between">
+
+        <div>
+
+          <p class="text-[13px] font-[700] text-[#64748B]">
+            Categorias
+          </p>
+
+          <h2 class="text-[42px] font-[900] text-[#141B2B] mt-3">
+            {{ result.categories.synced }}
+          </h2>
+
+        </div>
+
+        <div
+          class="w-[64px] h-[64px] rounded-[22px] bg-[#EEF2FF] flex items-center justify-center group-hover:scale-110 transition-all">
+
+          <i class="fa-solid fa-layer-group text-[#4F46E5] text-[24px]"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group bg-white border border-[#E2E8F0] rounded-[28px] p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+
+      <div class="flex items-start justify-between">
+
+        <div>
+
+          <p class="text-[13px] font-[700] text-[#64748B]">
+            Criados
+          </p>
+
+          <h2 class="text-[42px] font-[900] text-[#10B981] mt-3">
+            {{ result.products.created }}
+          </h2>
+
+        </div>
+
+        <div
+          class="w-[64px] h-[64px] rounded-[22px] bg-[#ECFDF5] flex items-center justify-center group-hover:scale-110 transition-all">
+
+          <i class="fa-solid fa-plus text-[#10B981] text-[24px]"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group bg-white border border-[#E2E8F0] rounded-[28px] p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+
+      <div class="flex items-start justify-between">
+
+        <div>
+
+          <p class="text-[13px] font-[700] text-[#64748B]">
+            Atualizados
+          </p>
+
+          <h2 class="text-[42px] font-[900] text-[#4F46E5] mt-3">
+            {{ result.products.updated }}
+          </h2>
+
+        </div>
+
+        <div
+          class="w-[64px] h-[64px] rounded-[22px] bg-[#EEF2FF] flex items-center justify-center group-hover:scale-110 transition-all">
+
+          <i class="fa-solid fa-pen text-[#4F46E5] text-[22px]"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CARD -->
+    <div
+      class="group bg-white border border-[#E2E8F0] rounded-[28px] p-6 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+
+      <div class="flex items-start justify-between">
+
+        <div>
+
+          <p class="text-[13px] font-[700] text-[#64748B]">
+            Não Encontrados
+          </p>
+
+          <h2 class="text-[42px] font-[900] text-[#EF4444] mt-3">
+            {{ result.products.missing }}
+          </h2>
+
+        </div>
+
+        <div
+          class="w-[64px] h-[64px] rounded-[22px] bg-[#FEF2F2] flex items-center justify-center group-hover:scale-110 transition-all">
+
+          <i class="fa-solid fa-circle-xmark text-[#EF4444] text-[24px]"></i>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ================================================= -->
+  <!-- ANALYTICS -->
+  <!-- ================================================= -->
+
+  <div
+    *ngIf="result"
+    class="mt-7 grid grid-cols-1 xl:grid-cols-[1.4fr_0.8fr] gap-6">
+
+    <!-- LEFT -->
+    <div
+      class="bg-white rounded-[32px] border border-[#E2E8F0] p-7 shadow-sm">
+
+      <div class="flex items-center justify-between mb-7">
+
+        <div>
+
+          <h2 class="text-[24px] font-[900] text-[#141B2B]">
+            Relatório da Execução
+          </h2>
+
+          <p class="text-[14px] text-[#64748B] mt-2">
+            Resultado completo da sincronização
+          </p>
+
+        </div>
+
+        <div
+          class="h-[46px] px-5 rounded-full bg-[#EEF2FF] text-[#4F46E5] flex items-center justify-center text-[13px] font-[800]">
+
+          Concluído
+
+        </div>
+
+      </div>
+
+      <!-- GRID -->
+      <div class="grid grid-cols-2 gap-5">
+
+        <!-- ITEM -->
+        <div class="rounded-[24px] bg-[#F8FAFC] border border-[#E2E8F0] p-5">
+
+          <p class="text-[12px] font-[700] uppercase tracking-[1px] text-[#94A3B8]">
+            Total Produtos
+          </p>
+
+          <h3 class="text-[34px] font-[900] text-[#141B2B] mt-3">
+            {{ result.products.total }}
+          </h3>
+
+        </div>
+
+        <!-- ITEM -->
+        <div class="rounded-[24px] bg-[#F8FAFC] border border-[#E2E8F0] p-5">
+
+          <p class="text-[12px] font-[700] uppercase tracking-[1px] text-[#94A3B8]">
+            Correspondências
+          </p>
+
+          <h3 class="text-[34px] font-[900] text-[#141B2B] mt-3">
+            {{ result.products.matched }}
+          </h3>
+
+        </div>
+
+        <!-- ITEM -->
+        <div class="rounded-[24px] bg-[#F8FAFC] border border-[#E2E8F0] p-5">
+
+          <p class="text-[12px] font-[700] uppercase tracking-[1px] text-[#94A3B8]">
+            Economia
+          </p>
+
+          <h3 class="text-[34px] font-[900] text-[#141B2B] mt-3">
+            R$ {{ result.products.totalSavings }}
+          </h3>
+
+        </div>
+
+        <!-- ITEM -->
+        <div class="rounded-[24px] bg-[#F8FAFC] border border-[#E2E8F0] p-5">
+
+          <p class="text-[12px] font-[700] uppercase tracking-[1px] text-[#94A3B8]">
+            Tempo
+          </p>
+
+          <h3 class="text-[34px] font-[900] text-[#141B2B] mt-3">
+            {{ result.executionTime }}
+          </h3>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div
+      class="bg-white rounded-[32px] border border-[#E2E8F0] p-7 shadow-sm">
+
+      <div class="flex items-center justify-between mb-6">
+
+        <div>
+
+          <h2 class="text-[22px] font-[900] text-[#141B2B]">
+            Status Atual
+          </h2>
+
+          <p class="text-[13px] text-[#64748B] mt-2">
+            Sistema do fornecedor
+          </p>
+
+        </div>
+
+        <div
+          class="w-[16px] h-[16px] rounded-full bg-[#10B981] animate-pulse">
+        </div>
+
+      </div>
+
+      <!-- STATUS -->
+      <div class="flex flex-col gap-5">
+
+        <div
+          class="rounded-[22px] border border-[#E2E8F0] p-5 flex items-center justify-between">
+
+          <div class="flex items-center gap-4">
+
+            <div
+              class="w-[54px] h-[54px] rounded-[18px] bg-[#EEF2FF] flex items-center justify-center">
+
+              <i class="fa-solid fa-server text-[#4F46E5]"></i>
+
+            </div>
+
+            <div>
+
+              <h3 class="text-[15px] font-[800] text-[#141B2B]">
+                API do Fornecedor
+              </h3>
+
+              <p class="text-[13px] text-[#64748B] mt-1">
+                Operacional
+              </p>
+
+            </div>
+
+          </div>
+
+          <span class="text-[#10B981] font-[800] text-[13px]">
+            Online
+          </span>
+
+        </div>
+
+        <div
+          class="rounded-[22px] border border-[#E2E8F0] p-5 flex items-center justify-between">
+
+          <div class="flex items-center gap-4">
+
+            <div
+              class="w-[54px] h-[54px] rounded-[18px] bg-[#ECFDF5] flex items-center justify-center">
+
+              <i class="fa-solid fa-database text-[#10B981]"></i>
+
+            </div>
+
+            <div>
+
+              <h3 class="text-[15px] font-[800] text-[#141B2B]">
+                Banco de Dados
+              </h3>
+
+              <p class="text-[13px] text-[#64748B] mt-1">
+                Sincronizado
+              </p>
+
+            </div>
+
+          </div>
+
+          <span class="text-[#10B981] font-[800] text-[13px]">
+            OK
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

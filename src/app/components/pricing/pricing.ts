@@ -2,87 +2,98 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { FormsModule } from '@angular/forms';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-pricing',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './pricing.html',
   styleUrl: './pricing.css',
 })
 export class Pricing implements OnInit {
+
   page = 1;
   pageSize = 10;
+
   modalPage = 1;
   modalPageSize = 10;
-  selectedProduct: any = null;
+
+  selectedCategory: any = null;
+
   defaultMarkup: number = 0;
 
   isManageModalOpen = false;
 
-  products: any[] = [];
+  // ✅ GAME LIST
+  categories: any[] = [];
+
+  // ✅ PRODUCTS OF SELECTED GAME
   modalProducts: any[] = [];
 
   Math = Math;
 
   constructor(
     private productService: ProductService,
-  ) { }
+    private categoryService: CategoryService,
+  ) {}
 
-  ngOnInit() {
-    this.loadProducts();
+  // =====================================================
+  // INIT
+  // =====================================================
+
+  ngOnInit(): void {
+    this.loadCategories();
   }
 
-  loadProducts() {
-    this.productService.getProducts().subscribe({
+  // =====================================================
+  // LOAD GAMES / CATEGORIES
+  // =====================================================
+
+  loadCategories() {
+
+    this.categoryService.getCategories().subscribe({
+
       next: (res: any) => {
-        this.products = res.data || [];
+
+        console.log('CATEGORIES:', res);
+
+        this.categories = res.data || [];
+
+        this.page = 1;
       },
-      error: (err) => console.error(err)
+
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
+
+  // =====================================================
+  // PAGINATION
+  // =====================================================
+
   get totalPages(): number {
-    return Math.ceil(this.products.length / this.pageSize) || 1;
+    return Math.ceil(this.categories.length / this.pageSize) || 1;
   }
 
   get paginatedProducts() {
+
     const start = (this.page - 1) * this.pageSize;
-    return this.products.slice(start, start + this.pageSize);
+
+    return this.categories.slice(start, start + this.pageSize);
   }
 
-  nextPage() {
-    if (this.page < this.totalPages) this.page++;
-  }
-
-  prevPage() {
-    if (this.page > 1) this.page--;
-  }
-
-  goToPage(p: number) {
-    if (p < 1 || p > this.totalPages) return;
-    this.page = p;
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-  get modalTotalPages(): number {
-    return Math.ceil(this.modalProducts.length / this.modalPageSize) || 1;
-  }
-
-  get paginatedModalProducts() {
-    const start = (this.modalPage - 1) * this.modalPageSize;
-    return this.modalProducts.slice(start, start + this.modalPageSize);
-  }
   get visiblePages(): number[] {
+
     const total = this.totalPages;
     const current = this.page;
 
-    const range = 2; // kitne pages show karne hain left/right
+    const range = 2;
 
     let start = Math.max(1, current - range);
     let end = Math.min(total, current + range);
 
-    // ensure at least 5 pages show ho
     if (current <= 3) {
       end = Math.min(5, total);
     }
@@ -92,157 +103,297 @@ export class Pricing implements OnInit {
     }
 
     const pages = [];
+
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
 
     return pages;
   }
+
+  nextPage() {
+    if (this.page < this.totalPages) {
+      this.page++;
+    }
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+    }
+  }
+
+  goToPage(p: number) {
+
+    if (p < 1 || p > this.totalPages) return;
+
+    this.page = p;
+  }
+
+  // =====================================================
+  // MODAL PAGINATION
+  // =====================================================
+
+  get modalTotalPages(): number {
+    return Math.ceil(this.modalProducts.length / this.modalPageSize) || 1;
+  }
+
+  get paginatedModalProducts() {
+
+    const start = (this.modalPage - 1) * this.modalPageSize;
+
+    return this.modalProducts.slice(start, start + this.modalPageSize);
+  }
+
   modalNext() {
-    if (this.modalPage < this.modalTotalPages) this.modalPage++;
+    if (this.modalPage < this.modalTotalPages) {
+      this.modalPage++;
+    }
   }
 
   modalPrev() {
-    if (this.modalPage > 1) this.modalPage--;
+    if (this.modalPage > 1) {
+      this.modalPage--;
+    }
   }
 
   goToModalPage(p: number) {
+
     if (p < 1 || p > this.modalTotalPages) return;
+
     this.modalPage = p;
   }
-  // ✅ update markup
-  updateMarkup(product: any) {
 
-    if (product.markup < 0 || product.markup > 500) {
-      product.error = true;
-      return;
-    }
+  // =====================================================
+  // OPEN GAME PRODUCTS
+  // =====================================================
 
-    product.error = false;
+  openManage(category: any) {
 
-    this.productService.updateProduct(product._id, {
-      markup: product.markup
-    }).subscribe({
-      next: () => console.log('updated'),
-      error: (err) => console.error(err)
-    });
-  }
+    this.selectedCategory = category;
 
-  // ✅ final price
-  getFinalPrice(product: any) {
-    return product.price + (product.price * (product.markup || 0) / 100);
-  }
-
-
-  // OPEN MODAL
-  openManage(product: any) {
-
-    const categoryId = product.category?._id;
-
-    this.selectedProduct = product;
-    this.defaultMarkup = product.markup || 0;
     this.isManageModalOpen = true;
 
-    this.modalPage = 1; // ✅ reset
+    this.modalPage = 1;
 
-    if (categoryId) {
-      this.productService.getByCategory(categoryId).subscribe({
-        next: (res: any) => {
-          this.modalProducts = res.data || [];
+    this.defaultMarkup = 0;
+
+    this.productService.getByCategory(category._id).subscribe({
+
+      next: (res: any) => {
+
+        console.log('CATEGORY PRODUCTS:', res);
+
+        this.modalProducts = res.data || [];
+
+        // ✅ DEFAULT MARKUP
+        if (this.modalProducts.length > 0) {
+          this.defaultMarkup = this.modalProducts[0]?.markup || 0;
         }
-      });
-    } else {
-      this.modalProducts = [product];
-    }
-  }
-
-  closeModal() {
-    this.isManageModalOpen = false;
-    this.modalProducts = [];
-  }
-  // DEFAULT MARKUP CHANGE
-updateDefaultMarkup() {
-
-  if (!this.selectedProduct) return;
-
-  if (this.defaultMarkup > 500) {
-    alert('Max 500% allowed');
-    return;
-  }
-
-  // ✅ ONLY SAME CATEGORY PRODUCTS
-  this.modalProducts.forEach((product: any) => {
-    product.markup = this.defaultMarkup;
-  });
-
-}
-
-  // PRODUCT LEVEL MARKUP
-  updateProductMarkup(product: any) {
-    if (product.markup > 500) {
-      product.error = true;
-      return;
-    }
-
-    product.error = false;
-
-    this.productService.updateProduct(product._id, {
-      markup: product.markup
-    }).subscribe();
-  }
-
-  // TOGGLE VISIBILITY
-  toggleVisibility(product: any) {
-    this.productService.updateProduct(product._id, {
-      isActive: !product.isActive
-    }).subscribe(() => {
-      product.isActive = !product.isActive;
-    });
-  }
-
-  saveAllChanges() {
-    const requests = this.modalProducts.map((p: any) => {
-      return this.productService.updateProduct(p._id, {
-        markup: p.markup || 0,
-        displayName: p.displayName || '', // ✅ important
-        isActive: p.isActive
-      });
-    });
-
-    Promise.all(requests.map(r => r.toPromise()))
-      .then(() => {
-        this.isManageModalOpen = false;
-        this.loadProducts();
-      })
-      .catch(err => console.error(err));
-  }
-  syncProducts() {
-    this.productService.syncProducts().subscribe({
-      next: () => {
-        console.log('Products synced');
-
-        // reload products after sync
-        this.loadProducts();
       },
+
       error: (err) => {
-        console.error('Sync failed', err);
+        console.error(err);
       }
     });
   }
 
-  updateDisplayName(product: any) {
+  closeModal() {
+
+    this.isManageModalOpen = false;
+
+    this.modalProducts = [];
+
+    this.selectedCategory = null;
+  }
+
+  // =====================================================
+  // FINAL PRICE
+  // =====================================================
+
+  getFinalPrice(product: any): number {
+
+    const price = Number(product.price || 0);
+
+    const markup = Number(product.markup || 0);
+
+    return price + (price * markup / 100);
+  }
+
+  // =====================================================
+  // UPDATE SINGLE PRODUCT MARKUP
+  // =====================================================
+
+  updateProductMarkup(product: any) {
+
+    if (product.markup < 0 || product.markup > 500) {
+
+      product.error = true;
+
+      return;
+    }
+
+    product.error = false;
+
     this.productService.updateProduct(product._id, {
-      displayName: product.displayName
+
+      markup: Number(product.markup)
+
     }).subscribe({
-      next: () => console.log('Display name updated'),
-      error: (err) => console.error(err)
+
+      next: () => {
+
+        console.log('PRODUCT MARKUP UPDATED');
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
+
+  // =====================================================
+  // UPDATE DISPLAY NAME
+  // =====================================================
+
+  updateDisplayName(product: any) {
+
+    this.productService.updateProduct(product._id, {
+
+      displayName: product.displayName || ''
+
+    }).subscribe({
+
+      next: () => {
+
+        console.log('DISPLAY NAME UPDATED');
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  // =====================================================
+  // DEFAULT MARKUP APPLY TO ALL
+  // =====================================================
+
+  updateDefaultMarkup() {
+
+    if (this.defaultMarkup < 0 || this.defaultMarkup > 500) {
+
+      alert('Max 500% allowed');
+
+      return;
+    }
+
+    this.modalProducts.forEach((product: any) => {
+
+      product.markup = Number(this.defaultMarkup);
+    });
+  }
+
+  // =====================================================
+  // TOGGLE PRODUCT ACTIVE
+  // =====================================================
+
+  toggleVisibility(product: any) {
+
+    this.productService.updateProduct(product._id, {
+
+      isActive: !product.isActive
+
+    }).subscribe({
+
+      next: () => {
+
+        product.isActive = !product.isActive;
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  // =====================================================
+  // RESET PRODUCT
+  // =====================================================
+
   resetToDefault(product: any) {
+
     product.markup = 0;
+
     product.displayName = '';
 
-    // optional UI flag
+    product.fixedPrice = null;
+
     product.isReset = true;
   }
+
+  // =====================================================
+  // SAVE ALL PRODUCTS
+  // =====================================================
+
+  saveAllChanges() {
+
+    const requests = this.modalProducts.map((product: any) => {
+
+      return this.productService.updateProduct(product._id, {
+
+        markup: Number(product.markup || 0),
+
+        displayName: product.displayName || '',
+
+        isActive: product.isActive,
+
+        fixedPrice: product.fixedPrice || null
+      });
+    });
+
+    Promise.all(requests.map((r: any) => r.toPromise()))
+
+      .then(() => {
+
+        console.log('ALL SAVED');
+
+        this.isManageModalOpen = false;
+
+        this.loadCategories();
+      })
+
+      .catch((err) => {
+
+        console.error(err);
+      });
+  }
+
+  // =====================================================
+  // SYNC PRODUCTS
+  // =====================================================
+
+  syncProducts() {
+
+    this.productService.syncProducts().subscribe({
+
+      next: () => {
+
+        console.log('PRODUCTS SYNCED');
+
+        this.loadCategories();
+
+        if (this.selectedCategory?._id) {
+
+          this.openManage(this.selectedCategory);
+        }
+      },
+
+      error: (err) => {
+
+        console.error('SYNC FAILED', err);
+      }
+    });
+  }
+
 }

@@ -39,9 +39,9 @@ export class DashboardApi {
   getDashboard(): Observable<DashboardResponse> {
     return this.http.get<DashboardResponse>(`${this.baseUrl}orders/dashboard`);
   }
-   getLogs(page = 1, limit = 10) {
-    return this.http.get(`${this.baseUrl}payments/logs?page=${page}&limit=${limit}`);
-  }
+  getLogs() {
+  return this.http.get(`${this.baseUrl}payments/logs`);
+}
   getOrderLogs(orderId: string) {
   return this.http.get(`${this.baseUrl}payments/order/${orderId}`);
 }

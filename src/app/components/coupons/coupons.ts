@@ -41,7 +41,6 @@ export class Coupons implements OnInit {
     code: '',
     type: 'percentage',
     value: 0,
-    appliesTo: 'all',
     products: [],
     categories: [],
     minOrderAmount: 0,
@@ -222,7 +221,6 @@ export class Coupons implements OnInit {
       code: '',
       type: 'percentage',
       value: 0,
-      appliesTo: 'all',
       products: [],
       categories: [],
       minOrderAmount: 0,
@@ -244,23 +242,26 @@ export class Coupons implements OnInit {
   // 🔥 DROPDOWN LOGIC
   // =========================
 
-  toggleDropdown() {
-    this.openDropdown = !this.openDropdown;
+toggleDropdown(type: 'products' | 'categories') {
 
-    if (this.openDropdown) {
-      this.onSearch();
-    }
+  this.openDropdown = !this.openDropdown;
+
+  if (this.openDropdown) {
+    this.onSearch(type);
   }
+}
 
-  onSearch() {
-    this.loading = true;
+onSearch(type: 'products' | 'categories') {
 
-    const API =
-      this.form.appliesTo === 'products'
-        ? 'https://api.sdshop.gg/api/products'
-        : 'https://api.sdshop.gg/api/categories';
+  this.loading = true;
 
-    this.http.get(`${API}?search=${this.searchQuery}`).subscribe({
+  const API =
+    type === 'products'
+      ? 'https://api.sdshop.gg/api/products/search'
+      : 'https://api.sdshop.gg/api/categories/search';
+
+  this.http.get(`${API}?q=${this.searchQuery}`)
+    .subscribe({
       next: (res: any) => {
         this.searchResults = res.data || [];
         this.loading = false;
@@ -269,28 +270,49 @@ export class Coupons implements OnInit {
         this.loading = false;
       }
     });
-  }
+}
 
-  selectItem(item: any) {
-    const exists = this.selectedItems.find(i => i._id === item._id);
+ selectItem(item: any, type: 'products' | 'categories') {
 
-    if (exists) {
-      this.selectedItems = this.selectedItems.filter(i => i._id !== item._id);
+  const target =
+    type === 'products'
+      ? this.form.products
+      : this.form.categories;
+
+  const exists = target.find(
+    (id: any) => id === item._id
+  );
+
+  if (exists) {
+
+    if (type === 'products') {
+      this.form.products =
+        this.form.products.filter(
+          (id: string) => id !== item._id
+        );
     } else {
-      this.selectedItems.push(item);
+      this.form.categories =
+        this.form.categories.filter(
+          (id: string) => id !== item._id
+        );
     }
 
-    // save ids
-    if (this.form.appliesTo === 'products') {
-      this.form.products = this.selectedItems.map(i => i._id);
-    } else {
-      this.form.categories = this.selectedItems.map(i => i._id);
-    }
-  }
+  } else {
 
-  isSelected(item: any) {
-    return this.selectedItems.some(i => i._id === item._id);
+    target.push(item._id);
+
   }
+}
+
+isSelected(item: any, type: 'products' | 'categories') {
+
+  const target =
+    type === 'products'
+      ? this.form.products
+      : this.form.categories;
+
+  return target.includes(item._id);
+}
   onAvatarUpload(event: any) {
     const file = event.target.files[0];
 

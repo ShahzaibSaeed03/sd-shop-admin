@@ -1,126 +1,251 @@
-<!-- MOBILE TOP BAR -->
-<div class="lg:hidden w-full h-[60px] flex items-center justify-between px-4 border-b bg-white fixed top-0 left-0 z-50">
-    <h2 class="font-semibold text-[16px] text-[#4338CA]">SD Shop</h2>
-
-    <button (click)="toggleSidebar()" class="text-[20px]">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-</div>
-
-<!-- OVERLAY -->
-<div *ngIf="isSidebarOpen"
-     (click)="toggleSidebar()"
-     class="fixed inset-0 bg-black/30 z-40 lg:hidden"></div>
-
+<!-- ================================================= -->
 <!-- SIDEBAR -->
+<!-- ================================================= -->
+
 <div
-    class="w-[256px] h-screen fixed top-0 left-0 bg-white flex flex-col border-r border-[#E2E8F04D] p-4 z-50
-           transform transition-transform duration-300
-           lg:translate-x-0"
-    [ngClass]="isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+  class="w-[280px] h-screen fixed top-0 left-0 bg-[#F8FAFC] border-r border-[#E2E8F0] flex flex-col z-50 transition-all duration-300 shadow-sm"
+  [ngClass]="isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+>
+  <!-- ================================================= -->
+  <!-- LOGO -->
+  <!-- ================================================= -->
 
-    <!-- HEADER -->
-    <div class="w-full h-[75px] pb-8 mt-[60px] lg:mt-0">
-        <h2 class="font-semibold text-[18px] text-[#4338CA]">
-            SD Shop
-        </h2>
-        <p class="mt-1 text-[13px] text-gray-500">
-            PAINEL ADMIN
+  <div class="px-5 pt-5 pb-6 border-b border-[#E2E8F0]">
+    <div class="flex items-center gap-4">
+      <div
+        class="relative w-[52px] h-[52px] rounded-[18px] bg-gradient-to-br from-[#7C3AED] to-[#4F46E5] flex items-center justify-center shadow-lg shadow-indigo-200"
+      >
+        <i class="fa-solid fa-gem text-white text-[20px]"></i>
+
+        <div class="absolute inset-0 rounded-[18px] bg-white/10 border border-white/20"></div>
+      </div>
+
+      <div class="flex flex-col">
+        <h2 class="text-[20px] font-[800] leading-[22px] text-[#141B2B]">SD Shop</h2>
+
+        <p class="text-[11px] font-[700] tracking-[2px] uppercase text-[#94A3B8] mt-[4px]">
+          Painel Administrativo
         </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- MENU -->
+  <!-- ================================================= -->
+
+  <div class="flex-1 overflow-y-auto px-4 py-5 scrollbar-hide">
+    <div class="px-3 mb-4">
+      <p class="text-[11px] font-[800] tracking-[1.5px] uppercase text-[#94A3B8]">
+        Navegação Principal
+      </p>
     </div>
 
-    <!-- MENU -->
-    <div class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
-        <div class="w-full pt-2 flex flex-col gap-2">
-            <ul class="space-y-2">
-
-                <!-- ITEM -->
-                <li routerLink="/dashboard"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    [routerLinkActiveOptions]="{ exact: true }"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-
-                    <img src="icons/dashboard.png" class="w-[15px] h-[15px]" />
-                    <span class="text-[14px] truncate">Painel de Controle</span>
-                </li>
-
-                <li routerLink="/content-management"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/contnt-mngmnt.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Gerenciador de Conteúdo</span>
-                </li>
-
-                <li routerLink="/img-management"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/img-mngmnt.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Gerenciador de Imagens</span>
-                </li>
-
-                <li routerLink="/pricing"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/pricing.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Preços</span>
-                </li>
-
-                <li routerLink="/order"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/order.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Pedidos</span>
-                </li>
-
-                <li routerLink="/coupons"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/coupon.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Cupons & Afiliados</span>
-                </li>
-
-                <li routerLink="/payment-stability"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <img src="icons/payment.png" class="w-[15px]" />
-                    <span class="text-[14px] truncate">Pagamentos & Estabilidade</span>
-                </li>
-
-                <li routerLink="/user-management"
-                    (click)="closeSidebarOnMobile()"
-                    routerLinkActive="bg-white shadow text-[#4F46E5]"
-                    class="w-full h-[36px] px-3 flex items-center gap-3 rounded-lg text-[#475569] cursor-pointer">
-                    <i class="fas fa-user text-[15px]"></i>
-                    <span class="text-[14px] truncate">User Management</span>
-                </li>
-
-            </ul>
+    <!-- MENU LIST -->
+    <div class="flex flex-col gap-[6px]">
+      <!-- DASHBOARD -->
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="sidebar-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-table-columns"></i>
         </div>
+
+        <span> Painel </span>
+      </a>
+
+      <!-- CONTENT -->
+      <a
+        routerLink="/content-management"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-regular fa-file-lines"></i>
+        </div>
+
+        <span> Gerenciamento de Conteúdo </span>
+      </a>
+
+      <!-- GAME CONTENT -->
+      <a
+        routerLink="/game-content"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-gamepad"></i>
+        </div>
+
+        <span> Conteúdo dos Jogos </span>
+      </a>
+      <!-- BUNDLES -->
+      <a
+        routerLink="/bundle-management"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <span> Bundles de Eventos </span>
+      </a>
+      <!-- SYNC -->
+      <a
+        routerLink="/supplier-sync"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-rotate"></i>
+        </div>
+
+        <span> Sincronização </span>
+      </a>
+
+      <!-- IMAGE -->
+      <a
+        routerLink="/img-management"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-regular fa-image"></i>
+        </div>
+
+        <span> Gerenciamento de Imagens </span>
+      </a>
+
+      <!-- PRICING -->
+      <a
+        routerLink="/pricing"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-tag"></i>
+        </div>
+
+        <span> Preços </span>
+      </a>
+
+      <!-- ORDERS -->
+      <a
+        routerLink="/order"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+
+        <span> Pedidos </span>
+      </a>
+
+      <!-- COUPONS -->
+      <a
+        routerLink="/coupons"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+
+        <span> Cupons e Afiliados </span>
+      </a>
+
+      <!-- PAYMENTS -->
+      <a
+        routerLink="/payment-stability"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-credit-card"></i>
+        </div>
+
+        <span> Pagamentos </span>
+      </a>
+
+      <!-- USERS -->
+      <a
+        routerLink="/user-management"
+        routerLinkActive="sidebar-active"
+        (click)="closeSidebarOnMobile()"
+        class="sidebar-item"
+      >
+        <div class="sidebar-icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+
+        <span> Usuários </span>
+      </a>
     </div>
+  </div>
 
-    <!-- USER -->
-    <div class="w-full pt-4 border-t mt-auto flex flex-col gap-2">
-        <div class="flex items-center gap-3">
-            <div class="w-[32px] h-[32px] rounded-full bg-[#E2DFFF] flex items-center justify-center">
-                <span class="text-[12px] text-[#3525CD] font-bold">AU</span>
-            </div>
+  <!-- ================================================= -->
+  <!-- USER PROFILE -->
+  <!-- ================================================= -->
 
-            <div class="flex flex-col">
-                <span class="text-[12px] font-semibold">Admin User</span>
-                <span class="text-[10px] text-[#464555]">admin@company.com</span>
-            </div>
+  <div class="p-4 border-t border-[#E2E8F0] bg-white/60 backdrop-blur-md">
+    <div class="w-full rounded-[20px] bg-white border border-[#E2E8F0] p-3 shadow-sm">
+      <!-- USER -->
+      <div class="flex items-center gap-3">
+        <ng-container *ngIf="adminUser?.picture; else initialsBlock">
+          <img
+            [src]="adminUser.picture"
+            alt="Admin"
+            (error)="onPictureError()"
+            class="w-[46px] h-[46px] rounded-full object-cover border-2 border-[#EEF2FF]"
+          />
+        </ng-container>
+
+        <ng-template #initialsBlock>
+          <div
+            class="w-[46px] h-[46px] rounded-full bg-gradient-to-br from-[#E2DFFF] to-[#EEF2FF] flex items-center justify-center"
+          >
+            <span class="text-[14px] font-[800] text-[#4F46E5]">
+              {{ adminInitials }}
+            </span>
+          </div>
+        </ng-template>
+
+        <!-- INFO -->
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="text-[14px] font-[800] text-[#141B2B] truncate">
+            {{ adminUser?.name || 'Administrador' }}
+          </span>
+
+          <span class="text-[12px] text-[#64748B] truncate mt-[2px]">
+            {{ adminUser?.email || 'admin@sdshop.gg' }}
+          </span>
         </div>
+      </div>
 
-        <div (click)="onLogout()" class="h-[36px] px-3 flex items-center gap-3 rounded-lg cursor-pointer hover:bg-gray-100">
-            <img src="icons/logout.png" class="w-[15px]" />
-            <span class="text-[14px]">Logout</span>
-        </div>
+      <!-- LOGOUT -->
+      <button
+        (click)="onLogout()"
+        class="w-full mt-4 h-[42px] rounded-[14px] bg-[#F8FAFC] hover:bg-[#EEF2FF] transition-all flex items-center justify-center gap-2 text-[13px] font-[700] text-[#475569]"
+      >
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        Sair
+      </button>
     </div>
+  </div>
 </div>

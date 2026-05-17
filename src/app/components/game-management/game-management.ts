@@ -48,6 +48,7 @@ export class GameManagement implements OnInit {
   goToImageManagement() {
     this.router.navigate(['/img-management']);
   }
+  
   onProductImageSelect(event: any, product: any) {
     const file = event.target.files[0];
     if (!file) return;

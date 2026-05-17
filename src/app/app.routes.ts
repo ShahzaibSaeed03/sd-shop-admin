@@ -11,21 +11,97 @@ import { StabilityDashboard } from './components/stability-dashboard/stability-d
 import { Order } from './components/order/order';
 import { OrderDetails } from './components/order-details/order-details';
 import { UserManagement } from './components/user-management/user-management';
+import { GameContent } from './components/game-content/game-content';
+import { SupplierSync } from './components/supplier-sync/supplier-sync';
+import { BundleManagment } from './components/bundle-managment/bundle-managment';
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-    
   { path: '', component: Login },
-  { path: 'dashboard', component: Dashboard },
-  { path: 'content-management', component: ContentManagement },
-  { path: 'img-management', component: ImgManagement },
-  { path: 'game-management/:id', component: GameManagement },
-  { path: 'pricing', component: Pricing },
-  { path: 'order', component: Order },
-  { path: 'orders/:id', component: OrderDetails },
-  { path: 'coupons', component: Coupons },
-  { path: 'payment-stability', component: PaymentStability },
-  { path: 'payment-dashboard', component: StabilityDashboard },
-  { path: 'user-management', component: UserManagement },
-  { path: '**', redirectTo: '' }
-  
+
+  {
+    path: 'dashboard',
+    component: Dashboard,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'content-management',
+    component: ContentManagement,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'img-management',
+    component: ImgManagement,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'game-management/:id',
+    component: GameManagement,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'pricing',
+    component: Pricing,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'order',
+    component: Order,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'orders/:id',
+    component: OrderDetails,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'coupons',
+    component: Coupons,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'payment-stability',
+    component: PaymentStability,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'payment-dashboard',
+    component: StabilityDashboard,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'user-management',
+    component: UserManagement,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'game-content',
+    component: GameContent,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'supplier-sync',
+    component: SupplierSync,
+    canActivate: [authGuard],
+  },
+
+  {
+    path: 'bundle-management',
+    component: BundleManagment,
+    canActivate: [authGuard],
+  },
+
+  { path: '**', redirectTo: '' },
 ];

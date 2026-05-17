@@ -47,61 +47,37 @@ export class ContentManagement {
     categories: [],
     openDropdown: false,
   };
-  onSearch() {
-    clearTimeout(this.searchTimeout);
 
-    this.searchTimeout = setTimeout(() => {
-      this.fetchGames();
-    }, 400);
-  }
-  loadSections() {
-    this.sectionService.getSections().subscribe({
-      next: (res: any) => {
-        console.log('SECTIONS:', res); // 👈 check
+loadSections() {
 
-        this.sections = res.map((s: any) => ({
-          ...s,
-          manualCategories: s.categories || [],
-        }));
-      },
-    });
-  }
-  removeCategoryFromNewSection(id: string) {
-  this.newSection.categories = this.newSection.categories.filter(
-    (c: any) => c._id !== id
-  );
-}
-  fetchGames() {
-    if (!this.searchQuery) {
-      this.searchResults = [];
-      return;
+  this.sectionService.getSections().subscribe({
+
+    next: (res: any) => {
+
+      console.log('📦 SECTIONS RESPONSE:', res);
+
+      const data = Array.isArray(res)
+        ? res
+        : (res.data || []);
+
+      this.sections = data.map((s: any) => ({
+        ...s,
+        manualCategories: s.categories || [],
+        openDropdown: false
+      }));
+    },
+
+    error: (err) => {
+      console.error('❌ SECTION LOAD ERROR:', err);
     }
+  });
+}
 
-    this.loading = true;
 
-    this.categoryService.searchCategories(this.searchQuery).subscribe({
-      next: (res: any) => {
-        this.searchResults = res.data || [];
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
-  }
 
   categories: any[] = [];
 
-  selectCategory(cat: any) {
-    const exists = this.newSection.categories.find((c: any) => c._id === cat._id);
-
-    if (exists) {
-      alert('Category already added');
-      return;
-    }
-
-    this.newSection.categories.push(cat);
-  }
+ 
   // ================= NEW BANNER =================
   draftBanner: any = {
     link: '',
@@ -136,34 +112,7 @@ export class ContentManagement {
   setDevice(device: 'desktop' | 'mobile', banner: any) {
     banner.selectedDevice = device;
   }
- setMode(section: any, mode: 'api' | 'manual') {
 
-  // 👉 NEW SECTION (modal)
-  if (!section?._id) {
-    section.mode = mode;
-
-    if (mode === 'api') {
-      section.categories = []; // ✅ correct
-    }
-
-    return;
-  }
-
-  // 👉 EXISTING SECTION
-  section.mode = mode;
-
-  const payload: any = { mode };
-
-  if (mode === 'api') {
-    payload.categories = [];     // ✅ FIXED (not products)
-  }
-
-  if (mode === 'manual') {
-    payload.apiSource = null;
-  }
-
-  this.sectionService.updateSection(section._id, payload).subscribe();
-}
   openGameSelectorForNewSection() {
     this.showGameSelector = true;
   }
@@ -181,12 +130,306 @@ export class ContentManagement {
       })
       .subscribe();
   }
+// =====================================================
+// SEARCH
+// =====================================================
 
+onSearch() {
+
+  this.openGameDropdown = true;
+
+  const value = this.searchQuery
+    .toLowerCase()
+    .trim();
+
+  if (!value) {
+
+    this.searchResults = [...this.categories];
+
+    return;
+  }
+
+  this.searchResults = this.categories.filter(
+    (item: any) =>
+      item.name.toLowerCase().includes(value)
+  );
+
+}
+
+// =====================================================
+// FETCH GAMES
+// =====================================================
+
+fetchGames() {
+
+  const query = this.searchQuery?.trim();
+
+  if (!query) {
+    this.searchResults = [];
+    this.loading = false;
+    return;
+  }
+
+  this.categoryService.searchCategories(query).subscribe({
+
+    next: (res: any) => {
+
+      let results: any[] = [];
+
+      if (Array.isArray(res)) {
+        results = res;
+      }
+      else if (Array.isArray(res?.data)) {
+        results = res.data;
+      }
+      else if (Array.isArray(res?.categories)) {
+        results = res.categories;
+      }
+      else if (Array.isArray(res?.results)) {
+        results = res.results;
+      }
+
+      // REMOVE DUPLICATES
+      this.searchResults = results.filter(
+        (item, index, self) =>
+          index === self.findIndex((x) => x._id === item._id)
+      );
+
+      this.loading = false;
+    },
+
+    error: (err) => {
+
+      console.error(err);
+
+      this.loading = false;
+      this.searchResults = [];
+    }
+  });
+}
+
+// =====================================================
+// SELECT CATEGORY
+// =====================================================
+
+selectCategory(cat: any) {
+
+  const exists = this.newSection.categories.find(
+    (c: any) => c._id === cat._id
+  );
+
+  if (exists) {
+    return;
+  }
+
+  this.newSection.categories.push(cat);
+
+  // RESET SEARCH
+  this.searchQuery = '';
+  this.searchResults = [];
+  this.openGameDropdown = false;
+}
+
+// =====================================================
+// REMOVE CATEGORY
+// =====================================================
+
+removeCategoryFromNewSection(id: string) {
+
+  this.newSection.categories =
+    this.newSection.categories.filter(
+      (c: any) => c._id !== id
+    );
+}
+
+// =====================================================
+// SET MODE
+// =====================================================
+
+setMode(
+  section: any,
+  mode: 'api' | 'manual'
+) {
+
+  // =========================================
+  // NEW SECTION
+  // =========================================
+
+  if (!section?._id) {
+
+    this.newSection.mode = mode;
+
+    // RESET SEARCH
+    this.searchQuery = '';
+    this.searchResults = [];
+    this.openGameDropdown = false;
+
+    // API MODE
+    if (mode === 'api') {
+
+      this.newSection.categories = [];
+
+    }
+
+    // MANUAL MODE
+    if (mode === 'manual') {
+
+      this.selectedOption = 'Top Games';
+
+    }
+
+    return;
+  }
+
+  // =========================================
+  // EXISTING SECTION
+  // =========================================
+
+  section.mode = mode;
+
+  const payload: any = {
+    mode
+  };
+
+  if (mode === 'api') {
+
+    payload.apiSource =
+      section.apiSource || 'top_games';
+
+    payload.categories = [];
+  }
+
+  if (mode === 'manual') {
+
+    payload.apiSource = null;
+  }
+
+  this.sectionService
+    .updateSection(section._id, payload)
+    .subscribe({
+
+      next: () => {
+        console.log('SECTION UPDATED');
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+    });
+}
+
+// =====================================================
+// CREATE SECTION
+// =====================================================
+
+createSection() {
+
+  // =========================
+  // MANUAL VALIDATION
+  // =========================
+
+  if (
+    this.newSection.mode === 'manual' &&
+    !this.newSection.name?.trim()
+  ) {
+
+    alert('Section name required');
+    return;
+  }
+
+  if (
+    this.newSection.mode === 'manual' &&
+    this.newSection.categories.length === 0
+  ) {
+
+    alert('Add at least 1 game');
+    return;
+  }
+
+  // =========================
+  // PAYLOAD
+  // =========================
+
+  const payload = {
+
+    name:
+      this.newSection.mode === 'api'
+        ? this.selectedOption
+        : this.newSection.name,
+
+    mode: this.newSection.mode,
+
+    apiSource:
+      this.newSection.mode === 'api'
+        ? this.sectionMap[this.selectedOption]
+        : null,
+
+    categories:
+      this.newSection.mode === 'manual'
+        ? this.newSection.categories.map(
+            (c: any) => c._id
+          )
+        : [],
+
+    isActive: true
+  };
+
+  console.log('FINAL PAYLOAD:', payload);
+
+  // =========================
+  // CREATE
+  // =========================
+
+  this.sectionService
+    .createSection(payload)
+    .subscribe({
+
+      next: () => {
+
+        this.isSectionModalOpen = false;
+
+        // RESET
+        this.newSection = {
+          name: '',
+          mode: 'api',
+          categories: [],
+          openDropdown: false
+        };
+
+        this.searchQuery = '';
+        this.searchResults = [];
+        this.openGameDropdown = false;
+
+        this.loadSections();
+      },
+
+      error: (err) => {
+        console.error(err);
+      }
+    });
+}
   // ✅ ADD THIS
   get paginatedCategories() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.categories.slice(start, start + this.itemsPerPage);
   }
+  addGameToSection(game: any) {
+
+  const exists = this.newSection.categories.find(
+    (x: any) => x._id === game._id
+  );
+
+  if (exists) return;
+
+  this.newSection.categories.push(game);
+
+  this.searchQuery = '';
+
+  this.searchResults = [];
+
+  this.openGameDropdown = false;
+
+}
   toggleCategory(cat: any) {
     const updated = !cat.isActive;
 
@@ -245,19 +488,33 @@ export class ContentManagement {
     });
   }
   // ================= LOAD =================
-  loadBanners() {
-    const section = this.sectionMap[this.selectedOption];
+loadBanners() {
 
-    this.bannerService.getBanners(section).subscribe({
-      next: (res: any) => {
-        this.banners = res.map((b: any) => ({
-          ...b,
-          selectedDevice: 'desktop', // 👈 per banner
-        }));
-      },
-      error: (err) => console.error(err),
-    });
-  }
+  const section = this.sectionMap[this.selectedOption];
+
+  console.log('📤 LOADING BANNERS:', section);
+
+  this.bannerService.getBanners(section).subscribe({
+
+    next: (res: any) => {
+
+      console.log('📥 BANNERS RESPONSE:', res);
+
+      const data = Array.isArray(res)
+        ? res
+        : (res.data || []);
+
+      this.banners = data.map((b: any) => ({
+        ...b,
+        selectedDevice: 'desktop'
+      }));
+    },
+
+    error: (err) => {
+      console.error('❌ BANNER LOAD ERROR:', err);
+    }
+  });
+}
 
   loadCategories() {
     this.categoryService.getCategories().subscribe({
@@ -303,42 +560,60 @@ export class ContentManagement {
     reader.readAsDataURL(file);
   }
 
-  confirmCreateBanner() {
-    if (!this.draftBanner.desktopImage) {
-      alert('Desktop image required');
-      return;
-    }
+ confirmCreateBanner() {
 
-    const formData = new FormData();
-
-    formData.append('desktopImage', this.draftBanner.desktopImage);
-
-    if (this.draftBanner.mobileImage) {
-      formData.append('mobileImage', this.draftBanner.mobileImage);
-    }
-
-    formData.append('link', this.draftBanner.link);
-    formData.append('section', this.sectionMap[this.selectedOption]);
-
-    this.bannerService.createBanner(formData).subscribe({
-      next: () => {
-        this.isAddingBanner = false;
-
-        // 🔥 reset
-        this.draftBanner = {
-          link: '',
-          desktopImage: null,
-          mobileImage: null,
-          desktopPreview: null,
-          mobilePreview: null,
-        };
-
-        this.loadBanners();
-      },
-      error: (err) => console.error('Create error:', err),
-    });
+  if (!this.draftBanner.desktopImage) {
+    alert('Desktop image required');
+    return;
   }
 
+  const formData = new FormData();
+
+  formData.append('desktopImage', this.draftBanner.desktopImage);
+
+  if (this.draftBanner.mobileImage) {
+    formData.append('mobileImage', this.draftBanner.mobileImage);
+  }
+
+  formData.append('link', this.draftBanner.link || '');
+
+  formData.append(
+    'section',
+    this.sectionMap[this.selectedOption]
+  );
+
+  console.log('📤 CREATING BANNER...');
+
+  this.bannerService.createBanner(formData).subscribe({
+
+    next: (res) => {
+
+      console.log('✅ BANNER CREATED:', res);
+
+      this.isAddingBanner = false;
+
+      this.draftBanner = {
+        link: '',
+        desktopImage: null,
+        mobileImage: null,
+        desktopPreview: null,
+        mobilePreview: null,
+      };
+
+      this.loadBanners();
+    },
+
+    error: (err) => {
+
+      console.error('❌ CREATE BANNER ERROR:', err);
+
+      alert(
+        err?.error?.message ||
+        'Banner create failed'
+      );
+    }
+  });
+}
   // ================= UPDATE =================
   updateBanner(banner: any) {
     this.bannerService
@@ -452,48 +727,7 @@ export class ContentManagement {
     }
   }
 
-createSection() {
 
-  // ✅ MANUAL MODE VALIDATION ONLY
-  if (this.newSection.mode === 'manual' && !this.newSection.name) {
-    alert('Section name required');
-    return;
-  }
-
-  if (this.newSection.mode === 'manual' && this.newSection.categories.length === 0) {
-    alert('Add at least 1 category');
-    return;
-  }
-
-  // ✅ FIX: ALWAYS HAVE NAME
-  const finalName =
-    this.newSection.mode === 'api'
-      ? this.selectedOption || 'Section'
-      : this.newSection.name;
-
-  const payload = {
-    name: finalName, // ✅ IMPORTANT
-    mode: this.newSection.mode,
-    apiSource:
-      this.newSection.mode === 'api'
-        ? this.sectionMap[this.selectedOption]
-        : null,
-
-    categories:
-      this.newSection.mode === 'manual'
-        ? this.newSection.categories.map((c: any) => c._id)
-        : [],
-
-    isActive: true,
-  };
-
-  console.log('FINAL PAYLOAD:', payload); // 👈 DEBUG
-
-  this.sectionService.createSection(payload).subscribe(() => {
-    this.isSectionModalOpen = false;
-    this.loadSections();
-  });
-}
 
   activeSection: any = null;
   showSectionGameModal = false;

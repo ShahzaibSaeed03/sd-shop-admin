@@ -1,533 +1,730 @@
 <!-- coupons.component.html -->
 <div class="w-full mx-auto min-h-screen flex flex-col gap-6 md:gap-10 px-3 md:px-0">
+  <!-- HEADER -->
+  <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+    <div class="flex flex-col gap-[6px]">
+      <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">Cupons & Afiliados</h1>
+      <p class="text-[14px] md:text-[18px] text-[#464555]">
+        Gerencie campanhas promocionais e parcerias estratégicas.
+      </p>
+    </div>
 
-    <!-- HEADER -->
-    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+    <button
+      (click)="openCreateModal()"
+      class="w-full md:w-[173px] h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[#4F46E5] text-white"
+    >
+      <i class="fa-solid fa-plus text-[14px]"></i>
+      <span class="text-[13px] md:text-[14px] font-bold"> Criar Cupom </span>
+    </button>
+  </div>
 
-        <div class="flex flex-col gap-[6px]">
-            <h1 class="text-[22px] md:text-[30px] font-[800] text-[#141B2B]">
-                Cupons & Afiliados
-            </h1>
-            <p class="text-[14px] md:text-[18px] text-[#464555]">
-                Gerencie campanhas promocionais e parcerias estratégicas.
-            </p>
-        </div>
+  <!-- SEARCH + FILTER -->
+  <div class="flex flex-col md:flex-row gap-3 md:items-center">
+    <!-- SEARCH -->
+    <div class="w-full md:w-[448px] relative">
+      <i
+        class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px]"
+      ></i>
 
-        <button (click)="openCreateModal()"
-            class="w-full md:w-[173px] h-[40px] flex items-center justify-center gap-2 rounded-[8px] bg-[#4F46E5] text-white">
-            <i class="fa-solid fa-plus text-[14px]"></i>
-            <span class="text-[13px] md:text-[14px] font-bold">
-                Criar Cupom
+      <input
+        type="text"
+        placeholder="Search coupon or affiliate..."
+        class="w-full h-[44px] pl-10 pr-4 rounded-lg bg-white border text-sm outline-none"
+      />
+    </div>
+
+    <!-- TABS -->
+    <div class="flex overflow-x-auto bg-[#F1F3FF] rounded-lg p-1 h-[36px] w-full md:w-[210px]">
+      <button
+        (click)="setFilter('all')"
+        [ngClass]="filterStatus === 'all' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
+        class="flex-1 text-[12px] font-[700] rounded-md whitespace-nowrap"
+      >
+        Todos
+      </button>
+
+      <button
+        (click)="setFilter('active')"
+        [ngClass]="filterStatus === 'active' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
+        class="flex-1 text-[12px] font-[700] whitespace-nowrap"
+      >
+        Ativo
+      </button>
+
+      <button
+        (click)="setFilter('disabled')"
+        [ngClass]="filterStatus === 'disabled' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
+        class="flex-1 text-[12px] font-[700] whitespace-nowrap"
+      >
+        Inativo
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLE (DESKTOP) -->
+  <div class="hidden md:block bg-white rounded-xl border overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-[#F1F3FF80]">
+        <tr class="text-[12px] font-[700] text-[#464555] h-[48px]">
+          <th class="px-6 text-left">Código do cupom</th>
+          <th class="text-left">DESCONTO (%)</th>
+          <th class="text-left">AFILIADO</th>
+          <th class="text-left">Análises</th>
+          <th class="text-left">Status</th>
+          <th class="text-right pr-6">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+        <tr *ngFor="let c of coupons" class="h-[72px]">
+          <td class="px-6 font-[700]">{{ c.code }}</td>
+
+          <td>
+            {{ c.type === 'percentage' ? c.value + '%' : '$' + c.value }}
+          </td>
+
+          <td>
+            <div class="flex items-center gap-[10px]">
+              <img
+                [src]="c.avatar || 'https://via.placeholder.com/40'"
+                class="w-[32px] h-[32px] rounded-full object-cover"
+              />
+              <div class="flex flex-col">
+                <span class="text-[12px] font-[700] text-[#141B2B]">
+                  {{ c.affiliateName || 'No affiliate' }}
+                </span>
+                <span class="text-[10px] text-[#94A3B8]">
+                  {{ c.affiliateName || 'No affiliate' }}
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <button
+              (click)="openAnalytics(c)"
+              class="flex items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-[8px] border border-[#C7C4D84D] bg-[#fff]"
+            >
+              <img src="icons/analytics.png" class="w-[16.5px] h-[12.75px]" />
+              <span class="text-[12px] font-semibold text-[#3525CD]">Ver</span>
+            </button>
+          </td>
+
+          <td>
+            <span
+              class="inline-flex items-center justify-center w-[57.53px] h-[20px] px-[10px] py-[2px] rounded-full text-[12px] font-bold"
+              [ngClass]="c.isActive ? 'bg-[#6FFBBE] text-[#005236]' : 'bg-[#FECACA] text-[#991B1B]'"
+            >
+              {{ c.isActive ? 'Ativo' : 'Inativo' }}
             </span>
+          </td>
+
+          <td class="pr-6">
+            <div class="flex items-center justify-end gap-[8px]">
+              <img src="icons/pencil.png" class="w-[15px] cursor-pointer" (click)="editCoupon(c)" />
+              <img
+                src="icons/dont.png"
+                class="w-[16.67px] cursor-pointer"
+                (click)="deleteCoupon(c._id)"
+              />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MOBILE CARDS -->
+  <div class="md:hidden flex flex-col gap-3">
+    <div *ngFor="let c of coupons" class="bg-white border rounded-xl p-3 flex flex-col gap-2">
+      <!-- TOP -->
+      <div class="flex justify-between items-center">
+        <span class="font-[700] text-[14px]">{{ c.code }}</span>
+
+        <span
+          class="text-[10px] px-2 py-[2px] rounded-full"
+          [ngClass]="c.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'"
+        >
+          {{ c.isActive ? 'Ativo' : 'Inativo' }}
+        </span>
+      </div>
+
+      <!-- INFO -->
+      <div class="text-[12px] text-gray-500">
+        {{ c.type === 'percentage' ? c.value + '%' : '$' + c.value }}
+      </div>
+
+      <div class="text-[12px]">
+        {{ c.affiliateName || 'No affiliate' }}
+      </div>
+
+      <!-- ACTION -->
+      <div class="flex justify-between items-center mt-2">
+        <button (click)="openAnalytics(c)" class="text-[#3525CD] text-[12px] font-[600]">
+          Análises
         </button>
 
+        <button (click)="editCoupon(c)" class="text-[#3525CD] text-[12px] font-[600]">Edit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="flex flex-col md:flex-row justify-between gap-3 text-[12px] text-[#464555]">
+    <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 text-[12px] font-[600]">
+      <!-- TOTAL -->
+      <span class="flex items-center gap-1 text-[#46455599]">
+        <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+        {{ total }} Cupons no total
+      </span>
+
+      <!-- ACTIVE -->
+      <span class="flex items-center gap-1 text-[#46455599]">
+        <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+        {{ activeCount }} cupons ativos
+      </span>
+
+      <!-- DISABLED -->
+      <span class="flex items-center gap-1 text-[#46455599]">
+        <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+        {{ disabledCount }} 56 Expirados / desabilitados
+      </span>
     </div>
 
-    <!-- SEARCH + FILTER -->
-    <div class="flex flex-col md:flex-row gap-3 md:items-center">
-
-        <!-- SEARCH -->
-        <div class="w-full md:w-[448px] relative">
-            <i
-                class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-[12px]"></i>
-
-            <input type="text" placeholder="Search coupon or affiliate..."
-                class="w-full h-[44px] pl-10 pr-4 rounded-lg bg-white border text-sm outline-none" />
-        </div>
-
-        <!-- TABS -->
-        <div class="flex overflow-x-auto bg-[#F1F3FF] rounded-lg p-1 h-[36px] w-full md:w-[210px]">
-
-            <button (click)="setFilter('all')"
-                [ngClass]="filterStatus==='all' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
-                class="flex-1 text-[12px] font-[700] rounded-md whitespace-nowrap">
-                Todos
-            </button>
-
-            <button (click)="setFilter('active')"
-                [ngClass]="filterStatus==='active' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
-                class="flex-1 text-[12px] font-[700] whitespace-nowrap">
-                Ativo
-            </button>
-
-            <button (click)="setFilter('disabled')"
-                [ngClass]="filterStatus==='disabled' ? 'bg-white text-[#4F46E5]' : 'text-[#464555]'"
-                class="flex-1 text-[12px] font-[700] whitespace-nowrap">
-                Inativo
-            </button>
-
-        </div>
-
+    <div class="flex items-center gap-2 text-[12px] font-[600] text-[#141B2B]">
+      <button
+        (click)="changePage(currentPage - 1)"
+        class="text-gray-400 hover:text-[#141B2B] transition"
+      >
+        ‹
+      </button>
+      <span> PÁGINA {{ currentPage }} DE {{ totalPages }} </span>
+      <button
+        (click)="changePage(currentPage + 1)"
+        class="text-gray-400 hover:text-[#141B2B] transition"
+      >
+        ›
+      </button>
     </div>
-
-    <!-- TABLE (DESKTOP) -->
-    <div class="hidden md:block bg-white rounded-xl border overflow-hidden">
-
-        <table class="w-full">
-
-            <thead class="bg-[#F1F3FF80]">
-                <tr class="text-[12px] font-[700] text-[#464555] h-[48px]">
-                    <th class="px-6 text-left">Código do cupom</th>
-                    <th class="text-left">DESCONTO (%)</th>
-                    <th class="text-left">AFILIADO</th>
-                    <th class="text-left">Análises</th>
-                    <th class="text-left">Status</th>
-                    <th class="text-right pr-6">Ações</th>
-                </tr>
-            </thead>
-
-            <tbody class="divide-y">
-
-                <tr *ngFor="let c of coupons" class="h-[72px]">
-
-                    <td class="px-6 font-[700]">{{ c.code }}</td>
-
-                    <td>
-                        {{ c.type === 'percentage' ? c.value + '%' : '$' + c.value }}
-                    </td>
-
-                    <td>
-                        <div class="flex items-center gap-[10px]">
-                            <img [src]="c.avatar || 'https://via.placeholder.com/40'"
-                                class="w-[32px] h-[32px] rounded-full object-cover" />
-                            <div class="flex flex-col">
-                                <span class="text-[12px] font-[700] text-[#141B2B]">
-                                    {{ c.affiliateName || 'No affiliate' }}
-                                </span>
-                                <span class="text-[10px] text-[#94A3B8]">
-                                    {{ c.affiliateName || 'No affiliate' }}
-                                </span>
-                            </div>
-                        </div>
-                    </td>
-
-                    <td>
-                        <button (click)="openAnalytics(c)"
-                            class="flex items-center justify-center gap-[6px] px-[12px] py-[6px] rounded-[8px] border border-[#C7C4D84D] bg-[#fff]">
-                            <img src="icons/analytics.png" class="w-[16.5px] h-[12.75px]" />
-                            <span class="text-[12px] font-semibold text-[#3525CD]">Ver</span>
-                        </button>
-                    </td>
-
-                    <td>
-                        <span
-                            class="inline-flex items-center justify-center w-[57.53px] h-[20px] px-[10px] py-[2px] rounded-full text-[12px] font-bold"
-                            [ngClass]="c.isActive ? 'bg-[#6FFBBE] text-[#005236]' : 'bg-[#FECACA] text-[#991B1B]'">
-                            {{ c.isActive ? 'Ativo' : 'Inativo' }}
-                        </span>
-                    </td>
-
-                    <td class="pr-6">
-                        <div class="flex items-center justify-end gap-[8px]">
-                            <img src="icons/pencil.png" class="w-[15px] cursor-pointer" (click)="editCoupon(c)" />
-                            <img src="icons/dont.png" class="w-[16.67px] cursor-pointer"
-                                (click)="deleteCoupon(c._id)" />
-                        </div>
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-    </div>
-
-    <!-- MOBILE CARDS -->
-    <div class="md:hidden flex flex-col gap-3">
-
-        <div *ngFor="let c of coupons" class="bg-white border rounded-xl p-3 flex flex-col gap-2">
-
-            <!-- TOP -->
-            <div class="flex justify-between items-center">
-                <span class="font-[700] text-[14px]">{{ c.code }}</span>
-
-                <span class="text-[10px] px-2 py-[2px] rounded-full"
-                    [ngClass]="c.isActive ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
-                    {{ c.isActive ? 'Ativo' : 'Inativo' }}
-                </span>
-            </div>
-
-            <!-- INFO -->
-            <div class="text-[12px] text-gray-500">
-                {{ c.type === 'percentage' ? c.value + '%' : '$' + c.value }}
-            </div>
-
-            <div class="text-[12px]">
-                {{ c.affiliateName || 'No affiliate' }}
-            </div>
-
-            <!-- ACTION -->
-            <div class="flex justify-between items-center mt-2">
-
-                <button (click)="openAnalytics(c)" class="text-[#3525CD] text-[12px] font-[600]">
-                    Análises
-                </button>
-
-                <button (click)="editCoupon(c)" class="text-[#3525CD] text-[12px] font-[600]">
-                    Edit
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- FOOTER -->
-    <div class="flex flex-col md:flex-row justify-between gap-3 text-[12px] text-[#464555]">
-
-        <div class="flex flex-wrap md:flex-nowrap gap-4 md:gap-6 text-[12px] font-[600]">
-            <!-- TOTAL -->
-            <span class="flex items-center gap-1 text-[#46455599]">
-                <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                {{ total }} Cupons no total
-            </span>
-
-            <!-- ACTIVE -->
-            <span class="flex items-center gap-1 text-[#46455599]">
-                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-                {{ activeCount }} cupons ativos
-            </span>
-
-            <!-- DISABLED -->
-            <span class="flex items-center gap-1 text-[#46455599]">
-                <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
-                {{ disabledCount }} 56 Expirados / desabilitados
-            </span>
-        </div>
-
-        <div class="flex items-center gap-2 text-[12px] font-[600] text-[#141B2B]">
-            <button (click)="changePage(currentPage - 1)" class="text-gray-400 hover:text-[#141B2B] transition">
-                ‹
-            </button>
-            <span>
-                PÁGINA {{ currentPage }} DE {{ totalPages }}
-            </span>
-            <button (click)="changePage(currentPage + 1)" class="text-gray-400 hover:text-[#141B2B] transition">
-                ›
-            </button>
-
-        </div>
-
-    </div>
-
+  </div>
 </div>
 
 <!-- Overlay -->
 <div *ngIf="isOpen" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"></div>
 
 <!-- Drawer -->
-<div *ngIf="isOpen" class="fixed inset-0 z-[9999] flex justify-end md:justify-end">
+<div *ngIf="isOpen" class="fixed inset-0 z-[9999] flex justify-end">
+  <!-- OVERLAY -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-[3px]" (click)="isOpen = false"></div>
 
-    <!-- OVERLAY -->
-    <div class="absolute inset-0 bg-black/30" (click)="isOpen=false"></div>
-
-    <!-- DRAWER -->
-    <div class="relative w-full md:w-[480px] h-full bg-[#F9F9FF] shadow-2xl flex flex-col
-               md:rounded-none rounded-t-[16px]">
-
-        <!-- HEADER -->
-        <div class="flex justify-between items-start px-4 md:px-6 py-4 md:py-5 border-b bg-[#F1F3FF]">
+  <!-- DRAWER -->
+  <div
+    class="relative w-full md:w-[520px] h-full bg-[#F9FAFF] shadow-2xl flex flex-col overflow-hidden"
+  >
+    <!-- HEADER -->
+    <div class="px-5 md:px-6 py-5 border-b bg-white">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <div
+              class="w-[40px] h-[40px] rounded-[12px] bg-[#EEF2FF] flex items-center justify-center"
+            >
+              <i class="fa-solid fa-ticket text-[#4F46E5]"></i>
+            </div>
 
             <div>
-                <h2 class="text-[16px] md:text-[20px] font-bold text-[#141B2B]">
-                    Criar novo Cupom
-                </h2>
-                <p class="text-[11px] md:text-[12px] text-[#464555] mt-1">
-                    Defina regras de promoção e atribua parcerias
-                </p>
+              <h2 class="text-[20px] font-[800] text-[#141B2B]">
+                {{ form._id ? 'Editar Cupom' : 'Criar Novo Cupom' }}
+              </h2>
+
+              <p class="text-[12px] text-[#64748B] mt-1">
+                Configure regras promocionais e parceiros afiliados
+              </p>
             </div>
-
-            <button (click)="isOpen=false">
-                <img src="icons/close.png" class="w-[14px] h-[14px]">
-            </button>
-
+          </div>
         </div>
 
-        <!-- CONTENT -->
-        <div class="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-5 space-y-5">
+        <button
+          (click)="isOpen = false"
+          class="w-[36px] h-[36px] rounded-full hover:bg-[#F3F4F6] flex items-center justify-center"
+        >
+          <i class="fa-solid fa-xmark text-[#64748B] text-[16px]"></i>
+        </button>
+      </div>
+    </div>
 
-            <!-- TITLE -->
-            <div class="flex items-center gap-[6px]">
-                <img src="icons/coupon.png" class="w-[14px]" />
-                <p class="text-[11px] md:text-[12px] font-[900] uppercase text-[#464555]">
-                    ConfiguraÇÃO DO CUPOM
-                </p>
-            </div>
+    <!-- CONTENT -->
+    <div class="flex-1 overflow-y-auto px-5 md:px-6 py-5 space-y-6">
+      <!-- SECTION -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-ticket text-[#4F46E5] text-[12px]"></i>
 
-            <!-- INPUTS -->
-            <input [(ngModel)]="form.code" placeholder="Coupon Code"
-                class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]" />
+          <p class="text-[11px] font-[900] uppercase tracking-[1px] text-[#464555]">
+            Configuração do Cupom
+          </p>
+        </div>
 
-            <select [(ngModel)]="form.type"
-                class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]">
-                <option value="percentage">Percentage</option>
-                <option value="fixed">Fixed</option>
+        <!-- CODE -->
+        <div class="space-y-2">
+          <label class="text-[12px] font-[700] text-[#141B2B]"> Código do Cupom </label>
+
+          <input
+            [(ngModel)]="form.code"
+            placeholder="Ex: WELCOME10"
+            class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px] outline-none"
+          />
+        </div>
+
+        <!-- TYPE + VALUE -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- TYPE -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Tipo de Desconto </label>
+
+            <select
+              [(ngModel)]="form.type"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px] outline-none"
+            >
+              <option value="percentage">Porcentagem (%)</option>
+
+              <option value="fixed">Valor Fixo</option>
             </select>
+          </div>
 
-            <input type="number" [(ngModel)]="form.value" placeholder="Discount Value"
-                class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]" />
+          <!-- VALUE -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Valor do Desconto </label>
 
-            <select [(ngModel)]="form.appliesTo"
-                class="w-full h-[40px] md:h-[42px] px-3 md:px-4 rounded-lg border text-[13px]">
-                <option value="all">All</option>
-                <option value="products">Products</option>
-                <option value="games">Categories</option>
-            </select>
+            <div
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white flex items-center"
+            >
+              <span class="text-[#64748B] text-[14px] font-[700] mr-2">
+                {{ form.type === 'percentage' ? '%' : '$' }}
+              </span>
 
-            <!-- DROPDOWN -->
-            <div *ngIf="form.appliesTo !== 'all'" class="relative">
-
-                <div (click)="toggleDropdown()"
-                    class="w-full h-[40px] md:h-[42px] px-3 rounded-lg border bg-white flex items-center justify-between">
-
-                    <span class="text-[13px]">
-                        {{ selectedItems.length ? selectedItems.length + ' selected' : 'Select Items' }}
-                    </span>
-
-                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                </div>
-
-                <div *ngIf="openDropdown"
-                    class="absolute top-[110%] left-0 w-full bg-white rounded-[12px] p-[10px] md:p-[12px] flex flex-col gap-[10px] shadow z-[9999]">
-
-                    <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search..."
-                        class="w-full h-[34px] px-3 bg-[#F1F3FF] rounded text-[12px]" />
-
-                    <div class="max-h-[200px] overflow-y-auto">
-
-                        <div *ngFor="let item of searchResults" (click)="selectItem(item)"
-                            class="flex items-center justify-between p-2 hover:bg-gray-50 cursor-pointer">
-
-                            <div class="flex gap-2 items-center">
-                                <img [src]="item.image || 'https://via.placeholder.com/40'"
-                                    class="w-[28px] h-[28px] rounded" />
-                                <span class="text-[12px]">{{ item.name }}</span>
-                            </div>
-
-                            <i *ngIf="isSelected(item)" class="fa-solid fa-check text-green-500 text-[12px]"></i>
-                        </div>
-
-                    </div>
-
-                    <button (click)="openDropdown=false" class="text-red-500 text-[12px]">
-                        Close
-                    </button>
-
-                </div>
-
+              <input
+                type="number"
+                [(ngModel)]="form.value"
+                placeholder="0"
+                class="w-full bg-transparent outline-none text-[14px]"
+              />
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- EXTRA -->
-            <input type="number" [(ngModel)]="form.minOrderAmount" placeholder="Minimum Order Amount"
-                class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
+      <!-- APPLY TARGET -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-[#4F46E5] text-[12px]"></i>
 
-            <input type="number" [(ngModel)]="form.maxDiscount" placeholder="Max Discount"
-                class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
-
-            <input type="number" [(ngModel)]="form.usageLimit" placeholder="Usage Limit"
-                class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
-
-            <input type="date" [(ngModel)]="form.expiresAt"
-                class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
-
-            <label class="flex items-center gap-2 text-[13px]">
-                <input type="checkbox" [(ngModel)]="form.isActive">
-                Active
-            </label>
-
-            <!-- AFFILIATE -->
-            <div class="bg-[#F1F3FF] p-3 md:p-4 rounded-xl space-y-3">
-
-                <p class="text-[12px] font-bold">Affiliate (Optional)</p>
-
-                <input [(ngModel)]="form.affiliateName" placeholder="Affiliate Name"
-                    class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
-
-                <input [(ngModel)]="form.affiliateSlug" placeholder="Affiliate Link"
-                    class="w-full h-[40px] px-3 rounded-lg border text-[13px]" />
-
-                <!-- UPLOAD -->
-                <div class="border-2 border-dashed rounded-xl h-[100px] md:h-[120px]
-                            flex flex-col items-center justify-center text-gray-400 text-[12px] bg-white cursor-pointer relative"
-                    (click)="fileInput.click()">
-
-                    <input #fileInput type="file" class="hidden" (change)="onAvatarUpload($event)" />
-
-                    <img *ngIf="form.avatarPreview" [src]="form.avatarPreview"
-                        class="absolute inset-0 w-full h-full object-cover rounded-xl" />
-
-                    <ng-container *ngIf="!form.avatarPreview">
-                        <p>Upload Image</p>
-                    </ng-container>
-
-                </div>
-
-            </div>
-
+          <p class="text-[11px] font-[900] uppercase tracking-[1px] text-[#464555]">
+            Onde o cupom será aplicado
+          </p>
         </div>
 
-        <!-- FOOTER -->
-        <div class="px-4 md:px-6 py-4 border-t flex flex-col md:flex-row gap-3">
+        <!-- SELECT -->
+        <select
+          [(ngModel)]="form.appliesTo"
+          (change)="selectedItems = []; form.products = []; form.categories = []"
+          class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px] outline-none"
+        >
+          <option value="all">Toda Loja</option>
 
-            <button (click)="createCoupon()"
-                class="w-full md:flex-1 bg-[#4F46E5] text-white py-2 rounded-lg text-[14px]">
-                Salvar
-            </button>
+          <option value="products">Produtos Específicos</option>
 
-            <button (click)="isOpen=false" class="w-full md:flex-1 text-indigo-600 text-[14px]">
-                Cancelar
-            </button>
+          <option value="games">Categorias / Jogos</option>
+        </select>
 
+        <!-- INFO -->
+        <div
+          class="bg-[#EEF2FF] border border-[#DCE4FF] rounded-xl px-4 py-3 text-[12px] text-[#64748B]"
+        >
+          <ng-container [ngSwitch]="form.appliesTo">
+            <span *ngSwitchCase="'all'"> Este cupom funcionará em todos os jogos e produtos. </span>
+
+            <span *ngSwitchCase="'products'"> Escolha quais produtos aceitarão este cupom. </span>
+
+            <span *ngSwitchCase="'games'"> Escolha quais categorias poderão usar este cupom. </span>
+          </ng-container>
         </div>
+      </div>
+
+
+
+
+     <!-- PRODUCTS -->
+<div class="space-y-3">
+
+  <label class="text-[12px] font-[700] text-[#141B2B]">
+    Produtos Específicos
+  </label>
+
+  <div class="relative">
+
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch('products')"
+      placeholder="Buscar produtos..."
+      class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+    />
+
+    <div
+      *ngIf="searchResults.length"
+      class="mt-2 bg-white border rounded-xl max-h-[250px] overflow-y-auto"
+    >
+
+      <div
+        *ngFor="let item of searchResults"
+        (click)="selectItem(item, 'products')"
+        class="flex items-center justify-between px-4 py-3 hover:bg-[#F8FAFF] cursor-pointer border-b"
+      >
+
+        <span>{{ item.name }}</span>
+
+        <i
+          *ngIf="isSelected(item, 'products')"
+          class="fa-solid fa-check text-[#4F46E5]"
+        ></i>
+
+      </div>
 
     </div>
 
+  </div>
+
 </div>
 
-<div *ngIf="isAnalyticsOpen" class="fixed inset-0 bg-black/40 backdrop-blur-[6px] z-40 transition-all">
+<!-- CATEGORIES -->
+<div class="space-y-3 mt-5">
+
+  <label class="text-[12px] font-[700] text-[#141B2B]">
+    Categorias
+  </label>
+
+  <div class="relative">
+
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch('categories')"
+      placeholder="Buscar categorias..."
+      class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+    />
+
+    <div
+      *ngIf="searchResults.length"
+      class="mt-2 bg-white border rounded-xl max-h-[250px] overflow-y-auto"
+    >
+
+      <div
+        *ngFor="let item of searchResults"
+        (click)="selectItem(item, 'categories')"
+        class="flex items-center justify-between px-4 py-3 hover:bg-[#F8FAFF] cursor-pointer border-b"
+      >
+
+        <span>{{ item.name }}</span>
+
+        <i
+          *ngIf="isSelected(item, 'categories')"
+          class="fa-solid fa-check text-[#4F46E5]"
+        ></i>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
+      <!-- RULES -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-[#4F46E5] text-[12px]"></i>
+
+          <p class="text-[11px] font-[900] uppercase tracking-[1px] text-[#464555]">
+            Regras do Cupom
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- MIN -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Pedido Mínimo </label>
+
+            <input
+              type="number"
+              [(ngModel)]="form.minOrderAmount"
+              placeholder="0"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+
+          <!-- MAX -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Desconto Máximo </label>
+
+            <input
+              type="number"
+              [(ngModel)]="form.maxDiscount"
+              placeholder="Opcional"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+
+          <!-- LIMIT -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Limite de Uso </label>
+
+            <input
+              type="number"
+              [(ngModel)]="form.usageLimit"
+              placeholder="Opcional"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+
+          <!-- EXPIRES -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Expiração </label>
+
+            <input
+              type="date"
+              [(ngModel)]="form.expiresAt"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+        </div>
+
+        <!-- ACTIVE -->
+        <label
+          class="flex items-center gap-3 bg-white border border-[#D8DDF2] rounded-xl px-4 py-3 cursor-pointer"
+        >
+          <input type="checkbox" [(ngModel)]="form.isActive" class="w-[16px] h-[16px]" />
+
+          <span class="text-[13px] font-[600] text-[#141B2B]"> Cupom Ativo </span>
+        </label>
+      </div>
+
+      <!-- AFFILIATE -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-users text-[#4F46E5] text-[12px]"></i>
+
+          <p class="text-[11px] font-[900] uppercase tracking-[1px] text-[#464555]">
+            Afiliado (Opcional)
+          </p>
+        </div>
+
+        <div class="space-y-4 bg-[#EEF2FF] rounded-[16px] p-4">
+          <!-- NAME -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Nome do Afiliado </label>
+
+            <input
+              [(ngModel)]="form.affiliateName"
+              placeholder="Nome do parceiro"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+
+          <!-- SLUG -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Link do Afiliado </label>
+
+            <input
+              [(ngModel)]="form.affiliateSlug"
+              placeholder="affiliate-link"
+              class="w-full h-[46px] px-4 rounded-xl border border-[#D8DDF2] bg-white text-[14px]"
+            />
+          </div>
+
+          <!-- UPLOAD -->
+          <div class="space-y-2">
+            <label class="text-[12px] font-[700] text-[#141B2B]"> Avatar / Banner </label>
+
+            <div
+              class="border-2 border-dashed border-[#CBD5E1] rounded-[16px] h-[140px] bg-white flex flex-col items-center justify-center cursor-pointer relative overflow-hidden"
+              (click)="fileInput.click()"
+            >
+              <input #fileInput type="file" hidden (change)="onAvatarUpload($event)" />
+
+              <img
+                *ngIf="form.avatarPreview"
+                [src]="form.avatarPreview"
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+
+              <ng-container *ngIf="!form.avatarPreview">
+                <i class="fa-solid fa-cloud-arrow-up text-[26px] text-[#4F46E5]"></i>
+
+                <p class="mt-2 text-[13px] font-[700] text-[#4F46E5]">Upload Image</p>
+
+                <span class="text-[11px] text-[#94A3B8] mt-1"> PNG, JPG ou WEBP </span>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="p-5 border-t bg-white flex flex-col md:flex-row gap-3">
+      <button
+        (click)="createCoupon()"
+        class="flex-1 h-[48px] rounded-xl bg-[#4F46E5] text-white text-[14px] font-[700]"
+      >
+        {{ form._id ? 'Salvar Alterações' : 'Criar Cupom' }}
+      </button>
+
+      <button
+        (click)="isOpen = false"
+        class="flex-1 h-[48px] rounded-xl border border-[#D8DDF2] text-[#4F46E5] text-[14px] font-[700]"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="isAnalyticsOpen"
+  class="fixed inset-0 bg-black/40 backdrop-blur-[6px] z-40 transition-all"
+></div>
 
 <div *ngIf="isAnalyticsOpen" class="fixed inset-0 z-[9999] flex justify-end">
+  <!-- OVERLAY -->
+  <div class="absolute inset-0 bg-black/30" (click)="isAnalyticsOpen = false"></div>
 
-    <!-- OVERLAY -->
-    <div class="absolute inset-0 bg-black/30" (click)="isAnalyticsOpen=false"></div>
-
-    <!-- DRAWER -->
-    <div class="relative w-full md:w-[480px] h-full bg-[#F8F9FF]
-               shadow-[0px_20px_60px_rgba(0,0,0,0.25)]
-               flex flex-col
-               md:rounded-none rounded-t-[16px]">
-
-        <!-- HEADER -->
+  <!-- DRAWER -->
+  <div
+    class="relative w-full md:w-[480px] h-full bg-[#F8F9FF] shadow-[0px_20px_60px_rgba(0,0,0,0.25)] flex flex-col md:rounded-none rounded-t-[16px]"
+  >
+    <!-- HEADER -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 px-4 md:px-6 py-4 md:py-5 border-b bg-[#F1F3FF]"
+    >
+      <div class="flex items-start gap-3">
         <div
-            class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 px-4 md:px-6 py-4 md:py-5 border-b bg-[#F1F3FF]">
-
-            <div class="flex items-start gap-3">
-
-                <div
-                    class="w-[36px] h-[36px] md:w-[44px] md:h-[44px] bg-[#4F46E5] rounded-xl flex items-center justify-center">
-                    <img src="icons/coupon-analytics.png" class="w-[16px] md:w-[18px]">
-                </div>
-
-                <div>
-                    <h2 class="text-[16px] md:text-[20px] font-[700] text-[#141B2B] leading-tight">
-                        Desempenho do Cupom
-                        <span
-                            class="ml-2 text-[8px] md:text-[9px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]">
-                            ATIVO
-                        </span>
-                    </h2>
-
-                    <p class="text-[12px] md:text-[14px] text-[#3525CD] font-[700] break-words">
-                        {{ selectedCoupon?.code }}
-                        <span class="text-[#464555] font-[500]">
-                            • {{ selectedCoupon?.affiliateName || 'No Affiliate' }}
-                        </span>
-                    </p>
-                </div>
-
-            </div>
-
-            <button (click)="isAnalyticsOpen=false" class="self-end sm:self-auto">
-                <i class="fa-solid fa-xmark text-[16px] text-[#777587]"></i>
-            </button>
-
+          class="w-[36px] h-[36px] md:w-[44px] md:h-[44px] bg-[#4F46E5] rounded-xl flex items-center justify-center"
+        >
+          <img src="icons/coupon-analytics.png" class="w-[16px] md:w-[18px]" />
         </div>
 
-        <!-- CONTENT -->
-        <div class="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-5">
+        <div>
+          <h2 class="text-[16px] md:text-[20px] font-[700] text-[#141B2B] leading-tight">
+            Desempenho do Cupom
+            <span
+              class="ml-2 text-[8px] md:text-[9px] bg-[#6FFBBE] text-[#005236] px-2 py-[2px] rounded-full font-[700]"
+            >
+              ATIVO
+            </span>
+          </h2>
 
-            <!-- DATE RANGE -->
-            <div class="bg-white rounded-xl p-4 shadow-sm border">
-
-                <div class="flex items-center gap-[6px] mb-3">
-                    <i class="fa-regular fa-calendar text-[#64748B] text-[11px]"></i>
-                    <p class="text-[10px] md:text-[11px] font-[700] uppercase text-[#64748B]">
-                        SELECIONAR PERíODO
-                    </p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-3">
-
-                    <div class="flex-1">
-                        <label class="text-[10px] font-[700] text-[#94A3B8]">DATA INICIAL</label>
-                        <input type="date" [(ngModel)]="analytics.startDate"
-                            class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]" />
-                    </div>
-
-                    <div class="flex-1">
-                        <label class="text-[10px] font-[700] text-[#94A3B8]">DATA FINAL</label>
-                        <input type="date" [(ngModel)]="analytics.endDate"
-                            class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]" />
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- CARD 1 -->
-            <div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border flex justify-between items-start">
-
-                <div>
-                    <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
-                        RECEITA DO CUPOM
-                    </p>
-
-                    <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
-                        {{ formatPrice(analytics.revenue || 0) }}
-                    </h3>
-
-                    <p class="text-[10px] text-[#777587] mt-1">
-                        Generated by
-                        <span class="text-[#3525CD] font-[700]">
-                            {{ selectedCoupon?.code }}
-                        </span>
-                    </p>
-                </div>
-
-                <div
-                    class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#EEF2FF] rounded-full flex items-center justify-center">
-                    <i class="fa-solid fa-ticket text-[#4F46E5] text-[12px] md:text-[14px]"></i>
-                </div>
-
-            </div>
-
-            <!-- CARD 2 -->
-            <div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border flex justify-between items-start">
-
-                <div>
-                    <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
-                        RECEITA TOTAL DO AFILIADO
-                    </p>
-
-                    <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
-                        {{ formatPrice(analytics.totalRevenue || 0) }}
-                    </h3>
-
-                    <p class="text-[10px] text-[#777587] mt-1">
-                        Across all coupons
-                    </p>
-                </div>
-
-                <div
-                    class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#E6F9F0] rounded-full flex items-center justify-center">
-                    <i class="fa-solid fa-user text-[#059669] text-[12px] md:text-[14px]"></i>
-                </div>
-
-            </div>
-
+          <p class="text-[12px] md:text-[14px] text-[#3525CD] font-[700] break-words">
+            {{ selectedCoupon?.code }}
+            <span class="text-[#464555] font-[500]">
+              • {{ selectedCoupon?.affiliateName || 'No Affiliate' }}
+            </span>
+          </p>
         </div>
+      </div>
 
-        <!-- FOOTER -->
-        <div class="p-4 md:p-6 border-t bg-white">
-
-            <button (click)="isAnalyticsOpen=false"
-                class="w-full h-[48px] md:h-[52px] bg-[#E1E8FD] text-[#3525CD] rounded-xl font-[700] text-[14px] md:text-[16px]">
-                Fechar
-            </button>
-
-        </div>
-
+      <button (click)="isAnalyticsOpen = false" class="self-end sm:self-auto">
+        <i class="fa-solid fa-xmark text-[16px] text-[#777587]"></i>
+      </button>
     </div>
 
+    <!-- CONTENT -->
+    <div class="flex-1 overflow-y-auto px-4 md:px-6 py-4 md:py-6 space-y-4 md:space-y-5">
+      <!-- DATE RANGE -->
+      <div class="bg-white rounded-xl p-4 shadow-sm border">
+        <div class="flex items-center gap-[6px] mb-3">
+          <i class="fa-regular fa-calendar text-[#64748B] text-[11px]"></i>
+          <p class="text-[10px] md:text-[11px] font-[700] uppercase text-[#64748B]">
+            SELECIONAR PERíODO
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1">
+            <label class="text-[10px] font-[700] text-[#94A3B8]">DATA INICIAL</label>
+            <input
+              type="date"
+              [(ngModel)]="analytics.startDate"
+              class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]"
+            />
+          </div>
+
+          <div class="flex-1">
+            <label class="text-[10px] font-[700] text-[#94A3B8]">DATA FINAL</label>
+            <input
+              type="date"
+              [(ngModel)]="analytics.endDate"
+              class="mt-1 h-[36px] w-full bg-[#F1F3FF] rounded-lg px-3 text-[12px]"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 1 -->
+      <div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border flex justify-between items-start">
+        <div>
+          <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
+            RECEITA DO CUPOM
+          </p>
+
+          <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
+            {{ formatPrice(analytics.revenue || 0) }}
+          </h3>
+
+          <p class="text-[10px] text-[#777587] mt-1">
+            Generated by
+            <span class="text-[#3525CD] font-[700]">
+              {{ selectedCoupon?.code }}
+            </span>
+          </p>
+        </div>
+
+        <div
+          class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#EEF2FF] rounded-full flex items-center justify-center"
+        >
+          <i class="fa-solid fa-ticket text-[#4F46E5] text-[12px] md:text-[14px]"></i>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="bg-white rounded-xl p-4 md:p-5 shadow-sm border flex justify-between items-start">
+        <div>
+          <p class="text-[11px] md:text-[12px] uppercase text-[#64748B] font-[700]">
+            RECEITA TOTAL DO AFILIADO
+          </p>
+
+          <h3 class="text-[22px] md:text-[30px] font-[800] mt-2">
+            {{ formatPrice(analytics.totalRevenue || 0) }}
+          </h3>
+
+          <p class="text-[10px] text-[#777587] mt-1">Across all coupons</p>
+        </div>
+
+        <div
+          class="w-[32px] h-[32px] md:w-[36px] md:h-[36px] bg-[#E6F9F0] rounded-full flex items-center justify-center"
+        >
+          <i class="fa-solid fa-user text-[#059669] text-[12px] md:text-[14px]"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="p-4 md:p-6 border-t bg-white">
+      <button
+        (click)="isAnalyticsOpen = false"
+        class="w-full h-[48px] md:h-[52px] bg-[#E1E8FD] text-[#3525CD] rounded-xl font-[700] text-[14px] md:text-[16px]"
+      >
+        Fechar
+      </button>
+    </div>
+  </div>
 </div>
